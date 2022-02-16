@@ -7,7 +7,8 @@ module.exports = {
         "dense-blue": "#172b4d",
       },
       backgroundColor: {
-        "list-clr": "#ebecf0"
+        "list-clr": "#ebecf0",
+        "primary": "#0079bf",
       }
     },
   },

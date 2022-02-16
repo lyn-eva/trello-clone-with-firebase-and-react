@@ -1,27 +1,18 @@
-import React from "react";
+import ListHdr from "./ListHdr";
+import Note from "./Note";
+import ListFtr from "./ListFtr";
 
-function List() {
+function List({ data, addTodb, listIdx }) {
   return (
     <li className="w-64">
-      <div className="bg-list-clr rounded-md p-2">
-        <header className="flex justify-between items-center pl-1 pr-1">
-          <div className=" text-dense-blue relative">
-            <input type="text" className="bg-transparent" />
-            <h2 className="absolute top-0">Books</h2>
-          </div>
-          <button className="px-1">
-            <i className="text-lg fas fa-ellipsis-h"></i>
-          </button>
-        </header>
+      <div className="bg-list-clr rounded-md p-2 shadow-sm">
+        <ListHdr hdr={data.name} />
         <ul>
-          {/* <li>note</li> */}
+          {data.notes.map((note) => (
+            <Note key={note.txt}>{note.txt}</Note>
+          ))}
         </ul>
-        <div>
-          <button className='text-grey-blue'>
-            <i className="fas fa-plus pr-2"></i>
-            Add a card
-          </button>
-        </div>
+        <ListFtr listIdx={listIdx} addTodb={addTodb}/>
       </div>
     </li>
   );
