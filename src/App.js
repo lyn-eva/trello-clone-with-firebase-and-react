@@ -33,14 +33,14 @@ export default App;
 //         apiReq: ["unsplash: download"],
 //       },
 //       List: {
-//         listHdr: {
+//         ListHeader: {
 //           sorting: ["by created time, by priority, by completed/uncompleted"]
 //         },
 //         Items: {
 //           Item : {},
 //           ItemDetail: {},
 //         },
-//         listFtr: "list footer",
+//         ListFooter: "list footer",
 //       },
 //       BoardFtr: {},
 //     },

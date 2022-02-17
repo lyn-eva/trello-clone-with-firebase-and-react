@@ -1,27 +1,27 @@
 import { useState, useRef } from "react";
 import Button from "../utility/Button";
 
-function ListFtr({addTodb, listIdx}) {
+function ListFooter({addTodb, listIdx}) {
   const [add, setAdd] = useState(false);
-  const textAreaRef = useRef();
+  const txtAreaRef = useRef();
 
   const addNote = () => {
     setAdd(true);
     setTimeout(() => {
-      textAreaRef.current.focus();
+      txtAreaRef.current.focus();
     }, 0);
   };
 
   const addNoteHandler = () => {
-    const note = textAreaRef.current.value;
+    const note = txtAreaRef.current.value;
     setAdd(false);
     if (!note) return;
     addTodb(listIdx, note);
-    textAreaRef.current.value = '';
+    txtAreaRef.current.value = '';
   }
 
   return (
-    <footer className="relative">
+    <footer className="mt-3">
       <button
         onClick={addNote}
         className={`${add ? "hidden" : "block"} text-left w-full`}
@@ -31,7 +31,7 @@ function ListFtr({addTodb, listIdx}) {
       </button>
       <div className={`${add ? "block" : "hidden"}`}>
         <textarea
-          ref={textAreaRef}
+          ref={txtAreaRef}
           col="20"
           placeholder="Enter the title of this card"
           className="w-full rounded-sm p-1 h-16 border-2 box-border resize-none"
@@ -47,4 +47,4 @@ function ListFtr({addTodb, listIdx}) {
   );
 }
 
-export default ListFtr;
+export default ListFooter;
