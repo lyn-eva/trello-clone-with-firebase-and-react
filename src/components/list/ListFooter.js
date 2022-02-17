@@ -1,30 +1,30 @@
 import { useState, useRef } from "react";
 import Button from "../utility/Button";
 
-function ListFooter({addTodb, listIdx}) {
+function ListFooter({addNote, listIdx}) {
   const [add, setAdd] = useState(false);
   const txtAreaRef = useRef();
 
-  const addNote = () => {
+  const addNoteInit = () => {
     setAdd(true);
     setTimeout(() => {
       txtAreaRef.current.focus();
     }, 0);
   };
 
-  const addNoteHandler = () => {
+  const addNoteDone = () => {
     const note = txtAreaRef.current.value;
     setAdd(false);
     if (!note) return;
-    addTodb(listIdx, note);
+    addNote(listIdx, note);
     txtAreaRef.current.value = '';
   }
 
   return (
     <footer className="mt-3">
       <button
-        onClick={addNote}
-        className={`${add ? "hidden" : "block"} text-left w-full`}
+        onClick={addNoteInit}
+        className={`${add ? "hidden" : "block"} text-left w-full p-1`}
       >
         <i className="fas fa-plus pr-2"></i>
         Add a card
@@ -34,10 +34,10 @@ function ListFooter({addTodb, listIdx}) {
           ref={txtAreaRef}
           col="20"
           placeholder="Enter the title of this card"
-          className="w-full rounded-sm p-1 h-16 border-2 box-border resize-none"
+          className="w-full rounded-sm p-2 h-16 border-2 box-border resize-none"
         />
         <div className="border-2 p-[1px] flex items-center -mt-2">
-          <Button clickFunc={addNoteHandler} className="bg-primary mr-2">Add card</Button>
+          <Button clickFunc={addNoteDone} className="bg-primary mr-2 text-white">Add card</Button>
           <Button clickFunc={() => setAdd(false)}>
             <i className="fas fa-times text-black text-2xl"></i>
           </Button>

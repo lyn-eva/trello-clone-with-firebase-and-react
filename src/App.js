@@ -2,9 +2,9 @@ import Board from "./components/board/Board";
 
 function App() {
   return (
-    <div className="text-list-clr">
+    <>
       <Board />
-    </div>
+    </>
   );
 }
 

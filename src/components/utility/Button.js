@@ -4,7 +4,7 @@ function Button({ children, clickFunc, className }) {
   return (
     <button
       onClick={clickFunc}
-      className={`text-white text-sm px-2 py-[5px] rounded-sm ${className}`}
+      className={`${className} text-sm px-2 py-[5px] rounded-sm`}
     >
       {children}
     </button>

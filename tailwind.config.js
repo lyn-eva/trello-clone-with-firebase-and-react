@@ -9,6 +9,9 @@ module.exports = {
       backgroundColor: {
         "list-clr": "#ebecf0",
         "primary": "#0079bf",
+      },
+      boxShadow: {
+        "inner-sm": "inset 0 0 5px rgba(255, 255,255,.2)"
       }
     },
   },

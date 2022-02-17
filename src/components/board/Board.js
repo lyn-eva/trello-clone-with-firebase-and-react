@@ -1,5 +1,6 @@
 import { useState } from "react";
 import List from "../list/List";
+import Button from "../utility/Button";
 
 const psudoData = [
   {
@@ -16,18 +17,35 @@ const psudoData = [
 
 function Board() {
   const [data, setData] = useState(psudoData);
-  const addTodb = (i, note) => {
-    console.log("triggered");
+
+  const addNote = (i, note) => {
     psudoData[i].notes.push({ txt: note });
-    console.log(psudoData);
     setData([...psudoData]);
   };
+  
+  const addList = () => {
+    psudoData.push({id: Math.random(), name: "new list", notes: []})
+    setData([...psudoData]);
+  }
+  
+  const deleteNote = (ListIdx, noteIdx) => {
+    psudoData[ListIdx].notes.splice(noteIdx, 1);
+    setData([...psudoData]);
+  }
+
   return (
-    <ul className="flex gap-2 p-2">
-      {data.map((list, i) => (
-        <List key={list.id} data={list} listIdx={i} addTodb={addTodb} />
-      ))}
-    </ul>
+    <div>
+      <ul className="flex gap-2 p-2 h-[90vh]">
+        {data.map((list, i) => (
+          <List key={list.id} data={list} listIdx={i} addNote={addNote} deleteNote={deleteNote}/>
+        ))}
+        <li>
+          <Button clickFunc={addList} className="text-black py-3 pl-6 w-64 text-left bg-list-clr rounded-md">
+            <i className="fas fa-plus mr-2"></i> Add another list
+          </Button>
+        </li>
+      </ul>
+    </div>
   );
 }
 

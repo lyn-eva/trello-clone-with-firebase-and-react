@@ -1,11 +1,12 @@
-import UseRename from "../customHooks/UseRename";
+import Button from "../utility/Button";
+import DynamicTxt from "../utility/DynamicTxt";
 
-function Note({ children }) {
+function Note({ note, deleteNote}) {
   return (
-    <li className="relative bg-white my-2 py-2 rounded-sm">
-      <div className="text-[15px]">
-          <UseRename className='px-2' initialName={children}/>
-        <input type="text" className='absolute top-0 py-2 bg-transparent -z-10 w-full px-2'/>
+    <li className="bg-white my-2 py-2 rounded-sm">
+      <div className="text-[15px] relative group">
+        <DynamicTxt className="px-2" initialName={note} />
+        <Button clickFunc={deleteNote} className='bg-white absolute right-2 top-[2px] text-[18px] hidden group-hover:inline-block'><i className='fas fa-times'></i></Button>
       </div>
     </li>
   );

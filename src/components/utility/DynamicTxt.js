@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-function UseRename({ initialName, className }) {
+function DynamicTxt({ initialName, className }) {
   const [rename, setRename] = useState(false);
   const [name, setName] = useState(initialName);
   const txtAreaRef = useRef();
@@ -27,7 +27,7 @@ function UseRename({ initialName, className }) {
         onBlur={renameDone}
         ref={txtAreaRef}
         type="text"
-        className={`bg-transparent p-1 w-full resize-none ${
+        className={` p-1 w-full resize-none ${
           rename ? "block" : "hidden"
         }`}
       />
@@ -36,4 +36,4 @@ function UseRename({ initialName, className }) {
   );
 }
 
-export default UseRename;
+export default DynamicTxt;
