@@ -1,10 +1,12 @@
 import Board from "./components/board/Board";
-
+import { useTrello } from "./components/context/Context";
 function App() {
+  const { BG_THEME } = useTrello();
+
   return (
-    <>
+    <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
       <Board />
-    </>
+    </main>
   );
 }
 

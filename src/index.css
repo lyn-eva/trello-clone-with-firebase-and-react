@@ -8,6 +8,6 @@
   font-family: "roboto", sans-serif;
 }
 
-body {
-  background-color: rgb(157, 226, 178);
+.temp {
+  box-shadow: inset 0 0 3px rgba(143, 95, 95, 0.2);
 }

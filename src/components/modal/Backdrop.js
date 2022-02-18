@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
 
-function Backdrop() {
+function Backdrop({ onClick }) {
   return (
-    <div className='fixed w-full h-full bg-black opacity-[.2] z-10'></div>
-  )
+    <div
+      onClick={onClick}
+      className="fixed w-full h-full bg-black opacity-[.2] z-10"
+    ></div>
+  );
 }
 
-export default Backdrop
+export default Backdrop;

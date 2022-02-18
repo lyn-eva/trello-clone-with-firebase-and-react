@@ -8,7 +8,7 @@ function Note({ note, deleteNote }) {
         <DynamicTxt className="px-2" initialName={note} />
         <Button
           clickFunc={deleteNote}
-          className="bg-white absolute right-2 top-[2px] text-[18px] hidden group-hover:inline-block"
+          className="bg-white absolute right-3 top-[7px] text-[18px] hidden group-hover:inline-block"
         >
           <i className="fas fa-times"></i>
         </Button>
