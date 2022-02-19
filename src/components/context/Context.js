@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+
+import { createContext, useContext, useState } from "react";
 
 const trelloContext = createContext();
 
@@ -7,11 +8,14 @@ export const useTrello = () => {
 };
 
 function Context({children}) {
+  const [bg, setBg] = useState("#0079bf");
+
+
 
   const value = {
     useTrello,
-    // BG_THEME: "rgb(157,226,178)",
-    BG_THEME: "#0079bf",
+    BG_THEME: bg,
+    setBg,
   };
 
   return (

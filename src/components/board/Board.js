@@ -47,7 +47,7 @@ function Board() {
       />
       <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar}/>
       <div>
-        <ul className="flex gap-2 m-2 h-[90vh]">
+        <ul className="flex gap-2 m-2 h-[80vh]">
           {data.map((list, i) => (
             <List
               key={list.id}
