@@ -12,7 +12,7 @@ module.exports = {
         "hover-clr": "rgba(90, 90, 90, 0.15)",
       },
       boxShadow: {
-        "inner-sm": "inset 0 0 5px rgba(255,0,0, .2)",
+        "note": "0 1px 0px 0px #091e4240",
       },
       animation: {
         "slide-in-right": "slide-in-right 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both",

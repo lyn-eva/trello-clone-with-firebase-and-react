@@ -10,11 +10,11 @@ const psudoData = [
     name: "trending technologies",
     notes: [{ txt: "nextjs" }, { txt: "typescript" }],
   },
-  {
-    id: "ea21kfil",
-    name: "potential ones",
-    notes: [{ txt: "webassembly" }, { txt: "decentralized web" }],
-  },
+  // {
+  //   id: "ea21kfil",
+  //   name: "potential ones",
+  //   notes: [{ txt: "webassembly" }, { txt: "decentralized web" }],
+  // },
 ];
 
 function Board() {
@@ -60,7 +60,7 @@ function Board() {
           <li>
             <Button
               clickFunc={addList}
-              className="text-black pl-6 py-3 w-64 text-left bg-list-clr rounded-md hover:bg-hover-clr hover:text-white hover:rounded-md"
+              className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white hover:rounded-md"
             >
               <i className="fas fa-plus mr-2"></i> Add another list
             </Button>

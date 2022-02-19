@@ -1,12 +1,15 @@
 import ListHeader from "./ListHeader";
 import Note from "./Note";
 import ListFooter from "./ListFooter";
+import ListDropDown from "./ListDropDown";
+
 
 function List({ data, listIdx, addNote, deleteNote }) {
   return (
-    <li className="min-w-[16rem] w-64 border-2 border-orange-500">
-      <div className="bg-list-clr rounded-md p-2 shadow-sm">
+    <li className="min-w-[20rem] w-64 border-2 border-orange-500">
+      <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
         <ListHeader hdr={data.name} />
+        <ListDropDown />
         <ul>
           {data.notes.map((note, i) => (
             <Note

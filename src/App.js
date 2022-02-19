@@ -1,9 +1,23 @@
+import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router";
+
 import Board from "./components/board/Board";
 import { useTrello } from "./components/context/Context";
+
+const Login = lazy(() => import("./components/form/Login"));
+const SignUp = lazy(() => import("./components/form/SignUp"));
+
 function App() {
   const { BG_THEME } = useTrello();
 
+  const fallback = <p>Loading ...</p>;
+
   return (
+    // <Suspense fallback={fallback}>
+    //   <Routes>
+    //     <Route path="/login" element={<Login />} />
+    //   </Routes>
+    // </Suspense>
     <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
       <Board />
     </main>

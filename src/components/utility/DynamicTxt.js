@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-function DynamicTxt({ initialName, className }) {
+function DynamicTxt({ initialName, className, title }) {
   const [rename, setRename] = useState(false);
   const [name, setName] = useState(initialName);
   const txtAreaRef = useRef();
@@ -28,7 +28,7 @@ function DynamicTxt({ initialName, className }) {
   return (
     <div
       onDoubleClick={renameStart}
-      className={`text-base text-dense-blue w-full ${className || ""}`}
+      className={`${title || ''} text-dense-blue w-full ${className || ""}`}
     >
       <textarea
         onBlur={renameDone}
@@ -38,7 +38,7 @@ function DynamicTxt({ initialName, className }) {
           rename ? "block" : "hidden"
         }`}
       />
-      <h2 className={`p-1 ${rename ? "hidden" : "block"}`}>{name}</h2>
+      <p className={`p-1  ${rename ? "hidden" : "block"}`}>{name}</p>
     </div>
   );
 }
