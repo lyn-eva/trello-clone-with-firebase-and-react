@@ -13,14 +13,14 @@ function App() {
   const fallback = <p>Loading ...</p>;
 
   return (
-    // <Suspense fallback={fallback}>
-    //   <Routes>
-    //     <Route path="/login" element={<Login />} />
-    //   </Routes>
-    // </Suspense>
-    <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
-      <Board />
-    </main>
+    <Suspense fallback={fallback}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+      </Routes>
+    </Suspense>
+    // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
+    //   <Board />
+    // </main>
   );
 }
 
