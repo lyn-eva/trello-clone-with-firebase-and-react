@@ -17,6 +17,9 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
       </Routes>
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
     </Suspense>
     // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
     //   <Board />
