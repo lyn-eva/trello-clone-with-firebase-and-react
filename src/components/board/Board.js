@@ -41,7 +41,7 @@ function Board() {
   }
 
   return (
-    <div className="relative p-[0.02px]">
+    <div className="relative p-[0.02px] bg-orange-400 min-w-fit">
       <BoardHeader
         toggleSidebar={toggleSidebar}
       />

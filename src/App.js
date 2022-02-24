@@ -1,11 +1,13 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 
 import { useTrello } from "./components/context/Context";
-import Board from "./components/board/Board";
+import PrivateRoute from "./PrivateRoute";
 
 const Login = lazy(() => import("./components/form/Login"));
 const SignUp = lazy(() => import("./components/form/SignUp"));
+const Profile = lazy(() => import("./components/profile/Profile"));
+const Board = lazy(() => import("./components/board/Board"));
 
 function App() {
   const { BG_THEME } = useTrello();
@@ -15,19 +17,26 @@ function App() {
   return (
     <Suspense fallback={fallback}>
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="login" element={<Login />} />
+        <Route path="signup" element={<SignUp />} />
         <Route
-          path="/board"
+          path="profile"
           element={
-            <main
-              className="h-screen"
-              style={{ backgroundColor: `${BG_THEME}` }}
-            >
-              <Board />
-            </main>
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
           }
         />
+        <Route
+          path="profile/board"
+          element={
+            <PrivateRoute>
+              <Board />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="/" element={<Navigate to="login" />} />
       </Routes>
     </Suspense>
     // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>

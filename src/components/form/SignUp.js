@@ -25,6 +25,7 @@ function SignUp() {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    setError('');
     if (!emailIsVaild() || !pwdIsValid() || !pwdConfirmIsValid()) {
       return;
     }
@@ -40,10 +41,10 @@ function SignUp() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      {error && <span className='bg-orange-100 border-2 border-red-300 w-64 px-[1.9rem] box-content py-3 shadow-lg'>{error}</span>}
+      {error && <span className='bg-orange-100 border-2 border-red-300 w-[18rem] px-[1.9rem] box-content py-3 shadow-lg'>{error}</span>}
       <div className="text-dense-blue px-8 py-6 text-left bg-white shadow-lg">
         <h3 className="text-2xl font-bold text-center ">Sign up your account</h3>
-        <form onSubmit={submitHandler} className="w-64 mt-6">
+        <form onSubmit={submitHandler} className="w-[18rem] mt-6">
           <div>
             <label className="block" htmlFor="email">
               Email

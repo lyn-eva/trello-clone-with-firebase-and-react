@@ -1,14 +1,20 @@
-import useValidate from "../customHooks/use-validate";
-import { Link } from "react-router-dom";
-import { useTrello } from "../context/Context";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
+import { useNavigate } from "react-router";
+import useValidate from "../customHooks/use-validate";
+import { useTrello } from "../context/Context";
 
 function Login() {
+  const loc = useLocation();
+  console.log(loc);
+
   const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
 
   const { normalSignIn } = useTrello();
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
@@ -16,12 +22,14 @@ function Login() {
 
   const submitHandler = (e) => {
     e.preventDefault();
+    setError('')
     if (!emailIsVaild() || !pwdIsValid()) {
       return;
     }
     normalSignIn(emailRef.current.value, pwdRef.current.value)
       .then(() => {
         setError('')
+        navigate('../profile', {replace: true});
       })
       .catch((err) => {
         setError(err.code);
@@ -31,7 +39,7 @@ function Login() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {error && (
-        <span className="bg-orange-100 border-2 border-red-300 w-64 px-[1.9rem] box-content py-3 shadow-lg">
+        <span className="bg-orange-100 border-2 border-red-300 w-[18rem] px-[1.9rem] box-content py-3 shadow-lg">
           {error}
         </span>
       )}
@@ -39,7 +47,7 @@ function Login() {
         <h3 className="text-2xl font-bold text-center ">
           Login to your account
         </h3>
-        <form onSubmit={submitHandler} className="w-64 mt-6">
+        <form onSubmit={submitHandler} className="w-[18rem] mt-6">
           <div>
             <label className="block" htmlFor="email">
               Email

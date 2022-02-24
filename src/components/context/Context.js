@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../firebase-config";
-import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "@firebase/auth";
+import { onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "@firebase/auth";
 
 const trelloContext = createContext();
 
@@ -14,7 +14,7 @@ function Context({children}) {
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
-      // console.log(user.email)
+      setCurrentUser(user);
     })
   }, [])
 
@@ -26,12 +26,18 @@ function Context({children}) {
     return signInWithEmailAndPassword(auth, email, pwd);
   }
 
+  const signOutUser = () => {
+    return signOut(auth);
+  }
+
   const value = {
     useTrello,
     BG_THEME: bg,
     setBg,
+    currentUser,
     normalSignUp,
-    normalSignIn
+    normalSignIn,
+    signOutUser,
   };
 
   return (
