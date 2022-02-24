@@ -1,9 +1,14 @@
 import useValidate from "../customHooks/use-validate";
 import { Link } from "react-router-dom";
+import { useTrello } from "../context/Context";
+import { useState } from "react";
 
 function Login() {
   const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
+
+  const { normalSignIn } = useTrello();
+  const [error, setError] = useState("");
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
@@ -14,11 +19,23 @@ function Login() {
     if (!emailIsVaild() || !pwdIsValid()) {
       return;
     }
+    normalSignIn(emailRef.current.value, pwdRef.current.value)
+      .then(() => {
+        setError('')
+      })
+      .catch((err) => {
+        setError(err.code);
+      });
   };
 
   return (
-    <main className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="text-dense-blue px-8 py-6 mt-4 text-left bg-white shadow-lg rounded-md">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      {error && (
+        <span className="bg-orange-100 border-2 border-red-300 w-64 px-[1.9rem] box-content py-3 shadow-lg">
+          {error}
+        </span>
+      )}
+      <div className="text-dense-blue px-8 py-6 text-left bg-white shadow-lg">
         <h3 className="text-2xl font-bold text-center ">
           Login to your account
         </h3>
@@ -29,7 +46,7 @@ function Login() {
             </label>
             {emailError && errorMsg(emailError)}
             <input
-              id='email'
+              id="email"
               ref={emailRef}
               placeholder="username@company.domain"
               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
@@ -41,14 +58,14 @@ function Login() {
             </label>
             {pwdError && errorMsg(pwdError)}
             <input
-              id='password'
+              id="password"
               type="password"
               ref={pwdRef}
               placeholder="Password"
               className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
             />
           </div>
-          <div className="flex items-baseline justify-between mt-6 mb-2">
+          <div className="flex items-baseline justify-between mt-6 mb-3">
             <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-900">
               Login
             </button>
@@ -56,7 +73,12 @@ function Login() {
               Forgot password?
             </a>
           </div>
-          <Link to='../signup' className="text-sm text-blue-600 hover:underline">New here? Create an account.</Link>
+          <Link
+            to="../SignUp"
+            className="text-sm text-blue-600 hover:border-blue-400 hover:border-b-[2px]"
+          >
+            <span className='mr-2'>New here?</span> Create an account.
+          </Link>
         </form>
       </div>
     </main>

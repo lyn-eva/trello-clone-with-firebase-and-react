@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router";
 
-import Board from "./components/board/Board";
 import { useTrello } from "./components/context/Context";
+import Board from "./components/board/Board";
 
 const Login = lazy(() => import("./components/form/Login"));
 const SignUp = lazy(() => import("./components/form/SignUp"));
@@ -16,9 +16,18 @@ function App() {
     <Suspense fallback={fallback}>
       <Routes>
         <Route path="/login" element={<Login />} />
-      </Routes>
-      <Routes>
         <Route path="/signup" element={<SignUp />} />
+        <Route
+          path="/board"
+          element={
+            <main
+              className="h-screen"
+              style={{ backgroundColor: `${BG_THEME}` }}
+            >
+              <Board />
+            </main>
+          }
+        />
       </Routes>
     </Suspense>
     // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
