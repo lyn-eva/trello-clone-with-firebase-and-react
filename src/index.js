@@ -1,14 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import Context from "./components/context/Context";
-import { BrowserRouter } from "react-router-dom";
+import AuthContext from "./components/context/AuthContext";
 
 ReactDOM.render(
   <BrowserRouter>
     <Context>
-      <App />
+      <AuthContext>
+        <App />
+      </AuthContext>
     </Context>
   </BrowserRouter>,
   document.getElementById("root")

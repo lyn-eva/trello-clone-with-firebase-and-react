@@ -1,13 +1,16 @@
-// import { useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useTrello } from "../context/Context";
 import Button from "../utility/Button";
 
 function BoardHeader({ toggleSidebar }) {
   const { signOutUser } = useTrello();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleSignOut = () => {
     signOutUser()
+      .then(() => {
+        navigate("../login", { replace: true });
+      })
       .catch(() => {});
   };
 

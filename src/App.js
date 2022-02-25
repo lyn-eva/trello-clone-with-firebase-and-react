@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router";
 
 import { useTrello } from "./components/context/Context";
 import PrivateRoute from "./PrivateRoute";
+import LoadingCircle from "./components/utility/LoadingCircle";
 
 const Login = lazy(() => import("./components/form/Login"));
 const SignUp = lazy(() => import("./components/form/SignUp"));
@@ -12,10 +13,8 @@ const Board = lazy(() => import("./components/board/Board"));
 function App() {
   const { BG_THEME } = useTrello();
 
-  const fallback = <p>Loading ...</p>;
-
   return (
-    <Suspense fallback={fallback}>
+    <Suspense fallback={<LoadingCircle msg="loading..." />}>
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
@@ -36,7 +35,14 @@ function App() {
           }
         />
 
-        <Route path="/" element={<Navigate to="login" />} />
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Navigate to='profile' />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Suspense>
     // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
