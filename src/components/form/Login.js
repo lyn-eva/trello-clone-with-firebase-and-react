@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import useValidate from "../customHooks/use-validate";
@@ -14,10 +14,11 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  if(currentUser) {
-    navigate(-1) // lol
-    return null;
-  }
+  useEffect(() => {
+    if (currentUser) {
+      navigate(-1); // lol
+    }
+  }, [currentUser, navigate]);
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;

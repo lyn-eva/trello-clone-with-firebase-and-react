@@ -10,18 +10,26 @@ function SignUp() {
     emailRef,
     pwdRef,
     pwdConfirmRef,
+    usernameRef,
     emailIsVaild,
     pwdIsValid,
     pwdConfirmIsValid,
+    usernameIsValid,
     emailError,
     pwdError,
     pwdConfirmError,
+    usernameError,
   } = useValidate();
 
-  const { normalSignUp } = useAuth();
+  const { normalSignUp, updateUserProfile } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentUsername, setCurrentUsername] = useState('')
+
+  const handleChange = () => { // onChange is not too bad
+    setCurrentUsername(usernameRef.current.value);
+  }
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
@@ -30,7 +38,12 @@ function SignUp() {
   const submitHandler = (e) => {
     e.preventDefault();
     setError("");
-    if (!emailIsVaild() || !pwdIsValid() || !pwdConfirmIsValid()) {
+    if (
+      !usernameIsValid() ||
+      !emailIsVaild() ||
+      !pwdIsValid() ||
+      !pwdConfirmIsValid()
+    ) {
       return;
     }
     setLoading(true);
@@ -38,11 +51,14 @@ function SignUp() {
       .then(() => {
         setLoading(false);
         setError("");
+        return updateUserProfile(currentUsername.trim());
+      })
+      .then(() => {
         navigate("../profile");
       })
       .catch((err) => {
         setLoading(false);
-        setError(err.code.slice(5).split('-').join(' '));
+        setError(err.code.slice(5).split("-").join(" "));
       });
   };
 
@@ -61,6 +77,19 @@ function SignUp() {
           </h3>
           <form onSubmit={submitHandler} className="w-[18rem] mt-6">
             <div>
+              <label className="block" htmlFor="username">
+                Username
+              </label>
+              {usernameError && errorMsg(usernameError)}
+              <input
+                onChange={handleChange}
+                id="username"
+                ref={usernameRef}
+                placeholder="man of culture?"
+                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+              />
+            </div>
+            <div className="mt-8">
               <label className="block" htmlFor="email">
                 Email
               </label>

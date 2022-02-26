@@ -4,9 +4,11 @@ function useValidate() {
   const [emailError, setEmailError] = useState("");
   const [pwdError, setPwdError] = useState("");
   const [pwdConfirmError, setpwdConfirmError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
   const emailRef = useRef();
   const pwdRef = useRef();
   const pwdConfirmRef = useRef();
+  const usernameRef = useRef();
 
   const emailIsVaild = () => {
     const email = emailRef.current.value;
@@ -49,16 +51,33 @@ function useValidate() {
     return true;
   };
 
+  const usernameIsValid = () => {
+    const username = usernameRef.current.value.trim();
+    if (username.length === 0) {
+      setUsernameError("username must not be empty");
+      return false;
+    }
+    if (/^_|\W+/gi.test(username)) {
+      setUsernameError("must only contain a to z, 0 to 9, _");
+      return false;
+    }
+    setUsernameError("");
+    return true;
+  };
+
   return {
     emailIsVaild,
     pwdIsValid,
     pwdConfirmIsValid,
+    usernameIsValid,
     emailError,
     pwdError,
     pwdConfirmError,
+    usernameError,
     emailRef,
     pwdRef,
     pwdConfirmRef,
+    usernameRef,
   };
 }
 

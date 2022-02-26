@@ -1,7 +1,8 @@
 import ProfileHeader from "./ProfileHeader";
-import { useTrello } from "../context/Context";
+import { useDB } from "../context/DbContext";
 
 function Profile() {
+  const { createProfile } = useDB();
 
   return (
     <div className="p-2 bg-[#0079bf] h-screen">
