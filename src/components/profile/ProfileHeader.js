@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router";
-import { useTrello } from "../context/Context";
+import { useAuth } from "../context/AuthContext";
 import Button from "../utility/Button";
 
 function BoardHeader({ toggleSidebar }) {
-  const { signOutUser } = useTrello();
+  const { signOutUser } = useAuth();
   const navigate = useNavigate();
 
   const handleSignOut = () => {

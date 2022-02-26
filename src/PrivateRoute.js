@@ -1,9 +1,9 @@
 import { useAuth } from "./components/context/AuthContext";
 import { Navigate } from "react-router";
+import { useEffect } from "react";
 
 function PrivateRoute({ children }) {
   const { currentUser } = useAuth();
-  console.log(currentUser);
   return currentUser ? children : <Navigate to="../login" />;
 }
 

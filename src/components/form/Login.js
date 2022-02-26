@@ -9,10 +9,15 @@ function Login() {
   const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
 
-  const { normalSignIn } = useAuth();
+  const { currentUser, normalSignIn } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  if(currentUser) {
+    navigate(-1) // lol
+    return null;
+  }
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;

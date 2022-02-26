@@ -1,7 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { auth } from "../firebase-config";
-
-console.log('rerendered')
+import { createContext, useContext, useState } from "react";
 const trelloContext = createContext();
 
 export const useTrello = () => {
