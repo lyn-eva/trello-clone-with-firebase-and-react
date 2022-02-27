@@ -1,8 +1,11 @@
+import { getAuth } from "@firebase/auth";
 import ProfileHeader from "./ProfileHeader";
 import { useDB } from "../context/DbContext";
 
 function Profile() {
   const { createProfile } = useDB();
+  const { currentUser } = getAuth();
+  createProfile(currentUser.displayName);
 
   return (
     <div className="p-2 bg-[#0079bf] h-screen">

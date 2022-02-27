@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { doc, collection, setDoc } from "@firebase/firestore";
+import { doc, collection, setDoc, getDocs } from "@firebase/firestore";
 import { db } from "../firebase-config";
 
 const dbContext = createContext();
@@ -10,7 +10,7 @@ export const useDB = () => {
 
 export default function DbContext({ children }) {
   const users = collection(db, "users");
-  // console.log(users);
+  getDocs(users).then((res) => console.log(res))
 
   const createProfile = (user) => {
     return setDoc(doc(users, user), { user });
