@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { doc, collection, setDoc, getDocs } from "@firebase/firestore";
 import { db } from "../firebase-config";
 
@@ -9,14 +9,19 @@ export const useDB = () => {
 };
 
 export default function DbContext({ children }) {
-  const users = collection(db, "users");
-  getDocs(users).then((res) => console.log(res))
+
+  const usersCol = collection(db, "users");
 
   const createProfile = (user) => {
-    return setDoc(doc(users, user), { user });
+    return setDoc(doc(usersCol, user), { user });
   };
 
-  const value = { createProfile };
+  const getDocuments = async () => {
+    const res = await getDocs(usersCol);
+    return res.docs.map((doc) => doc.id);
+  };
+
+  const value = { createProfile, getDocuments };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;
 }

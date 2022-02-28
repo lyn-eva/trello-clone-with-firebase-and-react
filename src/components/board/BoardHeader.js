@@ -17,7 +17,7 @@ function BoardHeader({ toggleSidebar }) {
         <li>
           <Button
             clickFunc={toggleSidebar}
-            className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-md"
+            className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-s"
           >
             <i className="text-lg fas fa-ellipsis-h text-dense-blue mr-3 text-inherit"></i>
             Show menu

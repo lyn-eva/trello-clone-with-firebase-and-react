@@ -41,13 +41,13 @@ function Board() {
   }
 
   return (
-    <div className="relative p-[0.02px] bg-orange-400 min-w-fit">
+    <div className="relative p-[0.02px] bg-orange-400 min-w-fit h-fit min-h-screen">
       <BoardHeader
         toggleSidebar={toggleSidebar}
       />
       <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar}/>
-      <div>
-        <ul className="flex gap-2 m-2 h-[80vh]">
+      {/* <div> */}
+        <ul className="flex gap-2 m-2 h-[calc(100%-54px)]">
           {data.map((list, i) => (
             <List
               key={list.id}
@@ -66,7 +66,7 @@ function Board() {
             </Button>
           </li>
         </ul>
-      </div>
+      {/* </div> */}
     </div>
   );
 }
