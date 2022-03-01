@@ -19,14 +19,6 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route
-          path="profile"
-          element={
-            <PrivateRoute>
-              <Profile />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="profile/board"
           element={
             <PrivateRoute>
@@ -34,6 +26,14 @@ function App() {
             </PrivateRoute>
           }
         />
+          <Route
+            path=":profile"
+            element={
+              <PrivateRoute>
+                <Profile />
+              </PrivateRoute>
+            }
+          />
 
         <Route
           path="/"

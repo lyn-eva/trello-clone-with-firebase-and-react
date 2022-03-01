@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { getAuth } from "@firebase/auth";
 import useValidate from "../customHooks/use-validate";
 import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
@@ -13,6 +14,9 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  // const { currentUser } = getAuth();
+
+  console.log(currentUser);
 
   useEffect(() => {
     if (currentUser) {
@@ -35,9 +39,11 @@ function Login() {
       .then(() => {
         setLoading(false);
         setError("");
-        navigate("../profile", { replace: true });
+        console.log('yes')
+        navigate(`../${currentUser.displayName}`, { replace: true });
       })
       .catch((err) => {
+        console.log('no')
         setLoading(false);
         setError(err.code.slice(5).split("-").join(" "));
       });

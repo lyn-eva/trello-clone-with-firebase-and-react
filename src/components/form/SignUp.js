@@ -54,7 +54,7 @@ function SignUp() {
         return updateUserProfile(currentUsername.trim());
       })
       .then(() => {
-        navigate("../profile");
+        navigate(`../${currentUsername}`);
       })
       .catch((err) => {
         setLoading(false);
