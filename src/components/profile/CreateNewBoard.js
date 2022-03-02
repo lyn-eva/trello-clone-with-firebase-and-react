@@ -15,7 +15,6 @@ function CreateNewBoard({ setNewBoard }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
     const title = titleRef.current.value.trim();
     if (title === "") {
       return setErr("required");
@@ -23,11 +22,12 @@ function CreateNewBoard({ setNewBoard }) {
     // if (/[\W|\S]/gi.test(title)) {
     //   return setErr("must only contain letters, numbers & space")
     // }
+    setLoading(true);
     setErr("");
-    createBoard(title.replace(/\s+/g, "-")).then(() => {
-      setLoading(false);
-      navigate('./')
-    });
+    const convertedTitle = title.replace(/\s+/g, "-");
+    createBoard(convertedTitle);
+    setLoading(false);
+    navigate(`./${convertedTitle}`);
   };
 
   return (
@@ -36,7 +36,7 @@ function CreateNewBoard({ setNewBoard }) {
         <Backdrop onClick={() => setNewBoard(false)} />,
         document.getElementById("backdrop")
       )}
-      {loading && <LoadingCircle msg='create a new board ...'/>}
+      {loading && <LoadingCircle msg="create a new board ..." />}
       {!loading && (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-3">
           <form onSubmit={handleSubmit} className="w-56 text-grey-blue">
@@ -46,7 +46,7 @@ function CreateNewBoard({ setNewBoard }) {
             <input
               ref={titleRef}
               placeholder="killer queen"
-              className="block mt-2 w-full h-7 outline outline-2 outline-red-400 pl-2"
+              className="block mt-2 w-full h-7 outline outline-2 outline-red-400 pl-2 focus:outline-blue-500"
             />
             {err && <small>{err}</small>}
             <Button className="bg-primary py-1 rounded-sm w-full mt-3 text-white">

@@ -12,16 +12,15 @@ function Profile() {
 
   useEffect(() => {
     getDocuments().then((users) => {
-      if (users?.indexOf(currentUser.displayName) === -1) {
+      const userdocs = users.docs.map((doc) => doc.id);
+      if (userdocs?.indexOf(currentUser.displayName) === -1) {
         // create firestore path if the user is new signup
         createProfile(currentUser.displayName);
       }
     });
   }, []);
 
-  const handleClick = () => {
-
-  }
+  const handleClick = () => {};
 
   return (
     <div className="p-2 bg-[#0079bf] h-screen">
@@ -40,10 +39,15 @@ function Profile() {
             <h3 className="font-medium text-2xl">Board 1</h3>
           </div> */}
           <li>
-            <Button clickFunc={() => setNewBoard(true)} className="h-40 w-full rounded-md p-3 text-3xl bg-hover-clr shadow-inner shadow-grey-500"><i className='fas fa-plus'/> New</Button>
+            <Button
+              clickFunc={() => setNewBoard(true)}
+              className="h-40 w-full rounded-md p-3 text-3xl bg-hover-clr shadow-inner shadow-grey-500"
+            >
+              <i className="fas fa-plus" /> New
+            </Button>
           </li>
         </ul>
-        {newBoard && <CreateNewBoard setNewBoard={setNewBoard}/>}
+        {newBoard && <CreateNewBoard setNewBoard={setNewBoard} />}
       </main>
     </div>
   );

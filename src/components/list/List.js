@@ -12,7 +12,7 @@ function List({ data, listIdx, addNote, deleteNote }) {
   return (
     <li className="min-w-[20rem] w-64 border-2 border-orange-500">
       <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
-        <ListHeader hdr={data.name} setDropDownOn={setDropDownOn} />
+        <ListHeader hdr={data.title} setDropDownOn={setDropDownOn} />
         {dropDownOn && (
           <>
             {createPortal(<Backdrop onClick={() => setDropDownOn(false)} />, document.getElementById("backdrop"))}
@@ -20,13 +20,13 @@ function List({ data, listIdx, addNote, deleteNote }) {
           </>
         )}
         <ul>
-          {data.notes.map((note, i) => (
+          {/* {data.notes.map((note, i) => (
             <Note
               key={note.txt}
               note={note.txt}
               deleteNote={() => deleteNote(listIdx, i)}
             />
-          ))}
+          ))} */}
         </ul>
         <ListFooter listIdx={listIdx} addNote={addNote} />
       </div>

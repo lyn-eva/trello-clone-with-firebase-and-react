@@ -16,14 +16,20 @@ export const useAuth = () => {
 
 export default function AuthContext({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUsername, setCurrentUsername] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user && user);
+      setCurrentUser(user?.displayName);
+      // setCurrentUsername(
+      //   user && user.currentUser && user.currentUser.displayName
+      // );
     });
 
     return unsubscribe;
   }, []);
+
+  // console.log(currentUser)
 
   const normalSignUp = (email, pwd) => {
     return createUserWithEmailAndPassword(auth, email, pwd);
