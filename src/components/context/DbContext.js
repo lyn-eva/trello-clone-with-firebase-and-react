@@ -7,6 +7,7 @@ import {
   addDoc,
   onSnapshot,
   query,
+  collectionGroup
 } from "@firebase/firestore";
 import { db } from "../firebase-config";
 import { useAuth } from "./AuthContext";
@@ -39,7 +40,14 @@ export default function DbContext({ children }) {
     });
   };
 
-  console.log(lists);
+  // console.log(lists);
+
+  const listenToListChange = () => {
+    const q = collectionGroup(db, 'notes');
+    return onSnapshot(q, snapShot => {
+      console.log(snapShot);
+    })
+  }
 
   const createProfile = (user) => {
     return setDoc(doc(usersCol, user), { title: user });
@@ -81,19 +89,20 @@ export default function DbContext({ children }) {
     createBoard,
     getDocuments,
     listenToBoardChange,
+    listenToListChange,
     lists
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;
 }
 
-const temp = {
-  user: {
-    board: {
-      list: {
-        title: "title",
-        notes: ["note1", "note2"],
-      },
-    },
-  },
-};
+// const temp = {
+//   user: {
+//     board: {
+//       list: {
+//         title: "title",
+//         notes: ["note1", "note2"],
+//       },
+//     },
+//   },
+// };

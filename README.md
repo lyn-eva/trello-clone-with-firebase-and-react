@@ -1,6 +1,7 @@
 ## in construction
 ### the tasks
-- working on firestore
+- firestore collectionGroup
+- listening to realtime CRUD
 
 ### What I learned
 - You can't rely on useRef hook though it is easy to use

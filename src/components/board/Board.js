@@ -23,11 +23,15 @@ function Board() {
   const [data, setData] = useState(psudoData);
   const [list, setList] = useState([]);
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { listenToBoardChange, lists } = useDB();
+  const { listenToBoardChange, listenToListChange, lists } = useDB();
 
   useEffect(() => {
     const unsub = listenToBoardChange();
-    return unsub;
+    const unsubscribe = listenToListChange();
+    return () => {
+      unsub();
+      unsubscribe();
+    };
   }, []);
 
   const addNote = (i, note) => {
