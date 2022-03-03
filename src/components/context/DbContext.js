@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useReducer } from "react";
 import {
   doc,
   collection,
@@ -7,7 +7,7 @@ import {
   addDoc,
   onSnapshot,
   query,
-  collectionGroup
+  collectionGroup,
 } from "@firebase/firestore";
 import { db } from "../firebase-config";
 import { useAuth } from "./AuthContext";
@@ -19,35 +19,63 @@ export const useDB = () => {
   return useContext(dbContext);
 };
 
-export default function DbContext({ children }) {
-  const [boardName, setBoardName] = useState("");
-  const [lists, setLists] = useState([]);
-  const usersCol = collection(db, "users");
 
+
+export default function DbContext({ children }) {
+  const [boards, setBoards] = useState([]);
+  const [lists, setLists] = useState([]);
+  const [notes, setNotes] = useState([]);
+
+  const [currentBoard, setCurrentBoard] = useState("");
+
+  const usersCol = collection(db, "users");
   const { currentUser } = useAuth();
 
-  // useEffect(() => {
-  //   const unsub = onSnapshot((snapshot) => {});
-
-  //   return unsub;
-  // }, []);
+  useEffect(() => {
+    let unsubBoardListener, unsubListListener;
+    if (currentUser) {
+      unsubBoardListener = listenToBoardChange();
+    }
+    if (currentUser && currentBoard) {
+      unsubListListener = listenToListChange();
+    }
+    return () => {
+      unsubBoardListener?.();
+      unsubListListener?.();
+    };
+  }, [currentUser, currentBoard]);
 
   const listenToBoardChange = () => {
-    const q = query(collection(db, `users/${currentUser}/new-board`));
-    return onSnapshot(q, (snapShot) => {
-      console.log(snapShot.docs);
+    const q = collection(db, `users/${currentUser}/boards`);
+    onSnapshot(q, (snapShot) => {
+      setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
+  // console.log(boards);
+
+  const listenToListChange = () => {
+    const q = collection(
+      db,
+      `users/${currentUser}/boards/${currentBoard}/lists`
+    );
+    onSnapshot(q, (snapShot) => {
       setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
 
-  // console.log(lists);
-
-  const listenToListChange = () => {
-    const q = collectionGroup(db, 'notes');
-    return onSnapshot(q, snapShot => {
-      console.log(snapShot);
-    })
-  }
+  const listenToNoteChange = () => {
+    // const
+    lists.forEach((list) => {
+      const q = collection(
+        db,
+        `users/${currentUser}/boards/${currentBoard}/lists/notes`
+      );
+      onSnapshot(q, (snapShot) => {
+        setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      });
+    });
+  };
 
   const createProfile = (user) => {
     return setDoc(doc(usersCol, user), { title: user });
@@ -60,7 +88,7 @@ export default function DbContext({ children }) {
   };
 
   const createBoard = (name) => {
-    setBoardName(name);
+    // setBoardName(name);
 
     const { currentUser } = getAuth();
     const userColRef = collection(
@@ -90,7 +118,10 @@ export default function DbContext({ children }) {
     getDocuments,
     listenToBoardChange,
     listenToListChange,
-    lists
+    lists,
+    boards,
+    setCurrentBoard,
+    currentBoard
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

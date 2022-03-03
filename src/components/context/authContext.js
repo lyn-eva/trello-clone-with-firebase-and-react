@@ -21,6 +21,7 @@ export default function AuthContext({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user?.displayName);
+      console.log('auth state changed')
       // setCurrentUsername(
       //   user && user.currentUser && user.currentUser.displayName
       // );

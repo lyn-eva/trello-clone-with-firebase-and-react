@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import { Routes, Route, Navigate } from "react-router";
 
 import { useTrello } from "./components/context/Context";
-import PrivateRoute from "./PrivateRoute";
+// import PrivateRoute from "./PrivateRoute";
 import LoadingCircle from "./components/utility/LoadingCircle";
 
 const Login = lazy(() => import("./components/form/Login"));
@@ -11,7 +11,7 @@ const Profile = lazy(() => import("./components/profile/Profile"));
 const Board = lazy(() => import("./components/board/Board"));
 
 function App() {
-  const { BG_THEME } = useTrello();
+  // const { BG_THEME } = useTrello();
 
   return (
     <Suspense fallback={<LoadingCircle msg="loading..." />}>
@@ -21,27 +21,27 @@ function App() {
         <Route
           path=":profile"
           element={
-            <PrivateRoute>
+            // <PrivateRoute>
               <Profile />
-            </PrivateRoute>
+            /* </PrivateRoute> */
           }
         >
         </Route>
           <Route
             path=":profile/:board"
             element={
-              <PrivateRoute>
+              // <PrivateRoute>
                 <Board />
-              </PrivateRoute>
+              /* </PrivateRoute> */
             }
           />
 
         <Route
           path="/"
           element={
-            <PrivateRoute>
+            // <PrivateRoute>
               <Navigate to="profile" />
-            </PrivateRoute>
+            /* </PrivateRoute> */
           }
         />
       </Routes>

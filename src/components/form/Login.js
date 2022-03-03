@@ -14,6 +14,7 @@ function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  console.log('currentuser',currentUser);
 
   useEffect(() => {
     if (currentUser) {
@@ -40,7 +41,8 @@ function Login() {
       })
       .catch((err) => {
         setLoading(false);
-        setError(err.code.slice(5).split("-").join(" "));
+        // setError(err.code.slice(5).split("-").join(" "));
+        setError(err.code);
       });
   };
 

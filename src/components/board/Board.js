@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "react-router";
 
 import BoardHeader from "./BoardHeader";
 import BoardSidebar from "./BoardSidebar";
@@ -20,33 +21,29 @@ const psudoData = [
 ];
 
 function Board() {
-  const [data, setData] = useState(psudoData);
+  // const [data, setData] = useState(psudoData);
   const [list, setList] = useState([]);
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { listenToBoardChange, listenToListChange, lists } = useDB();
-
+  const { lists, setCurrentBoard } = useDB();
+  
+  const path = useLocation();
   useEffect(() => {
-    const unsub = listenToBoardChange();
-    const unsubscribe = listenToListChange();
-    return () => {
-      unsub();
-      unsubscribe();
-    };
+    setCurrentBoard(path.pathname.match(/\w+$/gi)[0]);
   }, []);
 
   const addNote = (i, note) => {
-    psudoData[i].notes.push({ txt: note });
-    setData([...psudoData]);
+    // psudoData[i].notes.push({ txt: note });
+    // setData([...psudoData]);
   };
 
   const addList = () => {
-    psudoData.push({ id: Math.random(), name: "new list", notes: [] });
-    setData([...psudoData]);
+    // psudoData.push({ id: Math.random(), name: "new list", notes: [] });
+    // setData([...psudoData]);
   };
 
   const deleteNote = (ListIdx, noteIdx) => {
-    psudoData[ListIdx].notes.splice(noteIdx, 1);
-    setData([...psudoData]);
+    // psudoData[ListIdx].notes.splice(noteIdx, 1);
+    // setData([...psudoData]);
   };
 
   const toggleSidebar = () => {
