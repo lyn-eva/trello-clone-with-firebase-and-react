@@ -30,7 +30,7 @@ function Board() {
       {/* <div> */}
       <ul className="flex gap-2 m-2 h-[calc(100%-54px)]">
         {lists?.map((list, i) => (
-          <List key={list.id} data={list} listIdx={i} />
+          <List key={list.id} data={list} index={i} />
         ))}
         <li>
           <Button className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md">

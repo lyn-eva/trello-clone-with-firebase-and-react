@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
+
+import { useDB } from "../context/DbContext";
+
 import ListHeader from "./ListHeader";
 import Note from "./Note";
 import ListFooter from "./ListFooter";
 import ListDropDown from "./ListDropDown";
 import Backdrop from "../modal/Backdrop";
 
-function List({ data, listIdx, addNote, deleteNote }) {
+function List({ data, index, addNote, deleteNote }) {
   const [dropDownOn, setDropDownOn] = useState(false);
+  const { notes } = useDB();
+  const noteItems = Object.keys(notes).map(id => notes[id]);
+  console.log('notes',noteItems);
 
   return (
     <li className="min-w-[20rem] w-64 border-2 border-orange-500">
@@ -15,20 +21,23 @@ function List({ data, listIdx, addNote, deleteNote }) {
         <ListHeader hdr={data.title} setDropDownOn={setDropDownOn} />
         {dropDownOn && (
           <>
-            {createPortal(<Backdrop onClick={() => setDropDownOn(false)} />, document.getElementById("backdrop"))}
+            {createPortal(
+              <Backdrop onClick={() => setDropDownOn(false)} />,
+              document.getElementById("backdrop")
+            )}
             <ListDropDown />
           </>
         )}
         <ul>
-          {/* {data.notes.map((note, i) => (
-            <Note
-              key={note.txt}
+          {noteItems[index]?.map((note, i) => (
+          <Note
+              key={note.id}
               note={note.txt}
-              deleteNote={() => deleteNote(listIdx, i)}
+              // deleteNote={() => deleteNote(listIdx, i)}
             />
-          ))} */}
+          ))}
         </ul>
-        <ListFooter listIdx={listIdx} addNote={addNote} />
+        <ListFooter listIdx={index} addNote={addNote} />
       </div>
     </li>
   );

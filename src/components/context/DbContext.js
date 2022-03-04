@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useReducer,
+  useCallback,
 } from "react";
 import {
   doc,
@@ -28,7 +29,7 @@ export const useDB = () => {
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
   const [lists, setLists] = useState([]);
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState({});
 
   const [currentBoard, setCurrentBoard] = useState({}); //
 
@@ -36,47 +37,22 @@ export default function DbContext({ children }) {
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    if (currentUser && currentBoard) { // inspect currentBoard
-      const unsubBoardListener = listenToBoardChange();
-      const unsubListListener = listenToListChange();
+    if (!(currentUser && currentBoard)) return; // inspect currentBoard
+    const unsubBoardListener = listenToBoardChange();
+    const unsubListListener = listenToListChange();
 
-      return () => {
-        unsubBoardListener?.();
-        unsubListListener?.();
-      };
-    }
+    return () => {
+      unsubBoardListener?.();
+      unsubListListener?.();
+    };
   }, [currentUser, currentBoard]);
 
-  const listenToBoardChange = () => {
-    const path = `users/${currentUser}/boards`;
-    onSnapshot(collection(db, path), (snapShot) => {
-      setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    });
-  };
+  useEffect(() => {
+    if (!lists.length) return;
+    const unsubNoteListener = listenToNoteChange();
 
-  const listenToListChange = () => {
-    const path = `users/${currentUser}/boards/${currentBoard.id}/lists`;
-    onSnapshot(collection(db, path), (snapShot) => {
-      setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    });
-  };
-
-  const listenToNoteChange = () => {
-    // const
-    lists.forEach((list) => {
-      const q = collection(
-        db,
-        `users/${currentUser}/boards/${currentBoard}/lists/notes`
-      );
-      onSnapshot(q, (snapShot) => {
-        setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      });
-    });
-  };
-
-  const createProfile = (user) => {
-    return setDoc(doc(usersCol, user), { title: user });
-  };
+    return unsubNoteListener;
+  }, [lists]);
 
   const reqBoardDetails = (id) => {
     const path = `users/${currentUser}/boards/${id}`;
@@ -85,8 +61,38 @@ export default function DbContext({ children }) {
     });
   };
 
+  const listenToBoardChange = () => {
+    const path = `users/${currentUser}/boards`;
+    return onSnapshot(collection(db, path), (snapShot) => {
+      setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
 
+  const listenToListChange = () => {
+    console.log('updated')
+    const path = `users/${currentUser}/boards/${currentBoard.id}/lists`;
+    return onSnapshot(collection(db, path), (snapShot) => {
+      setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
+  // console.log("lis", lists);
+
+  const listenToNoteChange = () => {
+    lists.forEach((list) => {
+      const path = `users/${currentUser}/boards/${currentBoard.id}/lists/${list.id}/notes`;
+      // let noteOb
+      onSnapshot(collection(db, path), (snapShot) => {
+        const notes = snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+        console.log('notes', notes)
+        setNotes(prevState => ({...prevState, [list.id]: notes}));
+      });
+    });
+  };
   
+  const createProfile = (user) => {
+    return setDoc(doc(usersCol, user), { title: user });
+  };
   const getDocuments = async () => {
     const res = await getDocs(usersCol);
     return res;
@@ -126,6 +132,7 @@ export default function DbContext({ children }) {
     listenToListChange,
     lists,
     boards,
+    notes,
     setCurrentBoard,
     currentBoard,
     reqBoardDetails,
