@@ -4,10 +4,9 @@ import Button from "../utility/Button";
 function BoardHeader({ toggleSidebar }) {
   const { currentBoard } = useDB();
 
-  console.log("header", currentBoard)
   return (
     <header className="m-2 flex justify-between">
-      <h1 className='text-2xl font-medium'>one</h1>
+      <h1 className="text-2xl font-medium">{currentBoard && currentBoard.title}</h1>
       <ul className="flex justify-end gap-4">
         <li>
           <Button

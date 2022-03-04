@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useReducer,
+} from "react";
 import {
   doc,
   collection,
@@ -19,47 +25,38 @@ export const useDB = () => {
   return useContext(dbContext);
 };
 
-
-
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
   const [lists, setLists] = useState([]);
   const [notes, setNotes] = useState([]);
 
-  const [currentBoard, setCurrentBoard] = useState("");
+  const [currentBoard, setCurrentBoard] = useState({}); //
 
   const usersCol = collection(db, "users");
   const { currentUser } = useAuth();
 
   useEffect(() => {
-    let unsubBoardListener, unsubListListener;
-    if (currentUser) {
-      unsubBoardListener = listenToBoardChange();
+    if (currentUser && currentBoard) { // inspect currentBoard
+      const unsubBoardListener = listenToBoardChange();
+      const unsubListListener = listenToListChange();
+
+      return () => {
+        unsubBoardListener?.();
+        unsubListListener?.();
+      };
     }
-    if (currentUser && currentBoard) {
-      unsubListListener = listenToListChange();
-    }
-    return () => {
-      unsubBoardListener?.();
-      unsubListListener?.();
-    };
   }, [currentUser, currentBoard]);
 
   const listenToBoardChange = () => {
-    const q = collection(db, `users/${currentUser}/boards`);
-    onSnapshot(q, (snapShot) => {
+    const path = `users/${currentUser}/boards`;
+    onSnapshot(collection(db, path), (snapShot) => {
       setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
 
-  // console.log(boards);
-
   const listenToListChange = () => {
-    const q = collection(
-      db,
-      `users/${currentUser}/boards/${currentBoard}/lists`
-    );
-    onSnapshot(q, (snapShot) => {
+    const path = `users/${currentUser}/boards/${currentBoard.id}/lists`;
+    onSnapshot(collection(db, path), (snapShot) => {
       setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
@@ -81,6 +78,15 @@ export default function DbContext({ children }) {
     return setDoc(doc(usersCol, user), { title: user });
   };
 
+  const reqBoardDetails = (id) => {
+    const path = `users/${currentUser}/boards/${id}`;
+    onSnapshot(doc(db, path), (snapShot) => {
+      setCurrentBoard({ ...snapShot.data(), id: snapShot.id });
+    });
+  };
+
+
+  
   const getDocuments = async () => {
     const res = await getDocs(usersCol);
     return res;
@@ -121,7 +127,8 @@ export default function DbContext({ children }) {
     lists,
     boards,
     setCurrentBoard,
-    currentBoard
+    currentBoard,
+    reqBoardDetails,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

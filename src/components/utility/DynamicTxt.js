@@ -6,9 +6,10 @@ function DynamicTxt({ initialName, className, title }) {
   const txtAreaRef = useRef();
   
   useEffect(() => {
+    setName(initialName); //
     if (initialName !== "new list") return;
     renameStart();
-  }, [])
+  }, [initialName])
 
   const renameStart = () => {
     txtAreaRef.current.value = name;

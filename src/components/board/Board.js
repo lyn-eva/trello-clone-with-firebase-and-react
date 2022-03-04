@@ -6,45 +6,18 @@ import BoardSidebar from "./BoardSidebar";
 import List from "../list/List";
 import Button from "../utility/Button";
 import { useDB } from "../context/DbContext";
-
-const psudoData = [
-  {
-    id: "ds3dXfaf",
-    name: "trending technologies",
-    notes: [{ txt: "nextjs" }, { txt: "typescript" }],
-  },
-  // {
-  //   id: "ea21kfil",
-  //   name: "potential ones",
-  //   notes: [{ txt: "webassembly" }, { txt: "decentralized web" }],
-  // },
-];
+import { useAuth } from "../context/AuthContext";
 
 function Board() {
-  // const [data, setData] = useState(psudoData);
-  const [list, setList] = useState([]);
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { lists, setCurrentBoard } = useDB();
-  
+  const { lists, reqBoardDetails } = useDB();
+  const { currentUser } = useAuth();
+
   const path = useLocation();
   useEffect(() => {
-    setCurrentBoard(path.pathname.match(/\w+$/gi)[0]);
-  }, []);
-
-  const addNote = (i, note) => {
-    // psudoData[i].notes.push({ txt: note });
-    // setData([...psudoData]);
-  };
-
-  const addList = () => {
-    // psudoData.push({ id: Math.random(), name: "new list", notes: [] });
-    // setData([...psudoData]);
-  };
-
-  const deleteNote = (ListIdx, noteIdx) => {
-    // psudoData[ListIdx].notes.splice(noteIdx, 1);
-    // setData([...psudoData]);
-  };
+    if (!currentUser) return;
+    reqBoardDetails(path.pathname.match(/\w+$/gi)[0]);
+  }, [currentUser]);
 
   const toggleSidebar = () => {
     setSidebarOn((prevState) => !prevState);
@@ -57,19 +30,10 @@ function Board() {
       {/* <div> */}
       <ul className="flex gap-2 m-2 h-[calc(100%-54px)]">
         {lists?.map((list, i) => (
-          <List
-            key={list.id}
-            data={list}
-            listIdx={i}
-            addNote={addNote}
-            deleteNote={deleteNote}
-          />
+          <List key={list.id} data={list} listIdx={i} />
         ))}
         <li>
-          <Button
-            clickFunc={addList}
-            className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
-          >
+          <Button className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md">
             <i className="fas fa-plus mr-2"></i> Add another list
           </Button>
         </li>
