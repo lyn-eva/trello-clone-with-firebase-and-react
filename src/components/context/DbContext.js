@@ -13,12 +13,14 @@ import {
   getDocs,
   addDoc,
   onSnapshot,
+  serverTimestamp,
+  updateDoc,
   query,
-  collectionGroup,
+  orderBy,
+  deleteDoc
 } from "@firebase/firestore";
 import { db } from "../firebase-config";
 import { useAuth } from "./AuthContext";
-import { getAuth } from "@firebase/auth";
 
 const dbContext = createContext();
 
@@ -33,121 +35,118 @@ export default function DbContext({ children }) {
 
   const [currentBoard, setCurrentBoard] = useState({}); //
 
-  const usersCol = collection(db, "users");
-  const { currentUser } = useAuth();
+  const { currentUsername } = useAuth();
 
   useEffect(() => {
-    if (!(currentUser && currentBoard)) return; // inspect currentBoard
+    if (!(currentUsername && currentBoard)) return; // inspect currentBoard
     const unsubBoardListener = listenToBoardChange();
     const unsubListListener = listenToListChange();
 
     return () => {
-      unsubBoardListener?.();
-      unsubListListener?.();
+      unsubBoardListener();
+      unsubListListener();
     };
-  }, [currentUser, currentBoard]);
+  }, [currentUsername, currentBoard]);
 
   useEffect(() => {
-    if (!lists.length) return;
+    if (!(currentUsername && currentBoard && lists.length)) return;
     const unsubNoteListener = listenToNoteChange();
 
-    return unsubNoteListener;
-  }, [lists]);
+    return () => {
+      unsubNoteListener.forEach(unsub => {
+        unsub();
+      })
+    };
+  }, [lists, currentUsername, currentBoard]);
 
   const reqBoardDetails = (id) => {
-    const path = `users/${currentUser}/boards/${id}`;
+    const path = `users/${currentUsername}/boards/${id}`;
     onSnapshot(doc(db, path), (snapShot) => {
       setCurrentBoard({ ...snapShot.data(), id: snapShot.id });
     });
   };
 
   const listenToBoardChange = () => {
-    const path = `users/${currentUser}/boards`;
+    const path = `users/${currentUsername}/boards`;
     return onSnapshot(collection(db, path), (snapShot) => {
       setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
 
   const listenToListChange = () => {
-    console.log('updated')
-    const path = `users/${currentUser}/boards/${currentBoard.id}/lists`;
-    return onSnapshot(collection(db, path), (snapShot) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists`;
+    return onSnapshot(query(collection(db, path), orderBy("createdAt")), (snapShot) => {
       setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
 
-  // console.log("lis", lists);
 
   const listenToNoteChange = () => {
+    const listeners = []
     lists.forEach((list) => {
-      const path = `users/${currentUser}/boards/${currentBoard.id}/lists/${list.id}/notes`;
-      // let noteOb
-      onSnapshot(collection(db, path), (snapShot) => {
-        const notes = snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-        console.log('notes', notes)
-        setNotes(prevState => ({...prevState, [list.id]: notes}));
+      const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${list.id}/notes`;
+      const unsub = onSnapshot(collection(db, path), (snapShot) => {
+        const notes = snapShot.docs.map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }));
+        setNotes((prevState) => ({ ...prevState, [list.id]: notes }));
       });
+      listeners.push(unsub);
     });
+    return listeners;
   };
-  
+
   const createProfile = (user) => {
-    return setDoc(doc(usersCol, user), { title: user });
+    return setDoc(doc(db, "users/" + user), { title: user });
   };
   const getDocuments = async () => {
-    const res = await getDocs(usersCol);
-    return res;
+    // const res = await getDocs(usersCol);
+    // return res;
     // return res.docs.map((doc) => doc.id);
   };
 
-  const createBoard = (name) => {
-    // setBoardName(name);
-
-    const { currentUser } = getAuth();
-    const userColRef = collection(
-      db,
-      `users/${currentUser.displayName}/${name}`
-    );
-    createList(userColRef, "test-list"); // sample list
+  const createBoard = (boardName) => {
+    const path = `users/${currentUsername}/boards`;
+    return addDoc(collection(db, path), { title: boardName });
   };
-
-  const createList = (boardRef, listTitle) => {
-    const docRef = doc(boardRef, listTitle);
-    setDoc(docRef, { title: listTitle });
-    createNote(docRef, "it worked!!!"); // sample note
+  
+  const createList = (listTitle) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists`;
+    addDoc(collection(db, path), { title: listTitle, createdAt: serverTimestamp(), lastModified: serverTimestamp()});
   };
-
-  const createNote = (boardRef, noteTxt) => {
-    const NoteColRef = collection(boardRef, "notes");
-    return addDoc(NoteColRef, {
-      txt: noteTxt,
-      someth: "random stuff",
-    }); // auto generate id
+  
+  const createNote = (id, noteTxt) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${id}/notes`;
+    addDoc(collection(db, path), { title: noteTxt, createdAt: serverTimestamp(), lastModified: serverTimestamp()})
   };
+  
+  const updateList = (id, newTitle) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${id}`;
+    updateDoc(doc(db, path), {title: newTitle, lastModified: serverTimestamp()});
+  }
+  
+  const deleteList = (id) => {
+    console.log(id);
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${id}`;
+    deleteDoc(doc(db, path));
+  }
 
   const value = {
     createProfile,
     createBoard,
+    createList,
     getDocuments,
-    listenToBoardChange,
-    listenToListChange,
     lists,
     boards,
     notes,
     setCurrentBoard,
     currentBoard,
     reqBoardDetails,
+    updateList,
+    createNote,
+    deleteList
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;
 }
-
-// const temp = {
-//   user: {
-//     board: {
-//       list: {
-//         title: "title",
-//         notes: ["note1", "note2"],
-//       },
-//     },
-//   },
-// };

@@ -10,14 +10,14 @@ import { useAuth } from "../context/AuthContext";
 
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { lists, reqBoardDetails } = useDB();
-  const { currentUser } = useAuth();
+  const { lists, reqBoardDetails, createList } = useDB();
+  const { currentUsername } = useAuth();
 
   const path = useLocation();
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUsername) return;
     reqBoardDetails(path.pathname.match(/\w+$/gi)[0]);
-  }, [currentUser]);
+  }, [currentUsername]);
 
   const toggleSidebar = () => {
     setSidebarOn((prevState) => !prevState);
@@ -33,7 +33,7 @@ function Board() {
           <List key={list.id} data={list} index={i} />
         ))}
         <li>
-          <Button className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md">
+          <Button clickFunc={() => createList("new list")} className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md">
             <i className="fas fa-plus mr-2"></i> Add another list
           </Button>
         </li>

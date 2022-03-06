@@ -16,18 +16,13 @@ function CreateNewBoard({ setNewBoard }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const title = titleRef.current.value.trim();
-    if (title === "") {
-      return setErr("required");
-    }
-    // if (/[\W|\S]/gi.test(title)) {
-    //   return setErr("must only contain letters, numbers & space")
-    // }
+    if (title === "") return setErr("required");
     setLoading(true);
     setErr("");
-    const convertedTitle = title.replace(/\s+/g, "-");
-    createBoard(convertedTitle);
-    setLoading(false);
-    navigate(`./${convertedTitle}`);
+    createBoard(title.replace(/\s+/g, " ")).then((boardDetail) => {
+      setLoading(false);
+      navigate(`./${boardDetail.id}`);
+    });
   };
 
   return (

@@ -9,18 +9,18 @@ function Login() {
   const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
 
-  const { currentUser, normalSignIn } = useAuth();
+  const { currentUsername, normalSignIn } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  console.log('currentuser',currentUser);
+  console.log('currentUsername',currentUsername);
 
   useEffect(() => {
-    if (currentUser) {
+    if (currentUsername) {
       navigate(-1); // lol
     }
-  }, [currentUser, navigate]);
+  }, [currentUsername, navigate]);
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
@@ -37,7 +37,7 @@ function Login() {
       .then(() => {
         setLoading(false);
         setError("");
-        navigate(`../${currentUser.displayName}`, { replace: true });
+        navigate(`../${currentUsername.displayName}`, { replace: true });
       })
       .catch((err) => {
         setLoading(false);

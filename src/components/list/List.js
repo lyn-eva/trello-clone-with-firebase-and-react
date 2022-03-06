@@ -9,35 +9,33 @@ import ListFooter from "./ListFooter";
 import ListDropDown from "./ListDropDown";
 import Backdrop from "../modal/Backdrop";
 
-function List({ data, index, addNote, deleteNote }) {
+function List({ data, addNote, deleteNote }) {
   const [dropDownOn, setDropDownOn] = useState(false);
   const { notes } = useDB();
-  const noteItems = Object.keys(notes).map(id => notes[id]);
-  console.log('notes',noteItems);
 
   return (
     <li className="min-w-[20rem] w-64 border-2 border-orange-500">
       <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
-        <ListHeader hdr={data.title} setDropDownOn={setDropDownOn} />
+        <ListHeader hdr={data.title} id={data.id} setDropDownOn={setDropDownOn} />
         {dropDownOn && (
           <>
             {createPortal(
               <Backdrop onClick={() => setDropDownOn(false)} />,
               document.getElementById("backdrop")
             )}
-            <ListDropDown />
+            <ListDropDown listId={data.id}/>
           </>
         )}
         <ul>
-          {noteItems[index]?.map((note, i) => (
+          {notes[data.id]?.map((note, i) => (
           <Note
               key={note.id}
-              note={note.txt}
+              note={note.title}
               // deleteNote={() => deleteNote(listIdx, i)}
             />
           ))}
         </ul>
-        <ListFooter listIdx={index} addNote={addNote} />
+        <ListFooter listIdx={data.id} addNote={addNote} />
       </div>
     </li>
   );

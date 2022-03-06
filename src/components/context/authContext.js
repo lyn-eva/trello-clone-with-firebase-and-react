@@ -15,12 +15,12 @@ export const useAuth = () => {
 };
 
 export default function AuthContext({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUsername, setCurrentUsername] = useState(null);
   // const [currentUsername, setCurrentUsername] = useState("");
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user?.displayName);
+      setCurrentUsername(user?.displayName);
       console.log('auth state changed')
       // setCurrentUsername(
       //   user && user.currentUser && user.currentUser.displayName
@@ -51,7 +51,7 @@ export default function AuthContext({ children }) {
   };
 
   const value = {
-    currentUser,
+    currentUsername,
     normalSignUp,
     normalSignIn,
     signOutUser,
