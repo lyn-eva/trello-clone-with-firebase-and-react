@@ -10,7 +10,7 @@ import { useAuth } from "../context/AuthContext";
 
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { lists, reqBoardDetails, createList } = useDB();
+  const { lists, reqBoardDetails, createList, currentBoard } = useDB();
   const { currentUsername } = useAuth();
 
   const path = useLocation();
@@ -24,10 +24,9 @@ function Board() {
   };
 
   return (
-    <div className="relative p-[0.02px] bg-orange-400 min-w-fit h-fit min-h-screen">
+    <div className={`relative p-[0.02px] bg-[${currentBoard.bg}] min-w-fit h-fit min-h-screen`}>
       <BoardHeader toggleSidebar={toggleSidebar} />
       <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
-      {/* <div> */}
       <ul className="flex gap-2 m-2 h-[calc(100%-54px)]">
         {lists?.map((list, i) => (
           <List key={list.id} data={list} index={i} />
@@ -38,7 +37,6 @@ function Board() {
           </Button>
         </li>
       </ul>
-      {/* </div> */}
     </div>
   );
 }

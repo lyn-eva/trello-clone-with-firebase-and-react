@@ -1,10 +1,11 @@
+import { useDB } from "../context/DbContext";
+
 import { createPortal } from "react-dom";
 import Backdrop from "../modal/Backdrop";
 import Button from "../utility/Button";
-import { useTrello } from "../context/Context";
 
 function BoardSidebar({ on, toggleSidebar }) {
-  const { BG_THEME, setBg } = useTrello();
+  const {currentBoard, updateBoard} = useDB();
 
   return (
     <>
@@ -27,26 +28,25 @@ function BoardSidebar({ on, toggleSidebar }) {
         <div className="py-3 text-grey-blue mt-2">
           <h4>
             <span
-              style={{ background: BG_THEME }}
-              className="bg-orange-400 w-5 h-5 inline-block mr-3 -mb-1 rounded-md"
+              className={`bg-[${currentBoard.bg}] w-5 h-5 inline-block mr-3 -mb-1 rounded-md`}
             ></span>
             Change background
           </h4>
           <ul className="flex gap-3 flex-wrap mt-4">
             <li
-              onClick={() => setBg("#d29034")}
+              onClick={() => updateBoard({bg :"#d29034"})}
               className="color-option bg-[#d29034]"
             ></li>
             <li
-              onClick={() => setBg("#4bbf6b")}
+              onClick={() => updateBoard({bg :"#4bbf6b"})}
               className="color-option bg-[#4bbf6b]"
             ></li>
             <li
-              onClick={() => setBg("#cd5a91")}
+              onClick={() => updateBoard({bg :"#cd5a91"})}
               className="color-option bg-[#cd5a91]"
             ></li>
             <li
-              onClick={() => setBg("#0079bf")}
+              onClick={() => updateBoard({bg :"#0079bf"})}
               className="color-option bg-[#0079bf]"
             ></li>
           </ul>
