@@ -2,13 +2,8 @@ import { useState, useRef, useEffect } from "react";
 
 function DynamicTxt({ initialName, className, title, updateFunc }) {
   const [rename, setRename] = useState(false);
-  const [value, setValue] = useState(initialName);
+  const [value, setValue] = useState(initialName); //
   const txtAreaRef = useRef();
-
-  useEffect(() => {
-    // if (initialName !== "new list") return;
-    // renameStart();
-  }, [initialName]);
 
   const renameStart = () => {
     txtAreaRef.current.value = value;
@@ -21,10 +16,9 @@ function DynamicTxt({ initialName, className, title, updateFunc }) {
   const renameEnd = () => {
     setRename(false);
     const newValue = txtAreaRef.current.value;
-    setValue(newValue);
-    // if (!newValue) return;
+    if (value === newValue) return;
+    setValue(newValue); 
     updateFunc(newValue);
-    // setName(txtAreaRef.current.value);
   };
 
   return (

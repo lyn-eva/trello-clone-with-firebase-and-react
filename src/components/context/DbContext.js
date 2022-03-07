@@ -32,6 +32,7 @@ export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
   const [lists, setLists] = useState([]);
   const [notes, setNotes] = useState({});
+  const [boardPath, setBoardPath] = useState('');
 
   const [currentBoard, setCurrentBoard] = useState({}); //
 
@@ -85,7 +86,7 @@ export default function DbContext({ children }) {
     const listeners = []
     lists.forEach((list) => {
       const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${list.id}/notes`;
-      const unsub = onSnapshot(collection(db, path), (snapShot) => {
+      const unsub = onSnapshot(query(collection(db, path), orderBy("createdAt")), (snapShot) => {
         const notes = snapShot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
@@ -125,10 +126,18 @@ export default function DbContext({ children }) {
     const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${id}`;
     updateDoc(doc(db, path), {title: newTitle, lastModified: serverTimestamp()});
   }
+  const updateNote = (listId, noteId, newTitle) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${listId}/notes/${noteId}`;
+    updateDoc(doc(db, path), {title: newTitle, lastModified: serverTimestamp()});
+  }
   
   const deleteList = (id) => {
-    console.log(id);
     const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${id}`;
+    deleteDoc(doc(db, path));
+  }
+
+  const deleteNote = (listId, noteId) => {
+    const path = `users/${currentUsername}/boards/${currentBoard.id}/lists/${listId}/notes/${noteId}`;
     deleteDoc(doc(db, path));
   }
 
@@ -145,7 +154,9 @@ export default function DbContext({ children }) {
     reqBoardDetails,
     updateList,
     createNote,
-    deleteList
+    deleteList,
+    updateNote,
+    deleteNote
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

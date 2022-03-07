@@ -9,7 +9,7 @@ import ListFooter from "./ListFooter";
 import ListDropDown from "./ListDropDown";
 import Backdrop from "../modal/Backdrop";
 
-function List({ data, addNote, deleteNote }) {
+function List({ data }) {
   const [dropDownOn, setDropDownOn] = useState(false);
   const { notes } = useDB();
 
@@ -30,12 +30,13 @@ function List({ data, addNote, deleteNote }) {
           {notes[data.id]?.map((note, i) => (
           <Note
               key={note.id}
+              listId={data.id}
+              noteId={note.id}
               note={note.title}
-              // deleteNote={() => deleteNote(listIdx, i)}
             />
           ))}
         </ul>
-        <ListFooter listIdx={data.id} addNote={addNote} />
+        <ListFooter listId={data.id}/>
       </div>
     </li>
   );
