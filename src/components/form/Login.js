@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import useValidate from "../customHooks/use-validate";
@@ -13,13 +13,14 @@ function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  console.log('currentUsername',currentUsername);
-
+  
+  console.log("currentUsername", currentUsername);
+  
   useEffect(() => {
     if (currentUsername) {
-      navigate(-1); // lol
+      navigate(`../${currentUsername}`, { replace: true });
     }
+    return () => {}; // dunno why I need to cleanup
   }, [currentUsername, navigate]);
 
   const errorMsg = (msg) => {
@@ -35,9 +36,9 @@ function Login() {
     setLoading(true);
     normalSignIn(emailRef.current.value, pwdRef.current.value)
       .then(() => {
+        console.log('logged in')
         setLoading(false);
         setError("");
-        navigate(`../${currentUsername.displayName}`, { replace: true });
       })
       .catch((err) => {
         setLoading(false);

@@ -85,7 +85,7 @@ export default function DbContext({ children }) {
 
 
   const listenToNoteChange = () => {
-    const listeners = []
+    const listeners = [];
     lists.forEach((list) => {
       const path = `${boardPath}/lists/${list.id}/notes`;
       const unsub = onSnapshot(query(collection(db, path), orderBy("createdAt")), (snapShot) => {

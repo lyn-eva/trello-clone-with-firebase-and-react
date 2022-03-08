@@ -19,15 +19,12 @@ export default function AuthContext({ children }) {
   // const [currentUsername, setCurrentUsername] = useState("");
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUsername(user?.displayName);
       console.log('auth state changed')
-      // setCurrentUsername(
-      //   user && user.currentUser && user.currentUser.displayName
-      // );
     });
 
-    return unsubscribe;
+    return unsubAuth;
   }, []);
 
   // console.log(currentUser)

@@ -25,7 +25,6 @@ function Profile() {
 
   const goToBoard = (id) => { //curry
     return () => {
-      // setCurrentBoard(id);
       navigate(id);
     };
   };
@@ -40,7 +39,7 @@ function Profile() {
           {boards.map(({ title, id }) => (
             <li
               key={id}
-              onClick={goToBoard(id)}
+              onClick={() => navigate(id)}
               className="bg-orange-300 h-40 w-full rounded-md p-3 hover:opacity-80 cursor-pointer"
             >
               <h3 className="font-medium text-2xl">{title}</h3>
