@@ -21,7 +21,7 @@ function Login() {
       navigate(`../${currentUsername}`, { replace: true });
     }
     return () => {}; // dunno why I need to cleanup
-  }, [currentUsername, navigate]);
+  }, [currentUsername]);
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;

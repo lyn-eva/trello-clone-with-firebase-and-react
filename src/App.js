@@ -18,29 +18,21 @@ function App() {
         <Route
           path=":profile"
           element={
-            // <PrivateRoute>
+            <PrivateRoute>
               <Profile />
-            /* </PrivateRoute> */
-          }
-        >
-        </Route>
-          <Route
-            path=":profile/:board"
-            element={
-              <PrivateRoute>
-                <Board />
-              </PrivateRoute>
-            }
-          />
-
-        <Route
-          path="/"
-          element={
-            // <PrivateRoute>
-              <Navigate to="profile" />
-            /* </PrivateRoute> */
+            </PrivateRoute>
           }
         />
+        <Route
+          path=":profile/:board"
+          element={
+            <PrivateRoute>
+              <Board />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="/" element={<Navigate to="profile" />} />
       </Routes>
     </Suspense>
     // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>

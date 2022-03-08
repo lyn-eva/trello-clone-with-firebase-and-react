@@ -30,12 +30,12 @@ function Profile() {
   };
 
   return (
-    <div className="p-2 bg-[#0079bf] h-screen">
+    <div className="p-2 bg-[#0079bf] h-fit min-h-screen">
       <ProfileHeader />
       <main className="mt-8 text-white">
         <h2>{currentUser?.displayName}</h2>
         <h1 className="mb-4 text-2xl">Your Boards</h1>
-        <ul className="grid grid-rows-3 grid-cols-4 gap-4">
+        <ul className="grid grid-rows-1 grid-cols-4 gap-4">
           {boards.map(({ title, id }) => (
             <li
               key={id}
