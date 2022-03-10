@@ -15,23 +15,23 @@ export const useAuth = () => {
 };
 
 export default function AuthContext({ children }) {
-  const [currentUsername, setCurrentUsername] = useState(null);
-  // const [currentUsername, setCurrentUsername] = useState("");
+  const [currentUser, setcurrentUser] = useState(null);
+  // const [currentUser, setcurrentUser] = useState("");
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (user) => {
-      setCurrentUsername(user?.displayName);
+      setcurrentUser(user);
       console.log('auth state changed')
     });
 
     return unsubAuth;
   }, []);
 
-  // console.log(currentUser)
-
   const normalSignUp = (email, pwd) => {
     return createUserWithEmailAndPassword(auth, email, pwd);
   };
+
+  console.log('it does')
 
   const normalSignIn = (email, pwd) => {
     return signInWithEmailAndPassword(auth, email, pwd);
@@ -48,7 +48,7 @@ export default function AuthContext({ children }) {
   };
 
   const value = {
-    currentUsername,
+    currentUser,
     normalSignUp,
     normalSignIn,
     signOutUser,

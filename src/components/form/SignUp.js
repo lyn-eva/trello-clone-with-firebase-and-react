@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 import useValidate from "../customHooks/use-validate";
@@ -6,6 +6,24 @@ import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
 
 function SignUp() {
+  const { normalSignUp, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentUser, setcurrentUser] = useState('')
+  const [isSignedUp, setIsSignedUp] = useState(false);
+  
+  // useEffect(() => {
+  //   if (isSignedUp && currentUser) {
+  //     navigate(`../${currentUser}`);
+  //   }
+  
+  //   return () => {
+  //     setIsSignedUp(false);
+  //   }
+  // }, [currentUser])
+  
+
   const {
     emailRef,
     pwdRef,
@@ -21,16 +39,10 @@ function SignUp() {
     usernameError,
   } = useValidate();
 
-  const { normalSignUp, updateUserProfile } = useAuth();
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [currentUsername, setCurrentUsername] = useState('')
-
   const handleChange = () => { // onChange is not too bad
-    setCurrentUsername(usernameRef.current.value);
+    setcurrentUser(usernameRef.current.value);
   }
-
+  
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
   };
@@ -51,10 +63,10 @@ function SignUp() {
       .then(() => {
         setLoading(false);
         setError("");
-        return updateUserProfile(currentUsername.trim());
+        return updateUserProfile(currentUser.trim());
       })
       .then(() => {
-        navigate(`../${currentUsername}`);
+        setIsSignedUp(true);
       })
       .catch((err) => {
         setLoading(false);
@@ -71,7 +83,7 @@ function SignUp() {
         </span>
       )}
       {!loading && (
-        <div className="text-dense-blue px-8 py-6 text-left bg-white shadow-lg">
+        <div className="text-dense-blue px-8 py-6 my-8 text-left bg-white shadow-lg">
           <h3 className="text-2xl font-bold text-center ">
             Sign up your account
           </h3>

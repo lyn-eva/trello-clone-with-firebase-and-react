@@ -1,7 +1,6 @@
 ## in construction
-### the tasks
-- firestore collectionGroup
-- listening to realtime CRUD
+### bugs
+- set global state for previous route
 
 ### What I learned
 - You can't rely on useRef hook though it is easy to use

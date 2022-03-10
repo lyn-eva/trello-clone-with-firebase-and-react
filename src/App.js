@@ -15,6 +15,16 @@ function App() {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
+
+        <Route
+          path=":profile/:board"
+          element={
+            // <PrivateRoute>
+            <Board />
+            // </PrivateRoute>
+          }
+        />
+
         <Route
           path=":profile"
           element={
@@ -23,15 +33,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path=":profile/:board"
-          element={
-            <PrivateRoute>
-              <Board />
-            </PrivateRoute>
-          }
-        />
-
         <Route path="/" element={<Navigate to="profile" />} />
       </Routes>
     </Suspense>

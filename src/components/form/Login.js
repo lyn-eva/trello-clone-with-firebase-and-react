@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
+
 import useValidate from "../customHooks/use-validate";
 import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
@@ -9,19 +10,17 @@ function Login() {
   const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
 
-  const { currentUsername, normalSignIn } = useAuth();
+  const { currentUser: user, normalSignIn } = useAuth();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   
-  console.log("currentUsername", currentUsername);
-  
   useEffect(() => {
-    if (currentUsername) {
-      navigate(`../${currentUsername}`, { replace: true });
+    if (user) {
+      navigate('../profile', { replace: true });
     }
-    return () => {}; // dunno why I need to cleanup
-  }, [currentUsername]);
+    return () => {}; // dunno why it need a cleanup
+  }, [user]);
 
   const errorMsg = (msg) => {
     return <small className="text-red-400">{msg}</small>;
@@ -36,13 +35,12 @@ function Login() {
     setLoading(true);
     normalSignIn(emailRef.current.value, pwdRef.current.value)
       .then(() => {
-        console.log('logged in')
         setLoading(false);
         setError("");
       })
       .catch((err) => {
         setLoading(false);
-        // setError(err.code.slice(5).split("-").join(" "));
+        setError(err.code.slice(5).split("-").join(" "));
         setError(err.code);
       });
   };
@@ -56,7 +54,7 @@ function Login() {
         </span>
       )}
       {!loading && (
-        <div className="text-dense-blue px-8 py-6 text-left bg-white shadow-lg">
+        <div className="text-dense-blue px-8 py-6 my-8 text-left bg-white shadow-lg">
           <h3 className="text-2xl font-bold text-center ">
             Login to your account
           </h3>

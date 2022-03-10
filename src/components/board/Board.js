@@ -11,13 +11,14 @@ import { useAuth } from "../context/AuthContext";
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
   const { lists, reqBoardDetails, createList, currentBoard } = useDB();
-  const { currentUsername } = useAuth();
+  const { currentUser } = useAuth();
 
   const path = useLocation();
   useEffect(() => {
-    if (!currentUsername) return;
+    if (!currentUser) return;
     reqBoardDetails(path.pathname.match(/\w+$/gi)[0]);
-  }, [currentUsername]);
+    return () => {}
+  }, [currentUser]);
 
   const toggleSidebar = () => {
     setSidebarOn((prevState) => !prevState);
