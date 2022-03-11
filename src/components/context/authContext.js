@@ -31,8 +31,6 @@ export default function AuthContext({ children }) {
     return createUserWithEmailAndPassword(auth, email, pwd);
   };
 
-  console.log('it does')
-
   const normalSignIn = (email, pwd) => {
     return signInWithEmailAndPassword(auth, email, pwd);
   };

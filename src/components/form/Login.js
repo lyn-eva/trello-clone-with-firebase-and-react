@@ -17,7 +17,7 @@ function Login() {
   
   useEffect(() => {
     if (user) {
-      navigate('../profile', { replace: true });
+      navigate(`../${user.displayName}`, { replace: true });
     }
     return () => {}; // dunno why it need a cleanup
   }, [user]);

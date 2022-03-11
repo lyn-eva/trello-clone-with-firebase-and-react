@@ -10,14 +10,14 @@ import {
   doc,
   collection,
   setDoc,
-  getDocs,
+  getDoc,
   addDoc,
   onSnapshot,
   serverTimestamp,
   updateDoc,
   query,
   orderBy,
-  deleteDoc
+  deleteDoc,
 } from "@firebase/firestore";
 import { db } from "../firebase-config";
 
@@ -35,7 +35,6 @@ export default function DbContext({ children }) {
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState('');
 
-  console.log(boards)
   const [currentBoard, setCurrentBoard] = useState({}); //
 
   const { currentUser } = useAuth();
@@ -103,17 +102,16 @@ export default function DbContext({ children }) {
   };
 
   const createProfile = (user) => {
-    return setDoc(doc(db, "users/" + user), { title: user });
+    return setDoc(doc(db, "users/" + user), { title: user, createdAt: serverTimestamp(), lastModified: serverTimestamp()});
   };
 
   const updateBoard = (...details) => {
     updateDoc(doc(db, boardPath), ...details);
   }
 
-  const getDocuments = async () => {
-    // const res = await getDocs(usersCol);
-    // return res;
-    // return res.docs.map((doc) => doc.id);
+  const checkIfUserExists = (name) => {
+    const path = `users/${name}`;
+    return getDoc(doc(db, path))
   };
 
   const createBoard = (boardName) => {
@@ -152,7 +150,8 @@ export default function DbContext({ children }) {
   }
 
   const deleteBoard = (id) => {
-    const path = `users/${currentUser}/boards/${id}`
+    const path = `users/${currentUser.displayName}/boards/${id}`
+    console.log('delete', path)
     deleteDoc(doc(db, path));
   }
 
@@ -160,7 +159,7 @@ export default function DbContext({ children }) {
     createProfile,
     createBoard,
     createList,
-    getDocuments,
+    checkIfUserExists,
     lists,
     boards,
     notes,

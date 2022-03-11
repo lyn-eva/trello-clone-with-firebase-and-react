@@ -4,14 +4,15 @@ import { useNavigate } from "react-router";
 import useValidate from "../customHooks/use-validate";
 import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
+import { useDB } from "../context/DbContext";
 
 function SignUp() {
   const { normalSignUp, updateUserProfile } = useAuth();
+  const { checkIfUserExists, createProfile } = useDB();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentUser, setcurrentUser] = useState('')
-  const [isSignedUp, setIsSignedUp] = useState(false);
   
   // useEffect(() => {
   //   if (isSignedUp && currentUser) {
@@ -63,10 +64,13 @@ function SignUp() {
       .then(() => {
         setLoading(false);
         setError("");
-        return updateUserProfile(currentUser.trim());
+        updateUserProfile(currentUser.trim());
+        navigate(`../${currentUser}`)
+        return checkIfUserExists(currentUser);
       })
-      .then(() => {
-        setIsSignedUp(true);
+      .then((res) => {
+        if (res.data()) return;
+        createProfile(currentUser.trim());
       })
       .catch((err) => {
         setLoading(false);
