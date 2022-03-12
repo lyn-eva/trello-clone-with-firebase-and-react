@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import BoardHeader from "./BoardHeader";
 import BoardSidebar from "./BoardSidebar";
@@ -34,24 +34,24 @@ function Board() {
       <DragDropContext>
         <BoardHeader toggleSidebar={toggleSidebar} />
         <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
-        <ul className="flex gap-2 m-2 h-[calc(100%-54px)]">
-          {lists?.map((list, i) => (
-            <List
-              index={i}
-              key={list.id}
-              id={list.id}
-              title={list.title}
-            />
-          ))}
-          <li>
-            <Button
-              clickFunc={() => createList("new list")}
-              className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
-            >
-              <i className="fas fa-plus mr-2"></i> Add another list
-            </Button>
-          </li>
-        </ul>
+        <Droppable type='list' droppableId='list-container' direction='horizontal'>
+          {(provided) => (
+            <ul ref={provided.innerRef} {...provided.droppableProps} className='flex gap-4'>
+              {lists?.map((list, i) => (
+                <List index={i} key={list.id} id={list.id} title={list.title} />
+              ))}
+              {provided.placeholder}
+              <li>
+                <Button
+                  clickFunc={() => createList("new list")}
+                  className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
+                >
+                  <i className="fas fa-plus mr-2"></i> Add another list
+                </Button>
+              </li>
+            </ul>
+          )}
+        </Droppable>
       </DragDropContext>
     </div>
   );
