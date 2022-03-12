@@ -19,8 +19,8 @@ import {
   orderBy,
   deleteDoc,
 } from "@firebase/firestore";
-import { db } from "../firebase-config";
 
+import { db } from "../firebase-config";
 import { useAuth } from "./AuthContext";
 
 const dbContext = createContext();
@@ -116,7 +116,7 @@ export default function DbContext({ children }) {
 
   const createBoard = (boardName) => {
     const path = `users/${currentUser.displayName}/boards`;
-    return addDoc(collection(db, path), { title: boardName });
+    return addDoc(collection(db, path), { title: boardName, bg: "#0079bf"});
   };
   
   const createList = (listTitle) => {

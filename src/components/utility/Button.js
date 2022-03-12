@@ -4,7 +4,7 @@ function Button({ children, clickFunc, className }) {
   return (
     <button
       onClick={clickFunc}
-      className={`${className}  px-4`}
+      className={`${className} px-4`}
     >
       {children}
     </button>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 
 import { useDB } from "../context/DbContext";
 
@@ -9,34 +10,49 @@ import ListFooter from "./ListFooter";
 import ListDropDown from "./ListDropDown";
 import Backdrop from "../modal/Backdrop";
 
-function List({ data }) {
+function List({ id, title, index }) {
   const [dropDownOn, setDropDownOn] = useState(false);
   const { notes } = useDB();
 
   return (
     <li className="min-w-[20rem] w-64 border-2 border-orange-500">
       <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
-        <ListHeader hdr={data.title} id={data.id} setDropDownOn={setDropDownOn} />
+        <ListHeader
+          hdr={title}
+          id={id}
+          setDropDownOn={setDropDownOn}
+        />
         {dropDownOn && (
           <>
             {createPortal(
               <Backdrop onClick={() => setDropDownOn(false)} />,
               document.getElementById("backdrop")
             )}
-            <ListDropDown listId={data.id}/>
+            <ListDropDown listId={id} />
           </>
         )}
-        <ul>
-          {notes[data.id]?.map((note, i) => (
-          <Note
-              key={note.id}
-              listId={data.id}
-              noteId={note.id}
-              note={note.title}
-            />
-          ))}
-        </ul>
-        <ListFooter listId={data.id}/>
+        <Droppable droppableId={id}>
+          {(provided) => (
+            <ul index={index} ref={provided.innerRef} {...provided.droppableProps}>
+              {notes[id]?.map((note, i) => (
+                <Draggable draggableId={note.id} index={i} key={note.id}>
+                  {(provided) => (
+                    <Note
+                      innerRef={provided.innerRef}
+                      dragHandleProps={provided.dragHandleProps}
+                      draggableProps={provided.draggableProps}
+                      listId={id}
+                      noteId={note.id}
+                      note={note.title}
+                    />
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </ul>
+          )}
+        </Droppable>
+        <ListFooter listId={id} />
       </div>
     </li>
   );

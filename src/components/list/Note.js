@@ -3,7 +3,7 @@ import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";
 import DynamicTxt from "../utility/DynamicTxt";
 
-function Note({ note, listId, noteId }) {
+function Note({ note, listId, noteId, innerRef, draggableProps, dragHandleProps }) {
   const { updateNote, deleteNote } = useDB();
 
   const updateNoteTitle = (newTitle) => {
@@ -11,7 +11,7 @@ function Note({ note, listId, noteId }) {
   }
 
   return (
-    <li className="bg-white my-2 py-2 rounded-sm shadow-note">
+    <li ref={innerRef} {...dragHandleProps} {...draggableProps} className="bg-white my-2 py-2 rounded-sm shadow-note">
       <div className="text-[15px] relative group">
         <DynamicTxt updateFunc={updateNoteTitle} initialName={note} className="px-2"/>
         <Button
