@@ -10,9 +10,8 @@ import ListFooter from "./ListFooter";
 import ListDropDown from "./ListDropDown";
 import Backdrop from "../modal/Backdrop";
 
-function List({ id, title, index }) {
+function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
-  const { notes } = useDB();
 
   // optmize
   const Notes = memo(({ noteList }) =>
@@ -52,14 +51,14 @@ function List({ id, title, index }) {
                 <ListDropDown listId={id} />
               </>
             )}
-            <Droppable droppableId={id}>
+            <Droppable droppableId={id} type='note'>
               {(provided) => (
                 <ul
                   index={index}
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {notes[id] && <Notes noteList={notes[id]} />}
+                  {notes && <Notes noteList={notes} />}
                   {provided.placeholder}
                 </ul>
               )}

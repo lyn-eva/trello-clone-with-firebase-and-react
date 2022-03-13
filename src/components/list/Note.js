@@ -7,7 +7,7 @@ function Note({ note, listId, noteId, innerRef, draggableProps, dragHandleProps 
   const { updateNote, deleteNote } = useDB();
 
   const updateNoteTitle = (newTitle) => {
-    updateNote(listId, noteId, newTitle);
+    updateNote(listId, noteId, {title :newTitle});
   }
 
   return (

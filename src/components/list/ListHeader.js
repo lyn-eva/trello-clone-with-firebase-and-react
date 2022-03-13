@@ -7,7 +7,7 @@ function ListHeader({ hdr, id, setDropDownOn }) {
   const { updateList } = useDB();
 
   const updateListTitle = (newTitle) => {
-    updateList(id, newTitle);
+    updateList(id, {title: newTitle});
   }
 
   return (

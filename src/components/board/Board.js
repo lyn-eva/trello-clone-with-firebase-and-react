@@ -1,4 +1,4 @@
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useMemo } from "react";
 import { useLocation } from "react-router";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -11,10 +11,12 @@ import { useAuth } from "../context/AuthContext";
 
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { lists, reqBoardDetails, createList, currentBoard } = useDB();
+  const { lists, updateList, reqBoardDetails, createList, currentBoard } =
+    useDB();
   const { currentUser } = useAuth();
 
-  // console.log("board re-rendered");
+  const [localLists, setLocalLists] = useState(lists); // for smoother UX
+  useEffect(() => setLocalLists([...lists]), [lists]);
 
   const path = useLocation();
   useEffect(() => {
@@ -29,16 +31,45 @@ function Board() {
 
   // optimize
   const Lists = memo(() =>
-    lists?.map((list, i) => (
-      <List index={i} key={list.id} id={list.id} title={list.title} />
-    ))
+    localLists.map((list, i) => {
+      return (
+        <List
+          index={i}
+          key={list.id}
+          id={list.id}
+          title={list.title}
+          notes={list.notes}
+        />
+      );
+    })
   );
+
+  const onDragEnd = ({ destination: target, source, draggableId, type }) => {
+    if (
+      target === null ||
+      (source.index === target.index &&
+        source.droppableId === target.droppableId)
+    )
+      return;
+
+    switch (type) {
+      case "list":
+        [localLists[source.index], localLists[target.index]] = [localLists[target.index], localLists[source.index]];
+        setLocalLists([...localLists]);
+        updateList(draggableId, {order: target.index})
+        updateList(lists[target.index].id, {order: source.index})
+        break;
+
+      default:
+        console.log("default");
+    }
+  };
 
   return (
     <div
       className={`relative p-[0.02px] bg-[${currentBoard.bg}] min-w-fit h-fit min-h-screen`}
     >
-      <DragDropContext>
+      <DragDropContext onDragEnd={onDragEnd}>
         <BoardHeader toggleSidebar={toggleSidebar} />
         <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
         <Droppable
@@ -52,11 +83,13 @@ function Board() {
               {...provided.droppableProps}
               className="flex gap-4"
             >
-              {lists && <Lists listItems={lists} />}
+              {localLists.length && <Lists />}
               {provided.placeholder}
               <li>
                 <Button
-                  clickFunc={() => createList("new list")}
+                  clickFunc={() =>
+                    createList("new list", Object.keys(lists).length)
+                  }
                   className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
                 >
                   <i className="fas fa-plus mr-2"></i> Add another list
