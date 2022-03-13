@@ -54,16 +54,20 @@ function Board() {
 
     switch (type) {
       case "list":
-        [localLists[source.index], localLists[target.index]] = [localLists[target.index], localLists[source.index]];
+        const draggedItem = localLists[source.index];
+        localLists.splice(source.index, 1);
+        localLists.splice(target.index, 0, draggedItem)
         setLocalLists([...localLists]);
-        updateList(draggableId, {order: target.index})
-        updateList(lists[target.index].id, {order: source.index})
+        localLists.forEach(({id}, index) => {
+          updateList(id, {order: index})
+        })
         break;
 
       default:
         console.log("default");
     }
   };
+
 
   return (
     <div
