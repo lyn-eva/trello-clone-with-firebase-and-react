@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useLocation } from "react-router";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
@@ -27,6 +27,13 @@ function Board() {
     setSidebarOn((prevState) => !prevState);
   };
 
+  // optimize
+  const Lists = memo(() =>
+    lists?.map((list, i) => (
+      <List index={i} key={list.id} id={list.id} title={list.title} />
+    ))
+  );
+
   return (
     <div
       className={`relative p-[0.02px] bg-[${currentBoard.bg}] min-w-fit h-fit min-h-screen`}
@@ -34,12 +41,18 @@ function Board() {
       <DragDropContext>
         <BoardHeader toggleSidebar={toggleSidebar} />
         <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
-        <Droppable type='list' droppableId='list-container' direction='horizontal'>
+        <Droppable
+          type="list"
+          droppableId="list-container"
+          direction="horizontal"
+        >
           {(provided) => (
-            <ul ref={provided.innerRef} {...provided.droppableProps} className='flex gap-4'>
-              {lists?.map((list, i) => (
-                <List index={i} key={list.id} id={list.id} title={list.title} />
-              ))}
+            <ul
+              ref={provided.innerRef}
+              {...provided.droppableProps}
+              className="flex gap-4"
+            >
+              {lists && <Lists listItems={lists} />}
               {provided.placeholder}
               <li>
                 <Button

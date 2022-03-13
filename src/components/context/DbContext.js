@@ -3,8 +3,6 @@ import {
   useContext,
   useState,
   useEffect,
-  useReducer,
-  useCallback,
 } from "react";
 import {
   doc,
@@ -34,6 +32,8 @@ export default function DbContext({ children }) {
   const [lists, setLists] = useState([]);
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState('');
+
+  console.log('rerendered')
 
   const [currentBoard, setCurrentBoard] = useState({}); //
 
