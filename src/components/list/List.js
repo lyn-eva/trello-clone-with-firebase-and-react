@@ -1,4 +1,4 @@
-import { useState, memo } from "react";
+import { useState, memo, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -12,10 +12,13 @@ import Backdrop from "../modal/Backdrop";
 
 function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
+  // const [localNotes, setLocalNotes] = useState([]);
+  // console.log({notes})
+  // useEffect(() => setLocalNotes(notes),[notes])
 
   // optmize
-  const Notes = memo(({ noteList }) =>
-    noteList.map((note, i) => (
+  const Notes = memo(() =>
+    notes.map((note, i) => (
       <Draggable draggableId={note.id} index={i} key={note.id}>
         {(provided) => (
           <Note
@@ -58,12 +61,12 @@ function List({ id, title, index, notes }) {
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  {notes && <Notes noteList={notes} />}
+                  {notes && <Notes />}
                   {provided.placeholder}
                 </ul>
               )}
             </Droppable>
-            <ListFooter listId={id} />
+            <ListFooter listId={id} noteOrder={notes?.length}/>
           </div>
         </li>
       )}

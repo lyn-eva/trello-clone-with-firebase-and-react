@@ -24,8 +24,8 @@ export const useDB = () => {
 
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
-  const [lists, setLists] = useState([]);
-  const [notes, setNotes] = useState({})
+  const [lists, setLists] = useState({});
+  // const [notes, setNotes] = useState([])
   const [boardPath, setBoardPath] = useState("");
 
   // console.log('rerendered')
@@ -38,11 +38,11 @@ export default function DbContext({ children }) {
     const unsubBoardListener = listenToBoardChange();
     if (!currentBoard) return;
     setBoardPath(`users/${currentUser?.displayName}/boards/${currentBoard.id}`);
-    const unsubListListener = listenToListChange();
+    const unsubListeners = listenToListChange();
 
     return () => {
       unsubBoardListener();
-      unsubListListener();
+      unsubListeners.forEach((unsub) => unsub());
     };
   }, [currentUser, currentBoard, boardPath]); // this won't be infinite loop
 
@@ -53,14 +53,6 @@ export default function DbContext({ children }) {
     });
   };
 
-  const listenToListChange = () => {
-    const path = `${boardPath}/lists`;
-    return onSnapshot(query(collection(db, path), orderBy("order")), (snapShot) => {
-      setLists(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    });
-  };
-  // console.log(lists)
-
   const listenToBoardChange = () => {
     const path = `users/${currentUser?.displayName}/boards`;
     return onSnapshot(collection(db, path), (snapShot) => {
@@ -68,23 +60,45 @@ export default function DbContext({ children }) {
     });
   };
 
-  const listenToNoteChange = () => {
+  const listenToListChange = () => {
     const listeners = [];
-    lists.forEach((list) => {
-      const path = `${boardPath}/lists/${list.id}/notes`;
-      const unsub = onSnapshot(query(collection(db, path), orderBy("createdAt")), (snapShot) => {
+    const path = `${boardPath}/lists`;
+    const unsub = onSnapshot(
+      query(collection(db, path), orderBy("order")),
+      (snapShot) => {
+        const listItems = snapShot.docs.reduce(
+          (total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),
+          {}
+        );
+        setLists(listItems);
+        snapShot.docs.forEach((doc) => {
+          const unsub = listenToNoteChange(doc);
+          listeners.push(unsub);
+        });
+      }
+    );
+    listeners.push(unsub);
+    return listeners;
+  };
+  // console.log(lists);
+
+  const listenToNoteChange = (list) => {
+    const notePath = `${boardPath}/lists/${list.id}/notes`;
+    const unsub = onSnapshot(
+      query(collection(db, notePath), orderBy("order")),
+      (snapShot) => {
         const notes = snapShot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        setNotes((prevState) => ({ ...prevState, [list.id]: notes }));
-      });
-      listeners.push(unsub);
-    });
-    return listeners;
+        setLists((prevState) => ({
+          ...prevState,
+          [list.id]: { ...prevState[list.id], notes: notes },
+        }));
+      }
+    );
+    return unsub;
   };
-
-
 
   const createProfile = (user) => {
     return setDoc(doc(db, "users/" + user), {
@@ -118,10 +132,11 @@ export default function DbContext({ children }) {
     });
   };
 
-  const createNote = (id, noteTxt) => {
+  const createNote = (id, order, noteTxt) => {
     const path = `${boardPath}/lists/${id}/notes`;
     addDoc(collection(db, path), {
       title: noteTxt,
+      order: order,
       createdAt: serverTimestamp(),
       lastModified: serverTimestamp(),
     });
@@ -129,12 +144,22 @@ export default function DbContext({ children }) {
 
   const updateList = (id, newValues) => {
     const path = `${boardPath}/lists/${id}`;
-    updateDoc(doc(db, path), {...newValues, lastModified: serverTimestamp()});
+    updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
   // to repair
   const updateNote = (listId, noteId, newValues) => {
     const path = `${boardPath}/lists/${listId}/notes/${noteId}`;
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
+  };
+
+  const addNoteToExistingList = (listId, noteId, order, noteTxt) => {
+    const path = `${boardPath}/lists/${listId}/notes`;
+    setDoc(doc(db, path, noteId), {
+      title: noteTxt,
+      order: order,
+      createdAt: serverTimestamp(),
+      lastModified: serverTimestamp(),
+    });
   };
 
   const deleteList = (id) => {
@@ -171,6 +196,7 @@ export default function DbContext({ children }) {
     deleteNote,
     updateBoard,
     deleteBoard,
+    addNoteToExistingList,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

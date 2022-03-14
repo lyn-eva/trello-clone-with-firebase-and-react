@@ -4,7 +4,7 @@ import { useDB } from "../context/DbContext";
 
 import Button from "../utility/Button";
 
-function ListFooter({ listId }) {
+function ListFooter({ listId, noteOrder }) {
   const [add, setAdd] = useState(false);
   const txtAreaRef = useRef();
 
@@ -21,7 +21,7 @@ function ListFooter({ listId }) {
     setAdd(false);
     const note = txtAreaRef.current.value;
     if (!note) return;
-    createNote(listId, note);
+    createNote(listId, noteOrder, note);
     txtAreaRef.current.value = "";
   };
 
