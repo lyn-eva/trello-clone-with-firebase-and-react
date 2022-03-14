@@ -11,12 +11,22 @@ import { useAuth } from "../context/AuthContext";
 
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
-  const { lists, updateList, updateNote, createNote, deleteNote, addNoteToExistingList, reqBoardDetails, createList, currentBoard } =
-    useDB();
+  const {
+    lists,
+    updateList,
+    updateNote,
+    deleteNote,
+    addNoteToExistingList,
+    reqBoardDetails,
+    createList,
+    currentBoard,
+    noteDndForSameList,
+    noteDndAmongDiffLists,
+  } = useDB();
   const { currentUser } = useAuth();
 
   const [localLists, setLocalLists] = useState(lists); // for smoother UX
-  const [localNotes, setLocalNotes] = useState();
+  const [localNotes, setLocalNotes] = useState([]);
   // console.log(localNotes);
 
   useEffect(() => {
@@ -27,6 +37,7 @@ function Board() {
         {}
       )
     );
+    console.log("values recomputed");
   }, [lists]);
 
   const path = useLocation();
@@ -41,23 +52,21 @@ function Board() {
   };
 
   // optimize
-  const Lists = memo(() =>
-    localLists.map((list, i) => {
-      return (
-        <List
-          index={i}
-          key={list.id}
-          id={list.id}
-          title={list.title}
-          notes={localNotes[list.id]}
-        />
-      );
-    })
+  const Lists = memo(
+    () =>
+      localLists.map(({ id, title }, i) => {
+        return <List index={i} key={id} id={id} title={title} notes={localNotes[id]} />;
+      }),
+    (prevProps, nextProps) => true
   );
 
   const onDragEnd = ({ destination: target, source, type, draggableId }) => {
     // console.log(res)
-    if (target === null || (source.index === target.index && source.droppableId === target.droppableId)) return;
+    if (
+      target === null ||
+      (source.index === target.index && source.droppableId === target.droppableId)
+    )
+      return;
 
     switch (type) {
       case "list":
@@ -80,12 +89,10 @@ function Board() {
             ...prevState,
             [source.droppableId]: sourceList,
           }));
-          sourceList.forEach(({ id }, index) => {
-            updateNote(target.droppableId, id, { order: index });
-          });
+          noteDndForSameList(source.droppableId, sourceList);
           break;
-        }
-        else { // dnd between different Lists
+        } else {
+          // dnd between different Lists
           const targetList = localNotes[target.droppableId];
           sourceList.splice(source.index, 1);
           targetList.splice(target.index, 0, draggedNote);
@@ -94,14 +101,7 @@ function Board() {
             [source.droppableId]: sourceList,
             [target.droppableId]: targetList,
           }));
-          deleteNote(source.droppableId, draggableId);
-          addNoteToExistingList(target.droppableId, draggableId, target.index, draggedNote.title);
-          targetList.forEach(({ id }, index) => {
-            updateNote(target.droppableId, id, { order: index });
-          });
-          sourceList.forEach(({ id }, index) => {
-            updateNote(source.droppableId, id, { order: index });
-          });
+          noteDndAmongDiffLists(draggedNote, source, target, sourceList, targetList);
           break;
         }
 

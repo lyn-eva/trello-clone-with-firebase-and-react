@@ -11,6 +11,7 @@ import {
   query,
   orderBy,
   deleteDoc,
+  writeBatch,
 } from "@firebase/firestore";
 
 import { db } from "../firebase-config";
@@ -100,6 +101,8 @@ export default function DbContext({ children }) {
     return unsub;
   };
 
+  // console.log(console.log('%c Oh my heavens! ', 'background: #222; color: #bada55'))
+
   const createProfile = (user) => {
     return setDoc(doc(db, "users/" + user), {
       title: user,
@@ -144,7 +147,7 @@ export default function DbContext({ children }) {
 
   const updateList = (id, newValues) => {
     const path = `${boardPath}/lists/${id}`;
-    updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
+    return updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
   // to repair
   const updateNote = (listId, noteId, newValues) => {
@@ -178,6 +181,40 @@ export default function DbContext({ children }) {
     deleteDoc(doc(db, path));
   };
 
+  const noteDndForSameList = (listId, docArray) => {
+    const batch = writeBatch(db);
+    docArray.forEach(({ id }, index) => {
+      const path = `${boardPath}/lists/${listId}/notes/${id}`;
+      batch.update(doc(db, path), { order: index });
+    });
+    batch.commit();
+  };
+
+  const noteDndAmongDiffLists = (draggedNote, source, target, sourceList, targetList) => {
+    const batch = writeBatch(db);
+    batch.delete(
+      doc(db, `${boardPath}/lists/${source.droppableId}/notes/${draggedNote.id}`)
+    );
+
+    batch.set(doc(db, `${boardPath}/lists/${target.droppableId}/notes/${draggedNote.id}`), {
+      title: draggedNote.title,
+      order: target.index,
+      createdAt: draggedNote.createdAt,
+      lastModified: serverTimestamp(),
+    });
+
+    targetList.forEach(({ id }, index) => {
+      const path = `${boardPath}/lists/${target.droppableId}/notes/${id}`;
+      batch.update(doc(db, path), { order: index });
+    });
+
+    sourceList.forEach(({ id }, index) => {
+      const path = `${boardPath}/lists/${source.droppableId}/notes/${id}`;
+      batch.update(doc(db, path), { order: index });
+    });
+    batch.commit();
+  };
+
   const value = {
     createProfile,
     createBoard,
@@ -197,6 +234,8 @@ export default function DbContext({ children }) {
     updateBoard,
     deleteBoard,
     addNoteToExistingList,
+    noteDndForSameList,
+    noteDndAmongDiffLists
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

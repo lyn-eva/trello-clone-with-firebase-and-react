@@ -12,26 +12,27 @@ import Backdrop from "../modal/Backdrop";
 
 function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
-  // const [localNotes, setLocalNotes] = useState([]);
-  // console.log({notes})
-  // useEffect(() => setLocalNotes(notes),[notes])
+
+  // console.log(id, "re-rendered");
 
   // optmize
-  const Notes = memo(() =>
-    notes.map((note, i) => (
-      <Draggable draggableId={note.id} index={i} key={note.id}>
-        {(provided) => (
-          <Note
-            innerRef={provided.innerRef}
-            dragHandleProps={provided.dragHandleProps}
-            draggableProps={provided.draggableProps}
-            listId={id}
-            noteId={note.id}
-            note={note.title}
-          />
-        )}
-      </Draggable>
-    ))
+  const Notes = memo(
+    ({ noteList }) =>
+      noteList.map((note, i) => (
+        <Draggable draggableId={note.id} index={i} key={note.id}>
+          {(provided) => (
+            <Note
+              innerRef={provided.innerRef}
+              dragHandleProps={provided.dragHandleProps}
+              draggableProps={provided.draggableProps}
+              listId={id}
+              noteId={note.id}
+              note={note.title}
+            />
+          )}
+        </Draggable>
+      )),
+    (prevProps, nextProps) => prevProps.noteList === nextProps.noteList
   );
 
   return (
@@ -54,24 +55,20 @@ function List({ id, title, index, notes }) {
                 <ListDropDown listId={id} />
               </>
             )}
-            <Droppable droppableId={id} type='note'>
+            <Droppable droppableId={id} type="note">
               {(provided) => (
-                <ul
-                  index={index}
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {notes && <Notes />}
+                <ul index={index} ref={provided.innerRef} {...provided.droppableProps}>
+                  {notes && <Notes noteList={notes} />}
                   {provided.placeholder}
                 </ul>
               )}
             </Droppable>
-            <ListFooter listId={id} noteOrder={notes?.length}/>
+            <ListFooter listId={id} noteOrder={notes?.length} />
           </div>
         </li>
       )}
     </Draggable>
   );
 }
-
-export default List;
+// export default List;
+export default memo(List, (prevProps, nextProps) => true);
