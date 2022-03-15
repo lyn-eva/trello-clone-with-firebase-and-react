@@ -13,38 +13,23 @@ import Backdrop from "../modal/Backdrop";
 function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
 
-  // console.log(id, "re-rendered");
-
   // optmize
-  const Notes = memo(
-    ({ noteList }) =>
-      noteList.map((note, i) => (
-        <Draggable draggableId={note.id} index={i} key={note.id}>
-          {(provided) => (
-            <Note
-              innerRef={provided.innerRef}
-              dragHandleProps={provided.dragHandleProps}
-              draggableProps={provided.draggableProps}
-              listId={id}
-              noteId={note.id}
-              note={note.title}
-            />
-          )}
-        </Draggable>
-      )),
-    (prevProps, nextProps) => prevProps.noteList === nextProps.noteList
+  const Notes = memo(({ noteList }) =>
+    noteList.map((note, i) => (
+      <Note key={note.id} index={i} listId={id} noteId={note.id} noteTxt={note.title} />
+    ))
   );
 
   return (
-    <Draggable type="list" draggableId={id} index={index}>
-      {(provided) => (
-        <li
-          ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className="min-w-[20rem] w-64 border-2 border-orange-500"
-        >
-          <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
+    <li className="min-w-[20rem] w-64 border-2 border-orange-500">
+      <Draggable type="list" draggableId={id} index={index}>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            className="relative bg-list-clr rounded-md p-2 shadow-sm"
+          >
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />
             {dropDownOn && (
               <>
@@ -65,9 +50,9 @@ function List({ id, title, index, notes }) {
             </Droppable>
             <ListFooter listId={id} noteOrder={notes?.length} />
           </div>
-        </li>
-      )}
-    </Draggable>
+        )}
+      </Draggable>
+    </li>
   );
 }
 // export default List;

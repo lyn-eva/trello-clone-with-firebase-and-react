@@ -22,7 +22,7 @@ function Board() {
   } = useDB();
   const { currentUser } = useAuth();
 
-  const [localLists, setLocalLists] = useState(lists); // for smoother UX
+  const [localLists, setLocalLists] = useState([]); // for smoother UX
   const [localNotes, setLocalNotes] = useState([]);
 
   useEffect(() => {
