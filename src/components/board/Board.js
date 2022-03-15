@@ -13,21 +13,17 @@ function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
   const {
     lists,
-    updateList,
-    updateNote,
-    deleteNote,
-    addNoteToExistingList,
     reqBoardDetails,
     createList,
     currentBoard,
     noteDndForSameList,
     noteDndAmongDiffLists,
+    listDndOperation,
   } = useDB();
   const { currentUser } = useAuth();
 
   const [localLists, setLocalLists] = useState(lists); // for smoother UX
   const [localNotes, setLocalNotes] = useState([]);
-  // console.log(localNotes);
 
   useEffect(() => {
     setLocalLists(Object.values(lists));
@@ -37,7 +33,7 @@ function Board() {
         {}
       )
     );
-    console.log("values recomputed");
+    // console.log("values recomputed");
   }, [lists]);
 
   const path = useLocation();
@@ -52,16 +48,13 @@ function Board() {
   };
 
   // optimize
-  const Lists = memo(
-    () =>
-      localLists.map(({ id, title }, i) => {
-        return <List index={i} key={id} id={id} title={title} notes={localNotes[id]} />;
-      }),
-    (prevProps, nextProps) => true
+  const Lists = memo(() =>
+    localLists.map(({ id, title }, i) => {
+      return <List index={i} key={id} id={id} title={title} notes={localNotes[id]} />;
+    })
   );
 
   const onDragEnd = ({ destination: target, source, type, draggableId }) => {
-    // console.log(res)
     if (
       target === null ||
       (source.index === target.index && source.droppableId === target.droppableId)
@@ -74,9 +67,7 @@ function Board() {
         localLists.splice(source.index, 1);
         localLists.splice(target.index, 0, draggedList);
         setLocalLists([...localLists]);
-        localLists.forEach(({ id }, index) => {
-          updateList(id, { order: index });
-        });
+        listDndOperation(localLists);
         break;
 
       case "note":

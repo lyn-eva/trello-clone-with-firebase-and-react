@@ -29,7 +29,6 @@ export default function DbContext({ children }) {
   // const [notes, setNotes] = useState([])
   const [boardPath, setBoardPath] = useState("");
 
-  // console.log('rerendered')
   const [currentBoard, setCurrentBoard] = useState({}); //
 
   const { currentUser } = useAuth();
@@ -80,8 +79,7 @@ export default function DbContext({ children }) {
     );
     listeners.push(unsub);
     return listeners;
-  };
-  // console.log(lists);
+  };;
 
   const listenToNoteChange = (list) => {
     const notePath = `${boardPath}/lists/${list.id}/notes`;
@@ -149,20 +147,10 @@ export default function DbContext({ children }) {
     const path = `${boardPath}/lists/${id}`;
     return updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
-  // to repair
+
   const updateNote = (listId, noteId, newValues) => {
     const path = `${boardPath}/lists/${listId}/notes/${noteId}`;
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
-  };
-
-  const addNoteToExistingList = (listId, noteId, order, noteTxt) => {
-    const path = `${boardPath}/lists/${listId}/notes`;
-    setDoc(doc(db, path, noteId), {
-      title: noteTxt,
-      order: order,
-      createdAt: serverTimestamp(),
-      lastModified: serverTimestamp(),
-    });
   };
 
   const deleteList = (id) => {
@@ -177,13 +165,21 @@ export default function DbContext({ children }) {
 
   const deleteBoard = (id) => {
     const path = `users/${currentUser.displayName}/boards/${id}`;
-    console.log("delete", path);
     deleteDoc(doc(db, path));
   };
 
-  const noteDndForSameList = (listId, docArray) => {
+  const listDndOperation = (listArray) => {
     const batch = writeBatch(db);
-    docArray.forEach(({ id }, index) => {
+    listArray.forEach(({ id }, index) => {
+      const path = `${boardPath}/lists/${id}`;
+      batch.update(doc(db, path), { order: index });
+    });
+    batch.commit();
+  };
+
+  const noteDndForSameList = (listId, noteArray) => {
+    const batch = writeBatch(db);
+    noteArray.forEach(({ id }, index) => {
       const path = `${boardPath}/lists/${listId}/notes/${id}`;
       batch.update(doc(db, path), { order: index });
     });
@@ -233,9 +229,9 @@ export default function DbContext({ children }) {
     deleteNote,
     updateBoard,
     deleteBoard,
-    addNoteToExistingList,
     noteDndForSameList,
-    noteDndAmongDiffLists
+    noteDndAmongDiffLists,
+    listDndOperation
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;
