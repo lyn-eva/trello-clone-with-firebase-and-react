@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { createPortal } from "react-dom";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 
@@ -12,10 +12,11 @@ function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
 
   // optmize
-  const Notes = ({ noteList }) =>
+  const Notes = memo(({ noteList }) =>
     noteList.map((note, i) => (
       <Note key={note.id} index={i} listId={id} noteId={note.id} noteTxt={note.title} />
-    ));
+    ))
+  );
 
   return (
     <Draggable type="list" draggableId={id} index={index}>
@@ -38,9 +39,14 @@ function List({ id, title, index, notes }) {
               </>
             )}
             <Droppable droppableId={id} type="note">
-              {(provided) => {
+              {(provided, snapShot) => {
+                console.log(snapShot);
                 return (
-                  <ul ref={provided.innerRef} {...provided.droppableProps}>
+                  <ul
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                    className={`min-h-[1rem] ${snapShot.isDraggingOver ? "bg-gray-300" : ""}`}
+                  >
                     {notes && <Notes noteList={notes} />}
                     {provided.placeholder}
                   </ul>

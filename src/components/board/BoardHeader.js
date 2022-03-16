@@ -5,7 +5,7 @@ function BoardHeader({ toggleSidebar }) {
   const { currentBoard } = useDB();
 
   return (
-    <header className="m-2 flex justify-between">
+    <header className="m-2 flex justify-between items-center">
       <h1 className="text-2xl font-medium">{currentBoard && currentBoard.title}</h1>
       <ul className="flex justify-end gap-4">
         <li>

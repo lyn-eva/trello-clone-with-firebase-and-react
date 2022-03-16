@@ -102,7 +102,7 @@ function Board() {
 
   return (
     <div
-      className={`relative p-[0.02px] bg-[${currentBoard.bg}] min-w-fit h-fit min-h-screen`}
+      className={`relative p-[0.02px] bg-[${currentBoard.bg}] h-fit min-h-screen flex flex-col`}
     >
       <DragDropContext onDragEnd={onDragEnd}>
         <BoardHeader toggleSidebar={toggleSidebar} />
@@ -112,7 +112,7 @@ function Board() {
             <ul
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="flex p-2"
+              className="flex p-2 overflow-x-auto grow"
             >
               {localLists.length && <Lists lists={localLists} notes={localNotes} />}
               {provided.placeholder}

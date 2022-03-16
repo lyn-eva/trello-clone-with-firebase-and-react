@@ -45,7 +45,7 @@ function Profile() {
       <main className="mt-8 text-white">
         <h2>{currentUser?.displayName}</h2>
         <h1 className="mb-4 text-2xl">Your Boards</h1>
-        <ul className="grid grid-rows-1 grid-cols-[repeat(4,230px)] gap-4 overflow-x-scroll h-[calc(100vh-170px)]">
+        <ul className="grid grid-rows-1 grid-cols-[repeat(4,230px)] gap-4 overflow-x-auto h-[calc(100vh-175px)]">
           {boards.map(({ title, id, bg }) => (
             <li
               key={id}
