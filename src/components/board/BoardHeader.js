@@ -4,8 +4,6 @@ import Button from "../utility/Button";
 function BoardHeader({ toggleSidebar }) {
   const { currentBoard } = useDB();
 
-  console.log('board header rrerendered')
-
   return (
     <header className="m-2 flex justify-between">
       <h1 className="text-2xl font-medium">{currentBoard && currentBoard.title}</h1>

@@ -5,9 +5,6 @@ import DynamicTxt from "../utility/DynamicTxt";
 
 function ListHeader({ hdr, id, setDropDownOn }) {
   const { updateList } = useDB();
-
-  // console.log('listheaderrerendered')
-
   const updateListTitle = (newTitle) => {
     updateList(id, {title: newTitle});
   }

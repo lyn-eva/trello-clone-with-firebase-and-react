@@ -11,9 +11,7 @@ function Note({ noteTxt, listId, noteId, index }) {
   const updateNoteTitle = (newTitle) => {
     updateNote(listId, noteId, { title: newTitle });
   };
-
-  // console.log("notes rerendered");
-
+  
   return (
     <Draggable draggableId={noteId} index={index}>
       {(provided) => (
@@ -21,7 +19,7 @@ function Note({ noteTxt, listId, noteId, index }) {
           ref={provided.innerRef}
           {...provided.dragHandleProps}
           {...provided.draggableProps}
-          className="bg-white my-2 py-2 rounded-sm shadow-note"
+          className="bg-white mb-2 py-2 rounded-sm shadow-note"
         >
           <div className="text-[15px] relative group">
             <DynamicTxt

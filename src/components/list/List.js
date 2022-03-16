@@ -1,8 +1,6 @@
-import { useState, memo, useCallback } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-
-import { useDB } from "../context/DbContext";
 
 import ListHeader from "./ListHeader";
 import Note from "./Note";
@@ -13,16 +11,12 @@ import Backdrop from "../modal/Backdrop";
 function List({ id, title, index, notes }) {
   const [dropDownOn, setDropDownOn] = useState(false);
 
-  console.log({notes})
-
   // optmize
-  const Notes = memo(({ noteList }) =>
+  const Notes = ({ noteList }) =>
     noteList.map((note, i) => (
       <Note key={note.id} index={i} listId={id} noteId={note.id} noteTxt={note.title} />
-    ))
-  );
+    ));
 
-  console.log('list rerendered')
   return (
     <Draggable type="list" draggableId={id} index={index}>
       {(provided) => (
@@ -30,7 +24,7 @@ function List({ id, title, index, notes }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="min-w-[20rem] w-64 border-2 border-orange-500"
+          className="mr-4 min-w-[20rem] w-64"
         >
           <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />
@@ -44,13 +38,14 @@ function List({ id, title, index, notes }) {
               </>
             )}
             <Droppable droppableId={id} type="note">
-              {(provided) =>  {
+              {(provided) => {
                 return (
-                <ul ref={provided.innerRef} {...provided.droppableProps}>
-                  {notes && <Notes noteList={notes} />}
-                  {provided.placeholder}
-                </ul>
-              )}}
+                  <ul ref={provided.innerRef} {...provided.droppableProps}>
+                    {notes && <Notes noteList={notes} />}
+                    {provided.placeholder}
+                  </ul>
+                );
+              }}
             </Droppable>
             <ListFooter listId={id} noteOrder={notes?.length} />
           </div>

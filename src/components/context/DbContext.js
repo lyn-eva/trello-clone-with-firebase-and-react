@@ -25,8 +25,8 @@ export const useDB = () => {
 
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
-  const [lists, setLists] = useState({});
-  // const [notes, setNotes] = useState([])
+  const [lists, setLists] = useState({}); // needn't an object
+  const [notes, setNotes] = useState({})
   const [boardPath, setBoardPath] = useState("");
 
   const [currentBoard, setCurrentBoard] = useState({}); //
@@ -72,7 +72,7 @@ export default function DbContext({ children }) {
         );
         setLists(listItems);
         snapShot.docs.forEach((doc) => {
-          const unsub = listenToNoteChange(doc);
+          const unsub = listenToNoteChange(doc.id);
           listeners.push(unsub);
         });
       }
@@ -81,27 +81,22 @@ export default function DbContext({ children }) {
     return listeners;
   };;
 
-  const listenToNoteChange = (list) => {
-    const notePath = `${boardPath}/lists/${list.id}/notes`;
+  const listenToNoteChange = (listId) => {
+    const notePath = `${boardPath}/lists/${listId}/notes`;
     const unsub = onSnapshot(
       query(collection(db, notePath), orderBy("order")),
       (snapShot) => {
-        const notes = snapShot.docs.map((doc) => ({
+        const noteItems = snapShot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
-        console.log('normal', JSON.stringify(notes));
-        console.log(JSON.stringify(lists));
-        setLists((prevState) => ({
-          ...prevState,
-          [list.id]: { ...prevState[list.id], notes: notes },
-        }));
+        setNotes(prev => ({...prev, [listId]: noteItems}))
       }
     );
     return unsub;
   };
 
-  // console.log(console.log('%c Oh my heavens! ', 'background: #222; color: #bada55'))
+  // console.log('%c Oh my heavens! ', 'background: #222; color: #bada55')
 
   const createProfile = (user) => {
     return setDoc(doc(db, "users/" + user), {
@@ -233,7 +228,8 @@ export default function DbContext({ children }) {
     deleteBoard,
     noteDndForSameList,
     noteDndAmongDiffLists,
-    listDndOperation
+    listDndOperation,
+    notes
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

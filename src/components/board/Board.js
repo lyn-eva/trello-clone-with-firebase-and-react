@@ -1,18 +1,19 @@
-import { useState, useEffect, memo, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import BoardHeader from "./BoardHeader";
 import BoardSidebar from "./BoardSidebar";
-import Lists from "../list/Lists";
 import Button from "../utility/Button";
 import { useDB } from "../context/DbContext";
 import { useAuth } from "../context/AuthContext";
+import List from "../list/List";
 
 function Board() {
   const [sidebarOn, setSidebarOn] = useState(false);
   const {
     lists,
+    notes,
     reqBoardDetails,
     createList,
     currentBoard,
@@ -27,14 +28,11 @@ function Board() {
 
   useEffect(() => {
     setLocalLists(Object.values(lists));
-    setLocalNotes(
-      Object.values(lists).reduce(
-        (total, list) => (total = { ...total, [list.id]: list.notes }),
-        {}
-      )
-    );
-    console.log("values recomputed");
   }, [lists]);
+
+  useEffect(() => {
+    setLocalNotes(notes);
+  }, [notes]);
 
   const path = useLocation();
   useEffect(() => {
@@ -47,8 +45,11 @@ function Board() {
     setSidebarOn((prevState) => !prevState);
   };
 
-  // optimize
-
+  function Lists({ lists, notes }) {
+    return lists.map(({ id, title }, i) => {
+      return <List index={i} key={id} id={id} title={title} notes={notes[id]} />;
+    });
+  }
 
   const onDragEnd = ({ destination: target, source, type, draggableId }) => {
     if (
@@ -62,13 +63,14 @@ function Board() {
         const draggedList = localLists[source.index];
         localLists.splice(source.index, 1);
         localLists.splice(target.index, 0, draggedList);
-        // setLocalLists([...localLists]);
+        setLocalLists([...localLists]);
         listDndOperation(localLists);
         break;
 
       case "note":
         const sourceList = localNotes[source.droppableId];
         const draggedNote = sourceList[source.index];
+        // dnd at the same list
         if (source.droppableId === target.droppableId) {
           sourceList.splice(source.index, 1);
           sourceList.splice(target.index, 0, draggedNote);
@@ -78,8 +80,9 @@ function Board() {
           }));
           noteDndForSameList(source.droppableId, sourceList);
           break;
-        } else {
-          // dnd between different Lists
+        }
+        // dnd between different Lists
+        else {
           const targetList = localNotes[target.droppableId];
           sourceList.splice(source.index, 1);
           targetList.splice(target.index, 0, draggedNote);
@@ -109,9 +112,9 @@ function Board() {
             <ul
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="flex gap-4"
+              className="flex p-2"
             >
-              {localLists.length && <Lists lists={localLists} notes={localNotes}/>}
+              {localLists.length && <Lists lists={localLists} notes={localNotes} />}
               {provided.placeholder}
               <li>
                 <Button
