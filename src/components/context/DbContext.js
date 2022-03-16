@@ -90,6 +90,8 @@ export default function DbContext({ children }) {
           ...doc.data(),
           id: doc.id,
         }));
+        console.log('normal', JSON.stringify(notes));
+        console.log(JSON.stringify(lists));
         setLists((prevState) => ({
           ...prevState,
           [list.id]: { ...prevState[list.id], notes: notes },

@@ -1,10 +1,10 @@
-import { useState, useEffect, memo, useMemo } from "react";
+import { useState, useEffect, memo, useMemo, useCallback } from "react";
 import { useLocation } from "react-router";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 import BoardHeader from "./BoardHeader";
 import BoardSidebar from "./BoardSidebar";
-import List from "../list/List";
+import Lists from "../list/Lists";
 import Button from "../utility/Button";
 import { useDB } from "../context/DbContext";
 import { useAuth } from "../context/AuthContext";
@@ -23,7 +23,7 @@ function Board() {
   const { currentUser } = useAuth();
 
   const [localLists, setLocalLists] = useState([]); // for smoother UX
-  const [localNotes, setLocalNotes] = useState([]);
+  const [localNotes, setLocalNotes] = useState({});
 
   useEffect(() => {
     setLocalLists(Object.values(lists));
@@ -33,7 +33,7 @@ function Board() {
         {}
       )
     );
-    // console.log("values recomputed");
+    console.log("values recomputed");
   }, [lists]);
 
   const path = useLocation();
@@ -48,11 +48,7 @@ function Board() {
   };
 
   // optimize
-  const Lists = memo(() =>
-    localLists.map(({ id, title }, i) => {
-      return <List index={i} key={id} id={id} title={title} notes={localNotes[id]} />;
-    })
-  );
+
 
   const onDragEnd = ({ destination: target, source, type, draggableId }) => {
     if (
@@ -66,7 +62,7 @@ function Board() {
         const draggedList = localLists[source.index];
         localLists.splice(source.index, 1);
         localLists.splice(target.index, 0, draggedList);
-        setLocalLists([...localLists]);
+        // setLocalLists([...localLists]);
         listDndOperation(localLists);
         break;
 
@@ -115,7 +111,7 @@ function Board() {
               {...provided.droppableProps}
               className="flex gap-4"
             >
-              {localLists.length && <Lists />}
+              {localLists.length && <Lists lists={localLists} notes={localNotes}/>}
               {provided.placeholder}
               <li>
                 <Button

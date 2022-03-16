@@ -12,18 +12,18 @@ function Note({ noteTxt, listId, noteId, index }) {
     updateNote(listId, noteId, { title: newTitle });
   };
 
-  console.log("notes rerendered");
+  // console.log("notes rerendered");
 
   return (
-    <li className="bg-white my-2 py-2 rounded-sm shadow-note">
-      <Draggable draggableId={noteId} index={index}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.dragHandleProps}
-            {...provided.draggableProps}
-            className="text-[15px] relative group"
-          >
+    <Draggable draggableId={noteId} index={index}>
+      {(provided) => (
+        <li
+          ref={provided.innerRef}
+          {...provided.dragHandleProps}
+          {...provided.draggableProps}
+          className="bg-white my-2 py-2 rounded-sm shadow-note"
+        >
+          <div className="text-[15px] relative group">
             <DynamicTxt
               updateFunc={updateNoteTitle}
               initialName={noteTxt}
@@ -38,9 +38,9 @@ function Note({ noteTxt, listId, noteId, index }) {
               <i className="fas fa-times"></i>
             </Button>
           </div>
-        )}
-      </Draggable>
-    </li>
+        </li>
+      )}
+    </Draggable>
   );
 }
 
