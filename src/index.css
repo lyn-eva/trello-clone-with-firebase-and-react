@@ -6,7 +6,10 @@
 
 * {
   font-family: "roboto", sans-serif;
-  /* color: #c46f3e; */
+}
+
+.board-hdr::-webkit-scrollbar {
+  display: none;
 }
 
 @layer components {

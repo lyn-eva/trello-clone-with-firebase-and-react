@@ -1,12 +1,18 @@
 import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";
+import DynamicTxt from "../utility/DynamicTxt";
 
 function BoardHeader({ toggleSidebar }) {
-  const { currentBoard } = useDB();
+  const { currentBoard, updateBoard } = useDB();
+
+  const updateTitle = (title) => {
+    updateBoard({title})
+  }
 
   return (
-    <header className="m-2 flex justify-between items-center">
-      <h1 className="text-2xl font-medium">{currentBoard && currentBoard.title}</h1>
+    <header className="my-3 mx-2 flex items-center justify-between flex-wrap gap-2">
+      {/* <h1 >{currentBoard && currentBoard.title}</h1> */}
+      <DynamicTxt updateFunc={updateTitle} initialName={currentBoard.title} rows='1' maxLength='40' noWrap={true}style={{width: 'auto'}} className="text-2xl px-2 text-white font-medium bg-[rgba(255,255,255,.2)] rounded-md py-1"/>
       <ul className="flex justify-end gap-4">
         <li>
           <Button
@@ -20,7 +26,7 @@ function BoardHeader({ toggleSidebar }) {
         <li>
           <Button
             clickFunc={toggleSidebar}
-            className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-s"
+            className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-md"
           >
             <i className="text-lg fas fa-ellipsis-h text-dense-blue mr-3 text-inherit"></i>
             Show menu

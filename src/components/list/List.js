@@ -25,7 +25,7 @@ function List({ id, title, index, notes }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="mr-4 min-w-[20rem] w-64"
+          className="mr-4 min-w-[20rem] w-64 h-fit"
         >
           <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />
@@ -39,19 +39,18 @@ function List({ id, title, index, notes }) {
               </>
             )}
             <Droppable droppableId={id} type="note">
-              {(provided, snapShot) => {
-                console.log(snapShot);
-                return (
-                  <ul
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    className={`min-h-[1rem] ${snapShot.isDraggingOver ? "bg-gray-300" : ""}`}
-                  >
-                    {notes && <Notes noteList={notes} />}
-                    {provided.placeholder}
-                  </ul>
-                );
-              }}
+              {(provided, snapShot) => (
+                <ul
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className={`min-h-[1rem] ${
+                    snapShot.isDraggingOver ? "bg-gray-300" : ""
+                  }`}
+                >
+                  {notes && <Notes noteList={notes} />}
+                  {provided.placeholder}
+                </ul>
+              )}
             </Droppable>
             <ListFooter listId={id} noteOrder={notes?.length} />
           </div>

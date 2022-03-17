@@ -10,8 +10,8 @@ function ListHeader({ hdr, id, setDropDownOn }) {
   }
 
   return (
-    <header className="flex justify-between items-center pr-1 text-dense-blue py-2">
-      <DynamicTxt updateFunc={updateListTitle} title="text-[1.2rem]" initialName={hdr} />
+    <header className="flex justify-between items-center pr-1 text-dense-blue pb-2">
+      <DynamicTxt updateFunc={updateListTitle} className="text-[1.2rem] font-medium py-1" initialName={hdr} />
       <Button
         clickFunc={() => setDropDownOn(true)}
         className="py-0 px-2 hover:bg-hover-clr hover:rounded-md"

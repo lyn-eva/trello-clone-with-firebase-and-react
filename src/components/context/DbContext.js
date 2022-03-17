@@ -26,7 +26,7 @@ export const useDB = () => {
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
   const [lists, setLists] = useState({}); // needn't an object
-  const [notes, setNotes] = useState({})
+  const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState("");
 
   const [currentBoard, setCurrentBoard] = useState({}); //
@@ -79,7 +79,7 @@ export default function DbContext({ children }) {
     );
     listeners.push(unsub);
     return listeners;
-  };;
+  };
 
   const listenToNoteChange = (listId) => {
     const notePath = `${boardPath}/lists/${listId}/notes`;
@@ -90,7 +90,7 @@ export default function DbContext({ children }) {
           ...doc.data(),
           id: doc.id,
         }));
-        setNotes(prev => ({...prev, [listId]: noteItems}))
+        setNotes((prev) => ({ ...prev, [listId]: noteItems }));
       }
     );
     return unsub;
@@ -106,8 +106,9 @@ export default function DbContext({ children }) {
     });
   };
 
-  const updateBoard = (...details) => {
-    updateDoc(doc(db, boardPath), ...details);
+  const updateBoard = (newValues) => {
+    if (newValues.bg === currentBoard.bg) return;
+    updateDoc(doc(db, boardPath), { ...newValues, lastModified: serverTimestamp() });
   };
 
   const checkIfUserExists = (name) => {
@@ -117,7 +118,12 @@ export default function DbContext({ children }) {
 
   const createBoard = (boardName) => {
     const path = `users/${currentUser.displayName}/boards`;
-    return addDoc(collection(db, path), { title: boardName, bg: "#0079bf" });
+    return addDoc(collection(db, path), {
+      title: boardName,
+      bg: "#0079bf",
+      createdAt: serverTimestamp(),
+      lastModified: serverTimestamp(),
+    });
   };
 
   const createList = (listTitle, order) => {
@@ -189,12 +195,15 @@ export default function DbContext({ children }) {
       doc(db, `${boardPath}/lists/${source.droppableId}/notes/${draggedNote.id}`)
     );
 
-    batch.set(doc(db, `${boardPath}/lists/${target.droppableId}/notes/${draggedNote.id}`), {
-      title: draggedNote.title,
-      order: target.index,
-      createdAt: draggedNote.createdAt,
-      lastModified: serverTimestamp(),
-    });
+    batch.set(
+      doc(db, `${boardPath}/lists/${target.droppableId}/notes/${draggedNote.id}`),
+      {
+        title: draggedNote.title,
+        order: target.index,
+        createdAt: draggedNote.createdAt,
+        lastModified: serverTimestamp(),
+      }
+    );
 
     targetList.forEach(({ id }, index) => {
       const path = `${boardPath}/lists/${target.droppableId}/notes/${id}`;
@@ -229,7 +238,7 @@ export default function DbContext({ children }) {
     noteDndForSameList,
     noteDndAmongDiffLists,
     listDndOperation,
-    notes
+    notes,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

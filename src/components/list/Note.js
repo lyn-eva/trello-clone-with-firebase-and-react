@@ -26,7 +26,7 @@ function Note({ noteTxt, listId, noteId, index }) {
               <DynamicTxt
                 updateFunc={updateNoteTitle}
                 initialName={noteTxt}
-                className="px-2"
+                className="px-2 text-lg"
               />
               <Button
                 clickFunc={() => {

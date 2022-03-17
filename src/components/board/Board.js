@@ -112,9 +112,9 @@ function Board() {
             <ul
               ref={provided.innerRef}
               {...provided.droppableProps}
-              className="flex p-2 overflow-x-auto grow"
+              className="flex px-2 overflow-x-auto grow"
             >
-              {localLists.length && <Lists lists={localLists} notes={localNotes} />}
+              {localLists !== [] && <Lists lists={localLists} notes={localNotes} />}
               {provided.placeholder}
               <li>
                 <Button

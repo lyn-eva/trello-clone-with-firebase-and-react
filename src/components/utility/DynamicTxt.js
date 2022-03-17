@@ -1,9 +1,11 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 
-function DynamicTxt({ initialName, className, title, updateFunc }) {
+function DynamicTxt({ initialName, className, style, rows, maxLength, noWrap, updateFunc }) {
   const [rename, setRename] = useState(false);
   const [value, setValue] = useState(initialName); //
   const txtAreaRef = useRef();
+
+  useEffect(() => setValue(initialName), [initialName])
 
   const renameStart = () => {
     txtAreaRef.current.value = value;
@@ -16,23 +18,26 @@ function DynamicTxt({ initialName, className, title, updateFunc }) {
   const renameEnd = () => {
     setRename(false);
     const newValue = txtAreaRef.current.value;
-    if (value === newValue) return;
-    setValue(newValue); 
+    if (value === newValue || newValue === '') return;
+    setValue(newValue);
     updateFunc(newValue);
   };
 
   return (
     <div
       onDoubleClick={renameStart}
-      className={`${title || ""} text-dense-blue w-full ${className || ""}`}
+      className={`text-dense-blue w-full ${className || ""}`}
+      style={style || {}}
     >
       <textarea
         onBlur={renameEnd}
         ref={txtAreaRef}
         type="text"
-        className={` p-1 w-full resize-none ${rename ? "block" : "hidden"}`}
+        rows={rows || ''}
+        maxLength={maxLength || ''}
+        className={`board-hdr text-black p-1 w-full resize-none ${rename ? "block" : "hidden"} ${noWrap ? 'whitespace-nowrap' : '' }`}
       />
-      <p className={`p-1  ${rename ? "hidden" : "block"}`}>{value}</p>
+      <p className={`px-1 w-auto whitespace-pre-wrap ${rename ? "hidden" : "block"}`}>{value}</p>
     </div>
   );
 }
