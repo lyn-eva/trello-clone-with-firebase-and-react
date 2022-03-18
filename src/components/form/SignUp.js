@@ -7,18 +7,21 @@ import LoadingCircle from "../utility/LoadingCircle";
 import { useDB } from "../context/DbContext";
 
 function SignUp() {
-  const { normalSignUp, updateUserProfile } = useAuth();
-  const { checkIfUserExists, createProfile } = useDB();
+  const { normalSignUp, updateDisplayName } = useAuth();
+  // const { checkIfUserExists, createProfile } = useDB();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentUser, setcurrentUser] = useState("");
 
   const {
-    emailRef,
-    pwdRef,
-    pwdConfirmRef,
-    usernameRef,
+    email,
+    pwd,
+    pwdConfirm,
+    username,
+    handleEmail,
+    handlePwd,
+    handlePwdConfirm,
+    handleUsername,
     emailIsVaild,
     pwdIsValid,
     pwdConfirmIsValid,
@@ -28,11 +31,6 @@ function SignUp() {
     pwdConfirmError,
     usernameError,
   } = useValidate();
-
-  const handleChange = () => {
-    // onChange is not too bad
-    setcurrentUser(usernameRef.current.value);
-  };
 
   const errorMsg = (msg) => {
     return <small className="text-red-400 block -mb-1">{msg}</small>;
@@ -50,18 +48,18 @@ function SignUp() {
       return;
     }
     setLoading(true);
-    normalSignUp(emailRef.current.value, pwdRef.current.value)
+    normalSignUp(email, pwd)
       .then(() => {
         setLoading(false);
         setError("");
-        updateUserProfile(currentUser.trim());
-        navigate(`../${currentUser}`);
-        return checkIfUserExists(currentUser);
+        updateDisplayName(username)
+        navigate(`../${username}`);
+        // return checkIfUserExists(username);
       })
-      .then((res) => {
-        if (res.data()) return;
-        createProfile(currentUser.trim());
-      })
+      // .then((res) => {
+      //   if (res.data()) return;
+      //   createProfile(username);
+      // })
       .catch((err) => {
         setLoading(false);
         setError(err.code.slice(5).split("-").join(" "));
@@ -88,10 +86,9 @@ function SignUp() {
               </label>
               {usernameError && errorMsg(usernameError)}
               <input
-                onChange={handleChange}
-                value={currentUser}
+                onChange={handleUsername}
+                value={username}
                 id="username"
-                ref={usernameRef}
                 placeholder="man of culture?"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
               />
@@ -103,7 +100,8 @@ function SignUp() {
               {emailError && errorMsg(emailError)}
               <input
                 id="email"
-                ref={emailRef}
+                value={email}
+                onChange={handleEmail}
                 placeholder="username@company.domain"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
               />
@@ -116,7 +114,8 @@ function SignUp() {
               <input
                 id="password"
                 type="password"
-                ref={pwdRef}
+                value={pwd}
+                onChange={handlePwd}
                 placeholder="Password"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
               />
@@ -129,7 +128,8 @@ function SignUp() {
               <input
                 id="confirmPwd"
                 type="password"
-                ref={pwdConfirmRef}
+                value={pwdConfirm}
+                onChange={handlePwdConfirm}
                 placeholder="Password"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
               />

@@ -39,7 +39,7 @@ export default function AuthContext({ children }) {
     return signOut(auth);
   };
 
-  const updateUserProfile = (username) => {
+  const updateDisplayName = (username) => {
     return updateProfile(auth.currentUser, {
       displayName: username,
     });
@@ -50,7 +50,7 @@ export default function AuthContext({ children }) {
     normalSignUp,
     normalSignIn,
     signOutUser,
-    updateUserProfile,
+    updateDisplayName,
   };
 
   return (

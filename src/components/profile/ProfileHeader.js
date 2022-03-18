@@ -30,12 +30,18 @@ function BoardHeader({ toggleSidebar }) {
       <div className="flex gap-4">
         <Button
           clickFunc={handleSignOut}
-          className="text-white py-[5px] bg-red-400 rounded-md"
+          className="py-[5px] bg-white tracking-wide rounded-md"
+        >
+          Sign up
+        </Button>
+        <Button
+          clickFunc={handleSignOut}
+          className="py-[5px] tracking-wide bg-white rounded-md"
         >
           Sign Out
         </Button>
-        <div className="border-2 border-black w-10 grid place-items-center rounded-full bg-white h-full">
-          <i className="fas fa-user-alt"></i>
+        <div className="border-white w-10 grid place-items-center rounded-full bg-black h-full">
+          <i className="fas fa-user-alt text-white"></i>
         </div>
       </div>
     </header>

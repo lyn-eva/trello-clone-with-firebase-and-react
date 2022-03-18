@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
 
 function Login() {
-  const { emailRef, pwdRef, emailIsVaild, pwdIsValid, emailError, pwdError } =
+  const { email, pwd, handleEmail, handlePwd, emailIsVaild, pwdIsValid, emailError, pwdError } =
     useValidate();
 
   const { currentUser: user, normalSignIn } = useAuth();
@@ -33,7 +33,7 @@ function Login() {
       return;
     }
     setLoading(true);
-    normalSignIn(emailRef.current.value, pwdRef.current.value)
+    normalSignIn(email, pwd)
       .then(() => {
         setLoading(false);
         setError("");
@@ -46,7 +46,7 @@ function Login() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-[#40af9b]">
       {loading && <LoadingCircle msg="Logging in..." />}
       {error && (
         <span className="bg-orange-100 border-2 border-red-300 w-[18rem] px-[1.9rem] box-content py-3 shadow-lg">
@@ -66,10 +66,11 @@ function Login() {
               {emailError && errorMsg(emailError)}
               <input
                 id="email"
-                ref={emailRef}
+                value={email}
+                onChange={handleEmail}
                 placeholder="username@company.domain"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-              />
+                />
             </div>
             <div className="mt-8">
               <label className="block" htmlFor="password">
@@ -78,8 +79,9 @@ function Login() {
               {pwdError && errorMsg(pwdError)}
               <input
                 id="password"
+                value={pwd}
+                onChange={handlePwd}
                 type="password"
-                ref={pwdRef}
                 placeholder="Password"
                 className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />

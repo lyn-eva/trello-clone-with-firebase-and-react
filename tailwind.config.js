@@ -33,5 +33,11 @@ module.exports = {
       },
     },
   },
+  variants: {
+    extend: {
+      opacity: ["hover", "focus"],
+      display: ["focus"],
+    }
+  },
   plugins: [],
 };

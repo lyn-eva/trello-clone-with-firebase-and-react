@@ -28,7 +28,6 @@ export default function DbContext({ children }) {
   const [lists, setLists] = useState({}); // needn't an object
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState("");
-
   const [currentBoard, setCurrentBoard] = useState({}); //
 
   const { currentUser } = useAuth();
@@ -55,7 +54,7 @@ export default function DbContext({ children }) {
 
   const listenToBoardChange = () => {
     const path = `users/${currentUser?.displayName}/boards`;
-    return onSnapshot(collection(db, path), (snapShot) => {
+    return onSnapshot(query(collection(db, path), orderBy("createdAt")), (snapShot) => {
       setBoards(snapShot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
   };
@@ -111,8 +110,8 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, boardPath), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  const checkIfUserExists = (name) => {
-    const path = `users/${name}`;
+  const checkIfUserExists = () => {
+    const path = `users/${currentUser?.displayName}`;
     return getDoc(doc(db, path));
   };
 
@@ -167,6 +166,7 @@ export default function DbContext({ children }) {
   };
 
   const deleteBoard = (id) => {
+    console.log(id)
     const path = `users/${currentUser.displayName}/boards/${id}`;
     deleteDoc(doc(db, path));
   };
@@ -218,27 +218,27 @@ export default function DbContext({ children }) {
   };
 
   const value = {
+    boards,
+    lists,
+    notes,
+    currentBoard,
+    setCurrentBoard,
+    reqBoardDetails,
+    setLists,
+    checkIfUserExists,
     createProfile,
     createBoard,
     createList,
-    checkIfUserExists,
-    lists,
-    setLists,
-    boards,
-    setCurrentBoard,
-    currentBoard,
-    reqBoardDetails,
-    updateList,
     createNote,
-    deleteList,
-    updateNote,
-    deleteNote,
     updateBoard,
+    updateList,
+    updateNote,
     deleteBoard,
+    deleteList,
+    deleteNote,
     noteDndForSameList,
     noteDndAmongDiffLists,
     listDndOperation,
-    notes,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

@@ -1,17 +1,29 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 function useValidate() {
   const [emailError, setEmailError] = useState("");
   const [pwdError, setPwdError] = useState("");
   const [pwdConfirmError, setpwdConfirmError] = useState("");
   const [usernameError, setUsernameError] = useState("");
-  const emailRef = useRef();
-  const pwdRef = useRef();
-  const pwdConfirmRef = useRef();
-  const usernameRef = useRef();
+  const [email, setEmail] = useState('');
+  const [pwd, setPwd] = useState('');
+  const [pwdConfirm, setPwdConfirm] = useState('');
+  const [username, setUsername] = useState('');;
 
+  const handleEmail = e => {
+    setEmail(e.target.value);
+  }
+  const handlePwd = e => {
+    setPwd(e.target.value);
+  }
+  const handlePwdConfirm = e => {
+    setPwdConfirm(e.target.value);
+  }
+  const handleUsername = e => {
+    setUsername(e.target.value.trim());
+  }
+  
   const emailIsVaild = () => {
-    const email = emailRef.current.value;
     if (email.length === 0) {
       setEmailError("email must not be empty");
       return false;
@@ -29,7 +41,6 @@ function useValidate() {
   };
 
   const pwdIsValid = () => {
-    const pwd = pwdRef.current.value;
     if (pwd.length === 0) {
       setPwdError("pwd must not be empty");
       return false;
@@ -43,7 +54,7 @@ function useValidate() {
   };
 
   const pwdConfirmIsValid = () => {
-    if (pwdConfirmRef.current.value !== pwdRef.current.value) {
+    if (pwd !== pwdConfirm) {
       setpwdConfirmError("passwords don't match");
       return false;
     }
@@ -52,7 +63,6 @@ function useValidate() {
   };
 
   const usernameIsValid = () => {
-    const username = usernameRef.current.value.trim();
     if (username.length === 0) {
       setUsernameError("username must not be empty");
       return false;
@@ -74,10 +84,14 @@ function useValidate() {
     pwdError,
     pwdConfirmError,
     usernameError,
-    emailRef,
-    pwdRef,
-    pwdConfirmRef,
-    usernameRef,
+    email,
+    pwd,
+    pwdConfirm,
+    username,
+    handleEmail,
+    handlePwd,
+    handlePwdConfirm,
+    handleUsername,
   };
 }
 
