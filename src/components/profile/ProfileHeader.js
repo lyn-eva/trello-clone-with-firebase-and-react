@@ -6,6 +6,10 @@ function BoardHeader({ toggleSidebar }) {
   const { signOutUser } = useAuth();
   const navigate = useNavigate();
 
+  const handleSignUp = () => {
+    navigate("../signup");
+  }
+
   const handleSignOut = () => {
     signOutUser()
       .then(() => {
@@ -27,9 +31,9 @@ function BoardHeader({ toggleSidebar }) {
           </Button>
         </li>
       </ul>
-      <div className="flex gap-4">
+      <nav className="flex gap-4">
         <Button
-          clickFunc={handleSignOut}
+          clickFunc={handleSignUp}
           className="py-[5px] bg-white tracking-wide rounded-md"
         >
           Sign up
@@ -43,7 +47,7 @@ function BoardHeader({ toggleSidebar }) {
         <div className="border-white w-10 grid place-items-center rounded-full bg-black h-full">
           <i className="fas fa-user-alt text-white"></i>
         </div>
-      </div>
+      </nav>
     </header>
   );
 }

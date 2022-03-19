@@ -17,8 +17,8 @@ function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    userAlreadyExists().then((user) => {
-      if (user.id) return;
+    userAlreadyExists().then(exist => {
+      if (exist.data()) return;
       createProfile(currentUser.displayName); // create firestore path if the user is new signup
     });
   }, [currentUser.displayName]);
@@ -47,10 +47,11 @@ function Profile() {
               <h3 className="text-2xl font-normal">
                 <i>{title}</i>
               </h3>
-              <div
-                className="absolute right-3 bottom-3 group"
-              >
-                <button onClick={() => setDeleteBOARD({delete: true, id, title})} className="peer text-[14px] py-1 px-2 bg-white text-black rounded-sm translate-x-20 pointer-events-none duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto focus:!opacity-0">
+              <div className="absolute right-3 bottom-3 group">
+                <button
+                  onClick={() => setDeleteBOARD({ delete: true, id, title })}
+                  className="peer text-[14px] py-1 px-2 bg-white text-black rounded-sm translate-x-20 pointer-events-none duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto focus:!opacity-0"
+                >
                   delete
                 </button>
               </div>
@@ -60,13 +61,19 @@ function Profile() {
             <Button
               clickFunc={() => setAddBoard(true)}
               className="h-36 w-52 rounded-md p-3 text-3xl bg-hover-clr shadow-inner shadow-grey-500"
-              >
+            >
               <i className="fas fa-plus" />
             </Button>
           </li>
         </ul>
         {addBoard && <CreateNewBoard setNewBoard={setAddBoard} />}
-      {deleteBOARD.delete && <DeleteExistingBoard setDeleteBOARD={setDeleteBOARD} id={deleteBOARD.id} title={deleteBOARD.title}/>}
+        {deleteBOARD.delete && (
+          <DeleteExistingBoard
+            setDeleteBOARD={setDeleteBOARD}
+            id={deleteBOARD.id}
+            title={deleteBOARD.title}
+          />
+        )}
       </main>
     </div>
   );

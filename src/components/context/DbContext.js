@@ -12,6 +12,7 @@ import {
   orderBy,
   deleteDoc,
   writeBatch,
+  getDocs,
 } from "@firebase/firestore";
 
 import { db } from "../firebase-config";
@@ -155,19 +156,38 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  const deleteList = (id) => {
-    const path = `${boardPath}/lists/${id}`;
-    deleteDoc(doc(db, path));
+  const deleteBoard = (id) => {
+    const batch = writeBatch(db);
+    const path = `users/${currentUser.displayName}/boards/${id}`;
+    getDocs(collection(db, `${path}/lists`))
+      .then((res) => {
+        const nestedLists = res.docs.map(async(Doc) => await deleteList(Doc.id, batch)); // delete nested lists
+        return Promise.all(nestedLists);
+      })
+      .then(() => {
+        batch.delete(doc(db, path));
+        batch.commit();
+      });
   };
 
+  const deleteList = async(id, Batch) => {
+    const batch = Batch ?? writeBatch(db);
+    const path = `${boardPath}/lists/${id}`;
+    return await getDocs(collection(db, `${path}/notes`))
+      .then((res) => {
+        const nestedNotes = res.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
+        return Promise.all([...nestedNotes, batch.delete(doc(db, path))]); // delete nested notes
+      })
+      .then((res) => {
+        if (Batch) return res;
+        batch.commit();
+      });
+  };
+
+  // change this to await too
   const deleteNote = (listId, noteId) => {
     const path = `${boardPath}/lists/${listId}/notes/${noteId}`;
     deleteDoc(doc(db, path));
-  };
-
-  const deleteBoard = (id) => {
-    const path = `users/${currentUser.displayName}/boards/${id}`;
-    return deleteDoc(doc(db, path));
   };
 
   const listDndOperation = (listArray) => {
