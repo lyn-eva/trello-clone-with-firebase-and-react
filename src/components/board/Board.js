@@ -39,7 +39,7 @@ function Board() {
     if (!currentUser) return;
     reqBoardDetails(path.pathname.match(/\w+$/gi)[0]);
     return () => {};
-  }, [currentUser]);
+  }, [currentUser, path.pathname]);
 
   const toggleSidebar = () => {
     setSidebarOn((prevState) => !prevState);

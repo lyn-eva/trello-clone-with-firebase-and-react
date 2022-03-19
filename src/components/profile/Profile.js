@@ -6,16 +6,18 @@ import ProfileHeader from "./ProfileHeader";
 import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";
 import CreateNewBoard from "./CreateNewBoard";
+import DeleteExistingBoard from "./DeleteExistingBoard";
 
 function Profile() {
-  const { boards, deleteBoard, checkIfUserExists, createProfile } = useDB();
+  const { boards, userAlreadyExists, createProfile } = useDB();
   const { currentUser } = getAuth();
-  const [newBoard, setNewBoard] = useState(false);
+  const [addBoard, setAddBoard] = useState(false);
+  const [deleteBOARD, setDeleteBOARD] = useState({});
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    checkIfUserExists().then((user) => {
+    userAlreadyExists().then((user) => {
       if (user.id) return;
       createProfile(currentUser.displayName); // create firestore path if the user is new signup
     });
@@ -48,7 +50,7 @@ function Profile() {
               <div
                 className="absolute right-3 bottom-3 group"
               >
-                <button onClick={() => deleteBoard(id)} className="peer text-[14px] py-1 px-2 bg-white text-black rounded-sm translate-x-20 pointer-events-none duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto focus:!opacity-0">
+                <button onClick={() => setDeleteBOARD({delete: true, id, title})} className="peer text-[14px] py-1 px-2 bg-white text-black rounded-sm translate-x-20 pointer-events-none duration-300 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto focus:!opacity-0">
                   delete
                 </button>
               </div>
@@ -56,14 +58,15 @@ function Profile() {
           ))}
           <li>
             <Button
-              clickFunc={() => setNewBoard(true)}
+              clickFunc={() => setAddBoard(true)}
               className="h-36 w-52 rounded-md p-3 text-3xl bg-hover-clr shadow-inner shadow-grey-500"
-            >
+              >
               <i className="fas fa-plus" />
             </Button>
           </li>
         </ul>
-        {newBoard && <CreateNewBoard setNewBoard={setNewBoard} />}
+        {addBoard && <CreateNewBoard setNewBoard={setAddBoard} />}
+      {deleteBOARD.delete && <DeleteExistingBoard setDeleteBOARD={setDeleteBOARD} id={deleteBOARD.id} title={deleteBOARD.title}/>}
       </main>
     </div>
   );

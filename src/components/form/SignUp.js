@@ -8,7 +8,7 @@ import { useDB } from "../context/DbContext";
 
 function SignUp() {
   const { normalSignUp, updateDisplayName } = useAuth();
-  // const { checkIfUserExists, createProfile } = useDB();
+  // const { userAlreadyExists, createProfile } = useDB();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -54,7 +54,7 @@ function SignUp() {
         setError("");
         updateDisplayName(username)
         navigate(`../${username}`);
-        // return checkIfUserExists(username);
+        // return userAlreadyExists(username);
       })
       // .then((res) => {
       //   if (res.data()) return;

@@ -110,7 +110,7 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, boardPath), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  const checkIfUserExists = () => {
+  const userAlreadyExists = () => {
     const path = `users/${currentUser?.displayName}`;
     return getDoc(doc(db, path));
   };
@@ -166,9 +166,8 @@ export default function DbContext({ children }) {
   };
 
   const deleteBoard = (id) => {
-    console.log(id)
     const path = `users/${currentUser.displayName}/boards/${id}`;
-    deleteDoc(doc(db, path));
+    return deleteDoc(doc(db, path));
   };
 
   const listDndOperation = (listArray) => {
@@ -225,7 +224,7 @@ export default function DbContext({ children }) {
     setCurrentBoard,
     reqBoardDetails,
     setLists,
-    checkIfUserExists,
+    userAlreadyExists,
     createProfile,
     createBoard,
     createList,

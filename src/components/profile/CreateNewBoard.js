@@ -15,11 +15,11 @@ function CreateNewBoard({ setNewBoard }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const title = titleRef.current.value.trim();
+    const title = titleRef.current.value.trim().replace(/\s+/g, " ");
     if (title === "") return setErr("required");
     setLoading(true);
     setErr("");
-    createBoard(title.replace(/\s+/g, " ")).then((boardDetail) => {
+    createBoard(title).then((boardDetail) => {
       setLoading(false);
       navigate(`./${boardDetail.id}`);
     });
@@ -33,7 +33,7 @@ function CreateNewBoard({ setNewBoard }) {
       )}
       {loading && <LoadingCircle msg="create a new board ..." />}
       {!loading && (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-3">
+        <div className="rounded-sm absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-3">
           <form onSubmit={handleSubmit} className="w-56 text-grey-blue">
             <label htmlFor="title" className="font-medium ">
               Board title

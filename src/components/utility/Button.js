@@ -5,7 +5,8 @@ function Button({ children, clickFunc, className, style }) {
     <button
       onClick={clickFunc}
       className={`${className} px-4`}
-      // style={style || ''}
+      style={style || 
+      {}}
     >
       {children}
     </button>
