@@ -176,9 +176,7 @@ export default function DbContext({ children }) {
     const batch = Batch ?? writeBatch(db);
     const path = `${boardPath}/lists/${id}`;
     const noteList = await getDocs(collection(db, `${path}/notes`)); // get lists of deleted board
-    const nestedNotes = noteList.docs.map((Doc) =>
-      batch.delete(doc(db, `${path}/notes/${Doc.id}`))
-    );
+    const nestedNotes = noteList.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
     const batchArray = await Promise.all([...nestedNotes, batch.delete(doc(db, path))]);
     const updatedList = Object.keys(lists).filter((key) => key !== id);
     updateListOrder(updatedList);
@@ -211,7 +209,7 @@ export default function DbContext({ children }) {
     batch.commit();
   };
 
-  const noteDndAmongDiffLists = (draggedNote, source, target, sourceList, targetList) => {
+  const updateNotesOrder = (draggedNote, source, target, sourceList, targetList) => {
     const batch = writeBatch(db), sourceId = source.droppableId, targetId = target.droppableId;
 
     const batchNote = (List, ListId) => {
@@ -258,7 +256,7 @@ export default function DbContext({ children }) {
     deleteList,
     deleteNote,
     updateNoteOrder,
-    noteDndAmongDiffLists,
+    updateNotesOrder,
     updateListOrder,
   };
 

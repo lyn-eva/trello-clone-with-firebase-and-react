@@ -18,7 +18,7 @@ function Board() {
     createList,
     currentBoard,
     updateNoteOrder,
-    noteDndAmongDiffLists,
+    updateNotesOrder,
     updateListOrder,
   } = useDB();
   const { currentUser } = useAuth();
@@ -90,7 +90,7 @@ function Board() {
             [source.droppableId]: sourceList,
             [target.droppableId]: targetList,
           }));
-          noteDndAmongDiffLists(draggedNote, source, target, sourceList, targetList);
+          updateNotesOrder(draggedNote, source, target, sourceList, targetList);
           break;
         }
 
