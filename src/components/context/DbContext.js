@@ -26,31 +26,30 @@ export const useDB = () => {
 
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
-  const [lists, setLists] = useState([]); // needn't an object
+  const [lists, setLists] = useState({}); // needn't an object
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState("");
-  const [currentBoard, setCurrentBoard] = useState({}); //
+  const [currentBoard, setCurrentBoard] = useState(null); //
 
   const { currentUser } = useAuth();
 
   useEffect(() => {
     if (!currentUser) return;
     const unsubBoardListener = listenToBoardChange();
+    setBoardPath(`users/${currentUser?.displayName}/boards/${currentBoard?.id}`);
 
     return () => {
       unsubBoardListener();
     };
-  }, [currentUser]);
+  }, [currentUser, currentBoard]);
 
   useEffect(() => {
     if (!currentBoard) return;
-    setBoardPath(`users/${currentUser.displayName}/boards/${currentBoard.id}`);
     const unsubListeners = listenToListChange();
-
     return () => {
       unsubListeners.forEach((unsub) => unsub());
     };
-  }, [currentBoard, currentUser.displayName]);
+  }, [boardPath]);
 
   const reqBoardDetails = (id) => {
     const path = `users/${currentUser.displayName}/boards/${id}`;
@@ -72,6 +71,7 @@ export default function DbContext({ children }) {
     const unsub = onSnapshot(
       query(collection(db, path), orderBy("order")),
       (snapShot) => {
+        console.log(path);
         const listItems = snapShot.docs.reduce(
           (total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),
           {}
@@ -140,8 +140,8 @@ export default function DbContext({ children }) {
     });
   };
 
-  const createNote = (id, order, noteTxt) => {
-    const path = `${boardPath}/lists/${id}/notes`;
+  const createNote = (listId, order, noteTxt) => {
+    const path = `${boardPath}/lists/${listId}/notes`;
     addDoc(collection(db, path), {
       title: noteTxt,
       order: order,
@@ -149,6 +149,8 @@ export default function DbContext({ children }) {
       lastModified: serverTimestamp(),
     });
   };
+
+  console.log("notes", lists);
 
   const updateList = (id, newValues) => {
     const path = `${boardPath}/lists/${id}`;
@@ -160,51 +162,47 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  const deleteBoard = (id) => {
+  const deleteBoard = async (id) => {
     const batch = writeBatch(db);
     const path = `users/${currentUser.displayName}/boards/${id}`;
-    getDocs(collection(db, `${path}/lists`))
-      .then((res) => {
-        const nestedLists = res.docs.map(async (Doc) => await deleteList(Doc.id, batch)); // delete nested lists
-        return Promise.all(nestedLists);
-      })
-      .then(() => {
-        batch.delete(doc(db, path));
-        batch.commit();
-      });
+    const listItems = await getDocs(collection(db, `${path}/lists`));
+    const deleteNested = listItems.docs.map((Doc) => deleteList(Doc.id, batch)); // delete nested lists
+    const deleteLists = await Promise.all(deleteNested);
+    batch.delete(doc(db, path));
+    batch.commit();
   };
 
   const deleteList = async (id, Batch) => {
     const batch = Batch ?? writeBatch(db);
     const path = `${boardPath}/lists/${id}`;
-    return await getDocs(collection(db, `${path}/notes`))
-      .then((res) => {
-        const nestedNotes = res.docs.map((Doc) =>
-          batch.delete(doc(db, `${path}/notes/${Doc.id}`))
-        ); // delete nested notes
-        return Promise.all([...nestedNotes, batch.delete(doc(db, path))]);
-      })
-      .then((res) => {
-        if (Batch) return res;
-        batch.commit();
-      });
+    const noteList = await getDocs(collection(db, `${path}/notes`)); // get lists of deleted board
+    const nestedNotes = noteList.docs.map((Doc) =>
+      batch.delete(doc(db, `${path}/notes/${Doc.id}`))
+    );
+    const batchArray = await Promise.all([...nestedNotes, batch.delete(doc(db, path))]);
+    const updatedList = Object.keys(lists).filter((key) => key !== id);
+    updateListOrder(updatedList);
+    return Batch ? batchArray : batch.commit();
   };
 
-  const deleteNote = (listId, noteId) => {
+  const deleteNote = (listId, noteId, index) => {
     const path = `${boardPath}/lists/${listId}/notes/${noteId}`;
     deleteDoc(doc(db, path));
+    const updatedArray = [...notes[listId]];
+    updatedArray.splice(index, 1);
+    updateNoteOrder(listId, updatedArray);
   };
 
-  const listDndOperation = (listArray) => {
+  const updateListOrder = (listArray) => {
     const batch = writeBatch(db);
-    listArray.forEach(({ id }, index) => {
+    listArray.forEach((id, index) => {
       const path = `${boardPath}/lists/${id}`;
       batch.update(doc(db, path), { order: index });
     });
     batch.commit();
   };
 
-  const noteDndForSameList = (listId, noteArray) => {
+  const updateNoteOrder = (listId, noteArray) => {
     const batch = writeBatch(db);
     noteArray.forEach(({ id }, index) => {
       const path = `${boardPath}/lists/${listId}/notes/${id}`;
@@ -214,30 +212,29 @@ export default function DbContext({ children }) {
   };
 
   const noteDndAmongDiffLists = (draggedNote, source, target, sourceList, targetList) => {
-    const batch = writeBatch(db);
-    batch.delete(
-      doc(db, `${boardPath}/lists/${source.droppableId}/notes/${draggedNote.id}`)
-    );
+    const batch = writeBatch(db), sourceId = source.droppableId, targetId = target.droppableId;
 
+    const batchNote = (List, ListId) => {
+      List.forEach(({ id }, index) => {
+        const path = `${boardPath}/lists/${ListId}/notes/${id}`;
+        batch.update(doc(db, path), { order: index });
+      });
+    };
+
+    batch.delete(
+      doc(db, `${boardPath}/lists/${sourceId}/notes/${draggedNote.id}`)
+    );
     batch.set(
-      doc(db, `${boardPath}/lists/${target.droppableId}/notes/${draggedNote.id}`),
+      doc(db, `${boardPath}/lists/${targetId}/notes/${draggedNote.id}`),
       {
-        title: draggedNote.title,
+        ...draggedNote,
         order: target.index,
-        createdAt: draggedNote.createdAt,
         lastModified: serverTimestamp(),
       }
     );
+    batchNote(targetList, targetId)
+    batchNote(sourceList, sourceId)
 
-    targetList.forEach(({ id }, index) => {
-      const path = `${boardPath}/lists/${target.droppableId}/notes/${id}`;
-      batch.update(doc(db, path), { order: index });
-    });
-
-    sourceList.forEach(({ id }, index) => {
-      const path = `${boardPath}/lists/${source.droppableId}/notes/${id}`;
-      batch.update(doc(db, path), { order: index });
-    });
     batch.commit();
   };
 
@@ -260,9 +257,9 @@ export default function DbContext({ children }) {
     deleteBoard,
     deleteList,
     deleteNote,
-    noteDndForSameList,
+    updateNoteOrder,
     noteDndAmongDiffLists,
-    listDndOperation,
+    updateListOrder,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

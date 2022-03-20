@@ -17,9 +17,9 @@ function Board() {
     reqBoardDetails,
     createList,
     currentBoard,
-    noteDndForSameList,
+    updateNoteOrder,
     noteDndAmongDiffLists,
-    listDndOperation,
+    updateListOrder,
   } = useDB();
   const { currentUser } = useAuth();
 
@@ -38,7 +38,6 @@ function Board() {
   useEffect(() => {
     if (!currentUser) return;
     reqBoardDetails(path.pathname.match(/\w+$/gi)[0]);
-    return () => {};
   }, [currentUser, path.pathname]);
 
   const toggleSidebar = () => {
@@ -64,7 +63,7 @@ function Board() {
         localLists.splice(source.index, 1);
         localLists.splice(target.index, 0, draggedList);
         setLocalLists([...localLists]);
-        listDndOperation(localLists);
+        updateListOrder(localLists.map(list => list.id));
         break;
 
       case "note":
@@ -78,7 +77,7 @@ function Board() {
             ...prevState,
             [source.droppableId]: sourceList,
           }));
-          noteDndForSameList(source.droppableId, sourceList);
+          updateNoteOrder(source.droppableId, sourceList);
           break;
         }
         // dnd between different Lists
@@ -101,34 +100,38 @@ function Board() {
   };
 
   return (
-    <div
-      className={`relative p-[0.02px] bg-[${currentBoard.bg}] h-fit min-h-screen flex flex-col`}
-    >
-      <DragDropContext onDragEnd={onDragEnd}>
-        <BoardHeader toggleSidebar={toggleSidebar} />
-        <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
-        <Droppable type="list" droppableId="list-container" direction="horizontal">
-          {(provided) => (
-            <ul
-              ref={provided.innerRef}
-              {...provided.droppableProps}
-              className="flex px-2 overflow-x-auto grow"
-            >
-              {localLists !== [] && <Lists lists={localLists} notes={localNotes} />}
-              {provided.placeholder}
-              <li>
-                <Button
-                  clickFunc={() => createList("new list", localLists.length)}
-                  className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
+    <>
+      {currentBoard && (
+        <div
+          className={`relative p-[0.02px] bg-[${currentBoard.bg}] h-fit min-h-screen flex flex-col`}
+        >
+          <DragDropContext onDragEnd={onDragEnd}>
+            <BoardHeader toggleSidebar={toggleSidebar} />
+            <BoardSidebar on={sidebarOn} toggleSidebar={toggleSidebar} />
+            <Droppable type="list" droppableId="list-container" direction="horizontal">
+              {(provided) => (
+                <ul
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className="flex px-2 overflow-x-auto grow"
                 >
-                  <i className="fas fa-plus mr-2"></i> Add another list
-                </Button>
-              </li>
-            </ul>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </div>
+                  {localLists !== [] && <Lists lists={localLists} notes={localNotes} />}
+                  {provided.placeholder}
+                  <li>
+                    <Button
+                      clickFunc={() => createList("new list", localLists.length)}
+                      className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
+                    >
+                      <i className="fas fa-plus mr-2"></i> Add another list
+                    </Button>
+                  </li>
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+        </div>
+      )}
+    </>
   );
 }
 

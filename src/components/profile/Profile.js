@@ -9,19 +9,19 @@ import CreateNewBoard from "./CreateNewBoard";
 import DeleteExistingBoard from "./DeleteExistingBoard";
 
 function Profile() {
-  const { boards, userAlreadyExists, createProfile } = useDB();
+  const { boards} = useDB();
   const { currentUser } = getAuth();
   const [addBoard, setAddBoard] = useState(false);
   const [deleteBOARD, setDeleteBOARD] = useState({});
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    userAlreadyExists().then(exist => {
-      if (exist.data()) return;
-      createProfile(currentUser.displayName); // create firestore path if the user is new signup
-    });
-  }, [currentUser.displayName]);
+  // useEffect(() => {
+  //   userAlreadyExists().then(exist => {
+  //     if (exist.data()) return;
+  //     createProfile(currentUser.displayName); // create firestore path if the user is new signup
+  //   });
+  // }, [currentUser.displayName]);
 
   const handleClick = (e, id) => {
     if (e.target.tagName === "BUTTON") return;

@@ -14,7 +14,7 @@ function Note({ noteTxt, listId, noteId, index }) {
 
   return (
     <Draggable draggableId={noteId} index={index}>
-      {(provided, snapShot) => {
+      {(provided) => {
         return (
           <li
             ref={provided.innerRef}
@@ -29,9 +29,7 @@ function Note({ noteTxt, listId, noteId, index }) {
                 className="px-2 text-lg"
               />
               <Button
-                clickFunc={() => {
-                  deleteNote(listId, noteId);
-                }}
+                clickFunc={() => deleteNote(listId, noteId, index)}
                 className="bg-white absolute right-3 top-[3px] text-[18px] hidden group-hover:inline-block"
               >
                 <i className="fas fa-times"></i>

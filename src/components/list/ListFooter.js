@@ -33,7 +33,7 @@ function ListFooter({ listId, noteOrder }) {
           add ? "hidden" : "block"
         } text-left w-full px-2 py-2 hover:bg-hover-clr hover:rounded-md`}
       >
-        <i className="fas fa-plus pr-2"></i>
+        <i className="fas fa-plus pr-3"></i>
         Add a card
       </button>
       <div className={`${add ? "block" : "hidden"}`}>
