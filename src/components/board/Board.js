@@ -51,7 +51,7 @@ function Board() {
     });
   }
 
-  const onDragEnd = ({ destination: target, source, type, draggableId }) => {
+  const onDragEnd = ({ destination: target, source, type }) => {
     if (
       target === null ||
       (source.index === target.index && source.droppableId === target.droppableId)

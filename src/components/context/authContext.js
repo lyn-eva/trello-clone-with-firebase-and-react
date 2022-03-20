@@ -15,7 +15,7 @@ export const useAuth = () => {
 };
 
 export default function AuthContext({ children }) {
-  const [currentUser, setcurrentUser] = useState(null);
+  const [currentUser, setcurrentUser] = useState({});
   // const [currentUser, setcurrentUser] = useState("");
 
   useEffect(() => {

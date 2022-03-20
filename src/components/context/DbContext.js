@@ -26,7 +26,7 @@ export const useDB = () => {
 
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
-  const [lists, setLists] = useState({}); // needn't an object
+  const [lists, setLists] = useState([]); // needn't an object
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState("");
   const [currentBoard, setCurrentBoard] = useState({}); //
@@ -36,18 +36,24 @@ export default function DbContext({ children }) {
   useEffect(() => {
     if (!currentUser) return;
     const unsubBoardListener = listenToBoardChange();
-    if (!currentBoard) return;
-    setBoardPath(`users/${currentUser?.displayName}/boards/${currentBoard.id}`);
-    const unsubListeners = listenToListChange();
 
     return () => {
       unsubBoardListener();
+    };
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!currentBoard) return;
+    setBoardPath(`users/${currentUser.displayName}/boards/${currentBoard.id}`);
+    const unsubListeners = listenToListChange();
+
+    return () => {
       unsubListeners.forEach((unsub) => unsub());
     };
-  }, [currentUser, currentBoard, boardPath]); // this won't be infinite loop
+  }, [currentBoard, currentUser.displayName]);
 
   const reqBoardDetails = (id) => {
-    const path = `users/${currentUser?.displayName}/boards/${id}`;
+    const path = `users/${currentUser.displayName}/boards/${id}`;
     onSnapshot(doc(db, path), (snapShot) => {
       setCurrentBoard({ ...snapShot.data(), id: snapShot.id });
     });
@@ -95,8 +101,6 @@ export default function DbContext({ children }) {
     );
     return unsub;
   };
-
-  // console.log('%c Oh my heavens! ', 'background: #222; color: #bada55')
 
   const createProfile = (user) => {
     return setDoc(doc(db, "users/" + user), {
@@ -161,7 +165,7 @@ export default function DbContext({ children }) {
     const path = `users/${currentUser.displayName}/boards/${id}`;
     getDocs(collection(db, `${path}/lists`))
       .then((res) => {
-        const nestedLists = res.docs.map(async(Doc) => await deleteList(Doc.id, batch)); // delete nested lists
+        const nestedLists = res.docs.map(async (Doc) => await deleteList(Doc.id, batch)); // delete nested lists
         return Promise.all(nestedLists);
       })
       .then(() => {
@@ -170,13 +174,15 @@ export default function DbContext({ children }) {
       });
   };
 
-  const deleteList = async(id, Batch) => {
+  const deleteList = async (id, Batch) => {
     const batch = Batch ?? writeBatch(db);
     const path = `${boardPath}/lists/${id}`;
     return await getDocs(collection(db, `${path}/notes`))
       .then((res) => {
-        const nestedNotes = res.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
-        return Promise.all([...nestedNotes, batch.delete(doc(db, path))]); // delete nested notes
+        const nestedNotes = res.docs.map((Doc) =>
+          batch.delete(doc(db, `${path}/notes/${Doc.id}`))
+        ); // delete nested notes
+        return Promise.all([...nestedNotes, batch.delete(doc(db, path))]);
       })
       .then((res) => {
         if (Batch) return res;
@@ -184,7 +190,6 @@ export default function DbContext({ children }) {
       });
   };
 
-  // change this to await too
   const deleteNote = (listId, noteId) => {
     const path = `${boardPath}/lists/${listId}/notes/${noteId}`;
     deleteDoc(doc(db, path));
