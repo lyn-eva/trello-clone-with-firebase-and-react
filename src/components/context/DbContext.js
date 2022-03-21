@@ -150,8 +150,6 @@ export default function DbContext({ children }) {
     });
   };
 
-  console.log("notes", lists);
-
   const updateList = (id, newValues) => {
     const path = `${boardPath}/lists/${id}`;
     return updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });

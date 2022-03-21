@@ -25,9 +25,9 @@ function List({ id, title, index, notes }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="mr-4 min-w-[20rem] w-64 h-fit"
+          className="mr-4 min-w-[20rem] w-64"
         >
-          <div className="relative bg-list-clr rounded-md p-2 shadow-sm">
+          <div className="relative p-2 duration bg-list-clr rounded-md shadow-sm">
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />
             {dropDownOn && (
               <>
@@ -50,7 +50,7 @@ function List({ id, title, index, notes }) {
                   {notes && <Notes noteList={notes} />}
                   {provided.placeholder}
                 </ul>
-              )}
+              )} 
             </Droppable>
             <ListFooter listId={id} noteOrder={notes?.length} />
           </div>
