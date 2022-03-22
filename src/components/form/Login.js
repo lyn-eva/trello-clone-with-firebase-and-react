@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import useValidate from "../customHooks/use-validate";
 import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
+import InputField from "./InputField";
 
 function Login() {
   const { email, pwd, handleEmail, handlePwd, emailIsVaild, pwdIsValid, emailError, pwdError } =
@@ -16,15 +17,9 @@ function Login() {
   const navigate = useNavigate();
   
   useEffect(() => {
-    if (user) {
-      navigate(`../${user.displayName}`, { replace: true });
-    }
-    return () => {}; // dunno why it need a cleanup
-  }, [user]);
-
-  const errorMsg = (msg) => {
-    return <small className="text-red-400">{msg}</small>;
-  };
+    if (!user.displayName) return;
+    navigate(`../${user.displayName}`, { replace: true });
+  }, [user, navigate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -41,7 +36,6 @@ function Login() {
       .catch((err) => {
         setLoading(false);
         setError(err.code.slice(5).split("-").join(" "));
-        setError(err.code);
       });
   };
 
@@ -54,40 +48,15 @@ function Login() {
         </span>
       )}
       {!loading && (
-        <div className="text-dense-blue px-8 py-6 my-8 text-left bg-white shadow-lg">
+        <div className="text-dense-blue px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md">
           <h3 className="text-2xl font-bold text-center ">
             Login to your account
           </h3>
-          <form onSubmit={submitHandler} className="w-[18rem] mt-6">
-            <div>
-              <label className="block" htmlFor="email">
-                Email
-              </label>
-              {emailError && errorMsg(emailError)}
-              <input
-                id="email"
-                value={email}
-                onChange={handleEmail}
-                placeholder="username@company.domain"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-                />
-            </div>
-            <div className="mt-8">
-              <label className="block" htmlFor="password">
-                Password
-              </label>
-              {pwdError && errorMsg(pwdError)}
-              <input
-                id="password"
-                value={pwd}
-                onChange={handlePwd}
-                type="password"
-                placeholder="Password"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
-              />
-            </div>
+          <form onSubmit={submitHandler} className="w-[18rem]">
+            <InputField id='email' value={email} placeholder="username@company.domain" error={emailError} onChange={handleEmail}/>
+            <InputField id='password' value={pwd} placeholder="Password" error={pwdError} onChange={handlePwd}/>
             <div className="flex items-baseline justify-between mt-6 mb-3">
-              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-900">
+              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg duration-300 hover:bg-[#40af9b]">
                 Login
               </button>
               <a href="" className="text-sm text-blue-600 hover:underline">
@@ -96,9 +65,9 @@ function Login() {
             </div>
             <Link
               to="../SignUp"
-              className="text-sm text-blue-600 hover:border-blue-400 hover:border-b-[2px]"
+              className="text-sm text-blue-600 hover:border-blue-400 hover:underline"
             >
-              <span className="mr-2">New here?</span> Create an account.
+              New here? Create an account.
             </Link>
           </form>
         </div>

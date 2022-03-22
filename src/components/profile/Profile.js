@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getAuth } from "@firebase/auth";
 import { useNavigate } from "react-router";
 
@@ -15,13 +15,6 @@ function Profile() {
   const [deleteBOARD, setDeleteBOARD] = useState({});
 
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   userAlreadyExists().then(exist => {
-  //     if (exist.data()) return;
-  //     createProfile(currentUser.displayName); // create firestore path if the user is new signup
-  //   });
-  // }, [currentUser.displayName]);
 
   const handleClick = (e, id) => {
     if (e.target.tagName === "BUTTON") return;

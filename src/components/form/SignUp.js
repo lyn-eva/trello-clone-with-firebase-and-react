@@ -5,6 +5,7 @@ import useValidate from "../customHooks/use-validate";
 import { useAuth } from "../context/AuthContext";
 import LoadingCircle from "../utility/LoadingCircle";
 import { useDB } from "../context/DbContext";
+import InputField from "./InputField";
 
 function SignUp() {
   const { normalSignUp, updateDisplayName } = useAuth();
@@ -31,10 +32,6 @@ function SignUp() {
     pwdConfirmError,
     usernameError,
   } = useValidate();
-
-  const errorMsg = (msg) => {
-    return <small className="text-red-400 block -mb-1">{msg}</small>;
-  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -71,65 +68,15 @@ function SignUp() {
             Sign up your account
           </h3>
           <form onSubmit={submitHandler} className="w-[19rem] mt-6">
-            <div>
-              <label className="block" htmlFor="username">
-                Username
-              </label>
-              {usernameError && errorMsg(usernameError)}
-              <input
-                onChange={handleUsername}
-                value={username}
-                id="username"
-                placeholder="man of culture?"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
-              />
-            </div>
-            <div className="mt-6">
-              <label className="block" htmlFor="email">
-                Email
-              </label>
-              {emailError && errorMsg(emailError)}
-              <input
-                id="email"
-                value={email}
-                onChange={handleEmail}
-                placeholder="username@company.domain"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
-              />
-            </div>
-            <div className="mt-6">
-              <label className="block" htmlFor="password">
-                Password
-              </label>
-              {pwdError && errorMsg(pwdError)}
-              <input
-                id="password"
-                type="password"
-                value={pwd}
-                onChange={handlePwd}
-                placeholder="Password"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
-              />
-            </div>
-            <div className="mt-6">
-              <label className="block" htmlFor="confirmPwd">
-                Confirm password
-              </label>
-              {pwdConfirmError && errorMsg(pwdConfirmError)}
-              <input
-                id="confirmPwd"
-                type="password"
-                value={pwdConfirm}
-                onChange={handlePwdConfirm}
-                placeholder="Password"
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
-              />
-            </div>
+            <InputField id='username' value={username} placeholder="killer queen?" error={usernameError} onChange={handleUsername}/>
+            <InputField id='email' value={email} placeholder="username@company.domain" error={emailError} onChange={handleEmail}/>
+            <InputField id='password' value={pwd} placeholder="Password" error={pwdError} onChange={handlePwd}/>
+            <InputField id='Confirm Password' value={pwdConfirm} placeholder="Password" type='password' error={pwdConfirmError} onChange={handlePwdConfirm}/>
             <div className="flex items-baseline justify-between mt-6">
-              <button className="px-6 py-2 text-white bg-[#c46f3e] rounded-lg hover:bg-[#40af9b] duration-500">
+              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-[#40af9b] duration-300">
                 SignUp
               </button>
-              <Link to="../login" className="text-sm text-[#c46f3e] hover:underline">
+              <Link to="../login" className="text-sm text-blue-600 hover:underline">
                 Log In
               </Link>
             </div>
