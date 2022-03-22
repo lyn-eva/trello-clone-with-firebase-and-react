@@ -7,6 +7,7 @@ import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";
 import CreateNewBoard from "./CreateNewBoard";
 import DeleteExistingBoard from "./DeleteExistingBoard";
+import LoadingCircle from "../utility/LoadingCircle";
 
 function Profile() {
   const { boards} = useDB();
@@ -30,8 +31,9 @@ function Profile() {
         </h1>
         <hr className="mt-8 opacity-70" />
         <h2 className="my-6 text-2xl font-medium tracking-wide">Your Boards</h2>
-        <ul className="flex gap-4 overflow-x-auto -[calc(100vh-175px)]">
-          {boards.map(({ title, id, bg }) => (
+         <ul className="flex gap-4 overflow-x-auto -[calc(100vh-175px)] relative">
+        {!boards.length && <LoadingCircle msg='loading your boards'/>}
+          {!!boards.length && boards.map(({ title, id, bg }) => (
             <li
               key={id}
               onClick={(e) => handleClick(e, id)}

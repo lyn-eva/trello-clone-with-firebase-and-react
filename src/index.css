@@ -16,4 +16,7 @@
   .color-option {
     @apply hover:cursor-pointer hover:opacity-80 duration-200 w-full h-24 rounded-md;
   }
+  .auth-error {
+    @apply text-center bg-orange-100 mb-4 px-[1.9rem] box-content py-3 shadow-note;
+  }
 }

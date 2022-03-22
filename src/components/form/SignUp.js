@@ -58,21 +58,17 @@ function SignUp() {
     <main className="flex flex-col items-center justify-center min-h-screen bg-[#40af9b]">
       {loading && <LoadingCircle msg="creating your account..." />}
       {!loading && (
-        <div className="absolute text-dense-blue px-12 rounded-md py-10 my-8 text-left bg-[#fff] shadow-lg">
-          {error && (
-            <span className="bg-orange-100 absolute w-full left-0 -top-4 py-3 text-center rounded-t-md">
-              {error}
-            </span>
-          )}
+        <div className="text-dense-blue px-12 rounded-md py-10 my-8 text-left bg-white shadow-lg  w-11/12 max-w-[24rem]">
+          {error && <p className="auth-error">{error}</p>}
           <h3 className="text-2xl text-center tracking-wide font-medium">
             Sign up your account
           </h3>
-          <form onSubmit={submitHandler} className="w-[19rem] mt-6">
+          <form onSubmit={submitHandler}>
             <InputField id='username' value={username} placeholder="killer queen?" error={usernameError} onChange={handleUsername}/>
             <InputField id='email' value={email} placeholder="username@company.domain" error={emailError} onChange={handleEmail}/>
             <InputField id='password' value={pwd} placeholder="Password" error={pwdError} onChange={handlePwd}/>
             <InputField id='Confirm Password' value={pwdConfirm} placeholder="Password" type='password' error={pwdConfirmError} onChange={handlePwdConfirm}/>
-            <div className="flex items-baseline justify-between mt-6">
+            <div className="flex flex-wrap items-baseline justify-between mt-6">
               <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-[#40af9b] duration-300">
                 SignUp
               </button>
