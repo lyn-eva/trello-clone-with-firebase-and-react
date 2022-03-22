@@ -13,7 +13,7 @@ function BoardHeader({ toggleSidebar }) {
     <header className="my-3 mx-2 flex items-center justify-between flex-wrap gap-2">
       <DynamicTxt updateFunc={updateTitle} initialName={currentBoard.title} rows='1' maxLength='40' noWrap={true}style={{width: 'auto'}} className="text-2xl px-2 text-white font-medium bg-[rgba(255,255,255,.2)] rounded-md py-1"/>
       <ul className="flex justify-end gap-4">
-        <li>
+        {/* <li>
           <Button
             clickFunc={toggleSidebar}
             className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-md tracking-wide"
@@ -21,7 +21,7 @@ function BoardHeader({ toggleSidebar }) {
             <i className="text-lg fas fa-ellipsis-h text-dense-blue mr-3 text-inherit"></i>
             Filter
           </Button>
-        </li>
+        </li> */}
         <li>
           <Button
             clickFunc={toggleSidebar}

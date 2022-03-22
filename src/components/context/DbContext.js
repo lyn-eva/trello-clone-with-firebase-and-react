@@ -71,11 +71,7 @@ export default function DbContext({ children }) {
     const unsub = onSnapshot(
       query(collection(db, path), orderBy("order")),
       (snapShot) => {
-        console.log(path);
-        const listItems = snapShot.docs.reduce(
-          (total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),
-          {}
-        );
+        const listItems = snapShot.docs.reduce((total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),{});
         setLists(listItems);
         snapShot.docs.forEach((doc) => {
           const unsub = listenToNoteChange(doc.id);
@@ -101,23 +97,25 @@ export default function DbContext({ children }) {
     );
     return unsub;
   };
+  
+  const userAlreadyExists = async (username) => {
+    const data = await getDoc(doc(db, `users/${username}`));
+    return data.exists();
+  }
 
-  const createProfile = (user) => {
-    return setDoc(doc(db, "users/" + user), {
+  const createProfile = async (user) => {
+    return setDoc(doc(db, "users/", user), {
       title: user,
       createdAt: serverTimestamp(),
       lastModified: serverTimestamp(),
     });
   };
 
+  // createProfile('Zayar_Linn')
+
   const updateBoard = (newValues) => {
     if (newValues.bg === currentBoard.bg) return;
     updateDoc(doc(db, boardPath), { ...newValues, lastModified: serverTimestamp() });
-  };
-
-  const userAlreadyExists = () => {
-    const path = `users/${currentUser?.displayName}`;
-    return getDoc(doc(db, path));
   };
 
   const createBoard = (boardName) => {
@@ -173,9 +171,10 @@ export default function DbContext({ children }) {
   const deleteList = async (id, Batch) => {
     const batch = Batch ?? writeBatch(db);
     const path = `${boardPath}/lists/${id}`;
+    deleteDoc(doc(db, path))
     const noteList = await getDocs(collection(db, `${path}/notes`)); // get lists of deleted board
     const nestedNotes = noteList.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
-    const batchArray = await Promise.all([...nestedNotes, batch.delete(doc(db, path))]);
+    const batchArray = await Promise.all(nestedNotes);
     const updatedList = Object.keys(lists).filter((key) => key !== id);
     updateListOrder(updatedList);
     return Batch ? batchArray : batch.commit();
@@ -242,7 +241,6 @@ export default function DbContext({ children }) {
     setCurrentBoard,
     reqBoardDetails,
     setLists,
-    userAlreadyExists,
     createProfile,
     createBoard,
     createList,
@@ -256,6 +254,7 @@ export default function DbContext({ children }) {
     updateNoteOrder,
     updateNotesOrder,
     updateListOrder,
+    userAlreadyExists,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

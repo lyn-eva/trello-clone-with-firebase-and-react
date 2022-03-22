@@ -8,7 +8,7 @@ import { useDB } from "../context/DbContext";
 
 function SignUp() {
   const { normalSignUp, updateDisplayName } = useAuth();
-  // const { userAlreadyExists, createProfile } = useDB();
+  const { userAlreadyExists, createProfile } = useDB();
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,34 +36,25 @@ function SignUp() {
     return <small className="text-red-400 block -mb-1">{msg}</small>;
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     setError("");
-    if (
-      !usernameIsValid() ||
-      !emailIsVaild() ||
-      !pwdIsValid() ||
-      !pwdConfirmIsValid()
-    ) {
+    if (!usernameIsValid() || !emailIsVaild() || !pwdIsValid() || !pwdConfirmIsValid()) {
       return;
     }
     setLoading(true);
-    normalSignUp(email, pwd)
-      .then(() => {
-        setLoading(false);
-        setError("");
-        updateDisplayName(username)
-        navigate(`../${username}`);
-        // return userAlreadyExists(username);
-      })
-      // .then((res) => {
-      //   if (res.data()) return;
-      //   createProfile(username);
-      // })
-      .catch((err) => {
-        setLoading(false);
-        setError(err.code.slice(5).split("-").join(" "));
-      });
+    try {
+      const alreadyExists = await userAlreadyExists(username);
+      if (alreadyExists) throw new Error("username is already in use");
+      const resolve = await Promise.all([normalSignUp(email, pwd), updateDisplayName(username), createProfile(username)]);
+      setLoading(false);
+      setError("");
+      navigate(`../${username}`);
+    } catch (err) {
+      setLoading(false);
+      const errMsg =  err.code?.split("-").join(" ") || err.message; 
+      setError(errMsg);
+    }
   };
 
   return (
@@ -138,10 +129,7 @@ function SignUp() {
               <button className="px-6 py-2 text-white bg-[#c46f3e] rounded-lg hover:bg-[#40af9b] duration-500">
                 SignUp
               </button>
-              <Link
-                to="../login"
-                className="text-sm text-[#c46f3e] hover:underline"
-              >
+              <Link to="../login" className="text-sm text-[#c46f3e] hover:underline">
                 Log In
               </Link>
             </div>

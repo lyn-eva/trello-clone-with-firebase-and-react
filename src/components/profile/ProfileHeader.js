@@ -21,7 +21,7 @@ function BoardHeader({ toggleSidebar }) {
   return (
     <header className="m-2 flex justify-between">
       <ul className="flex justify-end gap-4">
-        <li>
+        {/* <li>
           <Button
             clickFunc={toggleSidebar}
             className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-sm"
@@ -29,7 +29,7 @@ function BoardHeader({ toggleSidebar }) {
             <i className="text-lg fas fa-ellipsis-h text-dense-blue mr-3 text-inherit"></i>
             Show menu
           </Button>
-        </li>
+        </li> */}
       </ul>
       <nav className="flex gap-4">
         <Button

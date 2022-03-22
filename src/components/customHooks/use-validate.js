@@ -8,7 +8,7 @@ function useValidate() {
   const [email, setEmail] = useState('');
   const [pwd, setPwd] = useState('');
   const [pwdConfirm, setPwdConfirm] = useState('');
-  const [username, setUsername] = useState('');;
+  const [username, setUsername] = useState('');
 
   const handleEmail = e => {
     setEmail(e.target.value);
@@ -71,6 +71,7 @@ function useValidate() {
       setUsernameError("must only contain a to z, 0 to 9, _");
       return false;
     }
+
     setUsernameError("");
     return true;
   };

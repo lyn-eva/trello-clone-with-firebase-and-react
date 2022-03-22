@@ -13,16 +13,16 @@ function CreateNewBoard({ setNewBoard }) {
   const { createBoard } = useDB();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const title = titleRef.current.value.trim().replace(/\s+/g, " ");
+    const title = titleRef.current.value.trim().replace(/\s+/gi, " ");
+    if (!/^\w+/g.test(title)) return setErr("only letter, number and underscore");
     if (title === "") return setErr("required");
     setLoading(true);
     setErr("");
-    createBoard(title).then((boardDetail) => {
-      setLoading(false);
-      navigate(`./${boardDetail.id}`);
-    });
+    const boardDetail = await createBoard(title);
+    setLoading(false);
+    navigate(`./${boardDetail.id}`);
   };
 
   return (
