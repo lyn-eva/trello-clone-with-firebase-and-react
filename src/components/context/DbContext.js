@@ -171,7 +171,7 @@ export default function DbContext({ children }) {
   const deleteList = async (id, Batch) => {
     const batch = Batch ?? writeBatch(db);
     const path = `${boardPath}/lists/${id}`;
-    deleteDoc(doc(db, path))
+    deleteDoc(doc(db, path));
     const noteList = await getDocs(collection(db, `${path}/notes`)); // get lists of deleted board
     const nestedNotes = noteList.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
     const batchArray = await Promise.all(nestedNotes);

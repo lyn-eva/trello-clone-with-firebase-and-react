@@ -51,9 +51,9 @@ function Login() {
     <main className="flex flex-col items-center justify-center min-h-screen bg-[#40af9b]">
       {loading && <LoadingCircle msg="Logging in..." />}
       {!loading && (
-        <div className="text-dense-blue px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
+        <div className="text-dense-blue px-4 sm:px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
           {error && <p className="auth-error">{error}</p>}
-          <h3 className="text-2xl font-bold text-center ">Login to your account</h3>
+          <h3 className="text-sm-md sm:text-2xl font-bold text-center ">Login to your account</h3>
           <form onSubmit={submitHandler}>
             <InputField
               id="email"

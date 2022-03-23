@@ -1,11 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 
-function DynamicTxt({ initialName, className, style, rows, maxLength, noWrap, updateFunc }) {
+function DynamicTxt({
+  initialName,
+  className,
+  style,
+  rows,
+  maxLength,
+  noWrap,
+  updateFunc,
+}) {
   const [rename, setRename] = useState(false);
   const [value, setValue] = useState(initialName); //
   const txtAreaRef = useRef();
 
-  useEffect(() => setValue(initialName), [initialName])
+  useEffect(() => {
+    setValue(initialName);
+  }, [initialName]);
 
   const renameStart = () => {
     txtAreaRef.current.value = value;
@@ -18,7 +28,7 @@ function DynamicTxt({ initialName, className, style, rows, maxLength, noWrap, up
   const renameEnd = () => {
     setRename(false);
     const newValue = txtAreaRef.current.value;
-    if (value === newValue || newValue === '') return;
+    if (value === newValue || newValue === "") return;
     setValue(newValue);
     updateFunc(newValue);
   };
@@ -33,11 +43,15 @@ function DynamicTxt({ initialName, className, style, rows, maxLength, noWrap, up
         onBlur={renameEnd}
         ref={txtAreaRef}
         type="text"
-        rows={rows || ''}
-        maxLength={maxLength || ''}
-        className={`board-hdr text-black p-1 w-full resize-none ${rename ? "block" : "hidden"} ${noWrap ? 'whitespace-nowrap' : '' }`}
+        rows={rows || ""}
+        maxLength={maxLength || ""}
+        className={`board-hdr text-black p-1 w-full resize-none ${
+          rename ? "block" : "hidden"
+        } ${noWrap ? "whitespace-nowrap" : ""}`}
       />
-      <p className={`px-1 w-auto whitespace-pre-wrap ${rename ? "hidden" : "block"}`}>{value}</p>
+      <p className={`px-1 w-auto whitespace-pre-wrap ${rename ? "hidden" : "block"}`}>
+        {value}
+      </p>
     </div>
   );
 }

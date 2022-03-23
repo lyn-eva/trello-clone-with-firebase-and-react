@@ -4,4 +4,4 @@ function onlyAlphanumeric(str) {
 
 console.log(onlyAlphanumeric('jkld0_&'))
 
-console.log({f: 3}.valueOf())
+console.log(new Date(1647667011179))

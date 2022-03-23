@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import Button from "../utility/Button";
 
-function BoardHeader({ toggleSidebar }) {
+function BoardHeader({ setShowInfo }) {
   const { signOutUser } = useAuth();
   const navigate = useNavigate();
 
@@ -20,19 +20,8 @@ function BoardHeader({ toggleSidebar }) {
   };
 
   return (
-    <header className="m-2 flex justify-between relative">
-      <ul className="flex justify-end gap-4">
-        {/* <li>
-          <Button
-            clickFunc={toggleSidebar}
-            className="text-white py-[5px] bg-[rgba(255,255,255,.2)] rounded-sm"
-          >
-            <i className="text-lg fas fa-ellipsis-h text-dense-blue mr-3 text-inherit"></i>
-            Show menu
-          </Button>
-        </li> */}
-      </ul>
-      <nav className="flex gap-4 group w-full sm:w-auto items-center justify-between">
+    <header className="m-2 flex justify-between sm:justify-end gap-4 relative">
+      <nav className="flex gap-4 group sm:w-auto items-center justify-between">
         <button className="sm:hidden">
           <i className="fa-solid fa-bars block text-white text-2xl"></i>
         </button>
@@ -62,10 +51,13 @@ function BoardHeader({ toggleSidebar }) {
             Sign Out
           </li>
         </ul>
-        <div className="border-white min-w-10 w-10 h-10 grid place-items-center rounded-full bg-black">
-          <i className="fas fa-user-alt text-white"></i>
-        </div>
       </nav>
+      <button
+        onClick={() => setShowInfo((prev) => !prev)}
+        className="border-white min-w-10 w-10 h-10 grid place-items-center rounded-full bg-black"
+      >
+        <i className="fas fa-user-alt text-white"></i>
+      </button>
     </header>
   );
 }

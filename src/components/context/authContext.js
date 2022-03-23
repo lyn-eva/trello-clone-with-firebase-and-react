@@ -15,8 +15,7 @@ export const useAuth = () => {
 };
 
 export default function AuthContext({ children }) {
-  const [currentUser, setcurrentUser] = useState({});
-  // const [currentUser, setcurrentUser] = useState("");
+  const [currentUser, setcurrentUser] = useState(null);
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (user) => {
@@ -26,6 +25,9 @@ export default function AuthContext({ children }) {
 
     return unsubAuth;
   }, []);
+
+  console.log(currentUser?.reloadUserInfo)
+
 
   const normalSignUp = (email, pwd) => {
     return createUserWithEmailAndPassword(auth, email, pwd);
