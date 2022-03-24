@@ -1,7 +1,7 @@
 function InputField({ id, value, placeholder, type, error, onChange }) {
   return (
     <div className="mt-6">
-      <label className="block" htmlFor={id}>
+      <label className="block ml-1" htmlFor={id}>
         {id}
       </label>
       {error && <small className="text-red-400 block -mb-1">{error}</small>}

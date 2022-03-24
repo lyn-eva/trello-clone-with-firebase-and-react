@@ -43,7 +43,8 @@ function SignUp() {
     try {
       const alreadyExists = await userAlreadyExists(username);
       if (alreadyExists) throw new Error("username is already in use");
-      await Promise.all([normalSignUp(email, pwd), updateDisplayName(username), createProfile(username)]);
+      await(normalSignUp(email, pwd))
+      await Promise.all([updateDisplayName(username), createProfile(username)])
       setLoading(false);
       setError("");
       navigate(`../${username}`);
@@ -67,7 +68,7 @@ function SignUp() {
           <form onSubmit={submitHandler}>
             <InputField id='username' value={username} placeholder="killer queen?" error={usernameError} onChange={handleUsername}/>
             <InputField id='email' value={email} placeholder="username@company.domain" error={emailError} onChange={handleEmail}/>
-            <InputField id='password' value={pwd} placeholder="Password" error={pwdError} onChange={handlePwd}/>
+            <InputField id='password' value={pwd} placeholder="Password" type='password' error={pwdError} onChange={handlePwd}/>
             <InputField id='Confirm Password' value={pwdConfirm} placeholder="Password" type='password' error={pwdConfirmError} onChange={handlePwdConfirm}/>
             <div className="flex flex-wrap gap-2 items-baseline justify-between mt-6">
               <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-clr-cyan duration-300">

@@ -7,7 +7,6 @@ import {
   updateProfile,
   sendEmailVerification,
   sendPasswordResetEmail,
-  reload
 } from "firebase/auth";
 import { auth } from "../firebase-config";
 
@@ -28,9 +27,6 @@ export default function AuthContext({ children }) {
 
     return unsubAuth;
   }, []);
-
-  // console.log(currentUser?.reloadUserInfo)
-
 
   const normalSignUp = (email, pwd) => {
     return createUserWithEmailAndPassword(auth, email, pwd);
@@ -55,7 +51,6 @@ export default function AuthContext({ children }) {
     console.log('user', currentUser.email)
 
     await sendPasswordResetEmail(auth, currentUser.email);
-    reload();
   }
 
   const value = {

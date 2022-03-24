@@ -7,7 +7,6 @@ import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";
 import CreateNewBoard from "./CreateNewBoard";
 import DeleteExistingBoard from "./DeleteExistingBoard";
-import LoadingCircle from "../utility/LoadingCircle";
 import UserInfo from "./UserInfo";
 
 function Profile() {
@@ -37,9 +36,7 @@ function Profile() {
           Your Boards
         </h2>
         <ul className="flex grow gap-4 overflow-x-auto relative">
-          {!boards.length && <LoadingCircle msg="loading your boards" />}
-          {!!boards.length &&
-            boards.map(({ title, id, bg }) => (
+            {boards.map(({ title, id, bg }) => (
               <li
                 key={id}
                 onClick={(e) => handleClick(e, id)}
