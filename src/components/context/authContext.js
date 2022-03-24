@@ -5,6 +5,9 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   updateProfile,
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  reload
 } from "firebase/auth";
 import { auth } from "../firebase-config";
 
@@ -15,7 +18,7 @@ export const useAuth = () => {
 };
 
 export default function AuthContext({ children }) {
-  const [currentUser, setcurrentUser] = useState(null);
+  const [currentUser, setcurrentUser] = useState({});
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, (user) => {
@@ -26,7 +29,7 @@ export default function AuthContext({ children }) {
     return unsubAuth;
   }, []);
 
-  console.log(currentUser?.reloadUserInfo)
+  // console.log(currentUser?.reloadUserInfo)
 
 
   const normalSignUp = (email, pwd) => {
@@ -42,10 +45,18 @@ export default function AuthContext({ children }) {
   };
 
   const updateDisplayName = (username) => {
-    return updateProfile(auth.currentUser, {
+    return updateProfile(auth.currentUser, {// fix this shit
       displayName: username,
     });
   };
+
+  const resetPwd = async () => {
+    // return sendEmailVerification(currentUser);
+    console.log('user', currentUser.email)
+
+    await sendPasswordResetEmail(auth, currentUser.email);
+    reload();
+  }
 
   const value = {
     currentUser,
@@ -53,6 +64,7 @@ export default function AuthContext({ children }) {
     normalSignIn,
     signOutUser,
     updateDisplayName,
+    resetPwd
   };
 
   return (

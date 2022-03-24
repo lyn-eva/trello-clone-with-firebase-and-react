@@ -24,7 +24,7 @@ function DeleteExistingBoard({ setDeleteBOARD, id, title }) {
         <div className="text-black rounded-sm text-center fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-white p-3">
           <p className="mb-4 leading-8 text-red-500">
             Are you sure you want to delete <br />
-            <span className="text-black text-xl underline">{title}</span>
+            <span className="text-black text-xl underline">{title}</span> ?
           </p>
           <Button clickFunc={handleDeleteConfirm} className="mr-16">
             yes <i className="ml-1 align-middle text-2xl text-green-500 fas fa-check"></i>

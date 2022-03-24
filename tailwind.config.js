@@ -14,6 +14,8 @@ module.exports = {
         "list-clr": "#ebecf0",
         primary: "#0079bf",
         "hover-clr": "rgba(90, 90, 90, 0.15)",
+        "clr-cyan": '#40af9b',
+        "clr-dark": '#202124'
       },
       boxShadow: {
         note: "0 1px 0px 0px #091e4240",

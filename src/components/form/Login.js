@@ -48,7 +48,7 @@ function Login() {
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#40af9b]">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-clr-cyan">
       {loading && <LoadingCircle msg="Logging in..." />}
       {!loading && (
         <div className="text-dense-blue px-4 sm:px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
@@ -70,7 +70,7 @@ function Login() {
               onChange={handlePwd}
             />
             <div className="flex flex-wrap gap-4 items-baseline justify-between mt-6 mb-3">
-              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg duration-300 hover:bg-[#40af9b]">
+              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg duration-300 hover:bg-clr-cyan">
                 Login
               </button>
               <a href="" className="text-sm text-blue-600 hover:underline">

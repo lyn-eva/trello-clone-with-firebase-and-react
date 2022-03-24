@@ -25,9 +25,9 @@ function Profile() {
   };
 
   return (
-    <div className="flex flex-col p-2 pb-0 bg-[#202124] h-fit min-h-screen">
+    <div className="flex flex-col p-2 pb-0 bg-clr-dark h-fit min-h-screen">
       <ProfileHeader setShowInfo={setShowInfo}/>
-      <main className="flex flex-col grow p-2 mt-4 sm:mt-12 text-white">
+      <main className="flex flex-col grow p-2 mt-4 mb-4 sm:mt-12 text-white">
         {showInfo && <UserInfo/>}
         <h1 className="text-center text-sm-lg sm:text-4xl tracking-wide">
           Welcome Back, {currentUser?.displayName}

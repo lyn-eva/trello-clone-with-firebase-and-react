@@ -6,6 +6,7 @@ import LoadingCircle from "./components/utility/LoadingCircle";
 
 const Login = lazy(() => import("./components/form/Login"));
 const SignUp = lazy(() => import("./components/form/SignUp"));
+const ResetPwd = lazy(() => import("./components/form/ResetPwd"))
 const Profile = lazy(() => import("./components/profile/Profile"));
 const Board = lazy(() => import("./components/board/Board"));
 
@@ -15,7 +16,7 @@ function App() {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
-
+        <Route path='reset_password' element={<ResetPwd />}/>
         <Route
           path=":profile/:board"
           element={
@@ -36,9 +37,6 @@ function App() {
         <Route path="/" element={<Navigate to="profile" />} />
       </Routes>
     </Suspense>
-    // <main className='h-screen' style={{ backgroundColor: `${BG_THEME}`}}>
-    //   <Board />
-    // </main>
   );
 }
 

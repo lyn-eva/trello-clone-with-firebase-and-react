@@ -13,6 +13,7 @@ import {
   deleteDoc,
   writeBatch,
   getDocs,
+
 } from "@firebase/firestore";
 
 import { db } from "../firebase-config";
@@ -163,7 +164,7 @@ export default function DbContext({ children }) {
     const path = `users/${currentUser.displayName}/boards/${id}`;
     const listItems = await getDocs(collection(db, `${path}/lists`));
     const deleteNested = listItems.docs.map((Doc) => deleteList(Doc.id, batch)); // delete nested lists
-    const deleteLists = await Promise.all(deleteNested);
+    await Promise.all(deleteNested);
     batch.delete(doc(db, path));
     batch.commit();
   };

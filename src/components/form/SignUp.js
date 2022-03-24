@@ -43,19 +43,20 @@ function SignUp() {
     try {
       const alreadyExists = await userAlreadyExists(username);
       if (alreadyExists) throw new Error("username is already in use");
-      const resolve = await Promise.all([normalSignUp(email, pwd), updateDisplayName(username), createProfile(username)]);
+      await Promise.all([normalSignUp(email, pwd), updateDisplayName(username), createProfile(username)]);
       setLoading(false);
       setError("");
       navigate(`../${username}`);
     } catch (err) {
       setLoading(false);
+      console.log({err})
       const errMsg =  err.code?.split("-").join(" ") || err.message; 
       setError(errMsg);
     }
   };
 
   return (
-    <main className="flex flex-col items-center justify-center min-h-screen bg-[#40af9b]">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-clr-cyan">
       {loading && <LoadingCircle msg="creating your account..." />}
       {!loading && (
         <div className="text-dense-blue px-4 sm:px-12 rounded-md py-10 my-8 text-left bg-white shadow-lg  w-11/12 max-w-[24rem]">
@@ -69,7 +70,7 @@ function SignUp() {
             <InputField id='password' value={pwd} placeholder="Password" error={pwdError} onChange={handlePwd}/>
             <InputField id='Confirm Password' value={pwdConfirm} placeholder="Password" type='password' error={pwdConfirmError} onChange={handlePwdConfirm}/>
             <div className="flex flex-wrap gap-2 items-baseline justify-between mt-6">
-              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-[#40af9b] duration-300">
+              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg hover:bg-clr-cyan duration-300">
                 SignUp
               </button>
               <Link to="../login" className="text-sm text-blue-600 hover:underline">

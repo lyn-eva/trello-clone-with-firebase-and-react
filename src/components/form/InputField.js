@@ -11,7 +11,7 @@ function InputField({ id, value, placeholder, type, error, onChange }) {
         id={id}
         type={type || ""}
         placeholder={placeholder}
-        className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-[#40af9b]"
+        className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-clr-cyan"
       />
     </div>
   );
