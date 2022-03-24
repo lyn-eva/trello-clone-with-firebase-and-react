@@ -6,9 +6,10 @@ import LoadingCircle from "./components/utility/LoadingCircle";
 
 const Login = lazy(() => import("./components/form/Login"));
 const SignUp = lazy(() => import("./components/form/SignUp"));
-const ResetPwd = lazy(() => import("./components/form/ResetPwd"));
 const Profile = lazy(() => import("./components/profile/Profile"));
 const Board = lazy(() => import("./components/board/Board"));
+const ResetPwd = lazy(() => import("./components/form/ResetPwd"));
+const DeleteAccount = lazy(() => import("./components/form/DeleteAccount"));
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path=":profile/reset_pwd" element={<ResetPwd />} />
+        <Route path=":profile/delete_account" element={<DeleteAccount />} />
         <Route
           path=":profile/:board"
           element={

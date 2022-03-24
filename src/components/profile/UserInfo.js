@@ -1,29 +1,30 @@
-import { useNavigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
-import Button from "../utility/Button";
+import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"
 
 function UserInfo() {
-  const { currentUser, resetPwd } = useAuth();
-  const {email, createdAt, lastLoginAt} = currentUser.reloadUserInfo ?? {};
-  const signedUpAt = new Date(+createdAt).toString()
-  const lastLoggedIn = new Date(+lastLoginAt).toString()
-
-  const handlePwdReset = async() => {
-    // console.log('sent')
-    // const res = await resetPwd();
-    // console.log(res)
-  }
-
-  const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { email, createdAt, lastLoginAt } = currentUser.reloadUserInfo ?? {};
+  const signedUpAt = new Date(+createdAt).toString();
+  const lastLoggedIn = new Date(+lastLoginAt).toString();
 
   return (
     <section className="animate-info-anime overflow-hidden border-[1px] rounded-md shadow-white p-3 mb-4">
-      <p className='mb-3'>email: {email}</p>
-      <p className='mb-3'>signed up at: {signedUpAt}</p>
-      <p>last logged in: {lastLoggedIn}</p>
-      <div className='flex flex-wrap text-black gap-4 mt-4 sm:mt-8'>
-        <Button clickFunc={() => navigate('reset_pwd')} className='bg-white rounded-md py-1'>Reset Password</Button>
-        <Button className='bg-white rounded-md py-1'>Delete Account</Button>
+      <p className="mb-3">
+        <span className="font-bold tracking-wide">email</span> : {email}
+      </p>
+      <p className="mb-3">
+        <span className="font-bold tracking-wide">signed up at</span> : {signedUpAt}
+      </p>
+      <p>
+        <span className="font-bold tracking-wide">last logged in</span> : {lastLoggedIn}
+      </p>
+      <div className="flex flex-wrap text-black gap-4 mt-4 sm:mt-6">
+        <NavLink to="reset_pwd" className="px-2 bg-white rounded-md py-1">
+          Change Password
+        </NavLink>
+        <NavLink to="delete_account" className="px-2 bg-white rounded-md py-1">
+          Delete Account
+        </NavLink>
       </div>
     </section>
   );

@@ -64,6 +64,7 @@ function Login() {
             />
             <InputField
               id="password"
+              type="password"
               value={pwd}
               placeholder="Password"
               error={pwdError}

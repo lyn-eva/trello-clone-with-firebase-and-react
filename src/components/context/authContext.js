@@ -4,6 +4,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  deleteUser,
   updateProfile,
   sendEmailVerification,
   sendPasswordResetEmail,
@@ -46,11 +47,12 @@ export default function AuthContext({ children }) {
     });
   };
 
-  const resetPwd = async () => {
-    // return sendEmailVerification(currentUser);
-    console.log('user', currentUser.email)
+  const resetPwd = () => {
+    sendPasswordResetEmail(auth, currentUser.email);
+  }
 
-    await sendPasswordResetEmail(auth, currentUser.email);
+  const deleteAccount = () => {
+    return deleteUser(currentUser);
   }
 
   const value = {
@@ -59,7 +61,8 @@ export default function AuthContext({ children }) {
     normalSignIn,
     signOutUser,
     updateDisplayName,
-    resetPwd
+    resetPwd,
+    deleteAccount
   };
 
   return (

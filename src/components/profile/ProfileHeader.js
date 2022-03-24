@@ -28,7 +28,7 @@ function BoardHeader({ setShowInfo }) {
         <ul className="opacity-0 scale-y-0 sm:opacity-100 sm:scale-y-100 origin-top md:gap-4 group-focus-within:scale-y-100 duration-300 group-focus-within:opacity-100 absolute sm:static sm:w-auto sm:flex sm:items-center sm:gap-3 sm:bg-transparent sm:shadow-none sm:text-black shadow-md bg-[#28292c] rounded-md w-[calc(100%+2rem)] -left-4 top-12 text-center text-white">
           <li
             onClick={handleSignUp}
-            className="sm:py-1 sm:px-2 sm:border-none sm:bg-white tracking-wide sm:rounded-md py-2 border-b-[1px] border-[rgba(255,255,255,.4)]"
+            className="cursor-pointer sm:py-1 sm:px-2 sm:border-none sm:bg-white tracking-wide sm:rounded-md py-2 border-b-[1px] border-[rgba(255,255,255,.4)]"
           >
             Sign Up
             {/* <Button
@@ -40,7 +40,7 @@ function BoardHeader({ setShowInfo }) {
           </li>
           <li
             onClick={handleSignOut}
-            className="py-2 sm:py-1 sm:bg-white sm:px-2 sm:rounded-md"
+            className="cursor-pointer py-2 sm:py-1 sm:bg-white sm:px-2 sm:rounded-md"
           >
             {/* <Button
               clickFunc={handleSignOut}

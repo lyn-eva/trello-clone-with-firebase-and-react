@@ -159,6 +159,13 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
 
+  // const deleteUserData = () => {
+  //   boards.forEach(() => {
+  //     console.log(id)
+  //   })
+  // }
+
+
   const deleteBoard = async (id) => {
     const batch = writeBatch(db);
     const path = `users/${currentUser.displayName}/boards/${id}`;
