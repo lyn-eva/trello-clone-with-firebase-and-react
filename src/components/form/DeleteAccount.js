@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router';
 import { useAuth } from '../context/AuthContext';
+import { useDB } from '../context/DbContext';
 import useValidate from '../customHooks/use-validate';
 import InputField from './InputField';
 import Button from '../utility/Button';
@@ -12,6 +14,8 @@ function DeleteAccount() {
 
   const {currentUser, normalSignIn, signOutUser, deleteAccount} = useAuth(); 
   const {pwd, handlePwd, pwdIsValid, pwdError} = useValidate();
+  const {deleteUserData} = useDB();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!success) return;
@@ -19,9 +23,11 @@ function DeleteAccount() {
       setTimer(prev => prev === 0 ? 0 : cancel ? prev :prev-1);
     }, 1000);
 
-    const unsubTime = setTimeout(() => {
+    const unsubTime = setTimeout(async () => {
       if(cancel) return;
-      deleteAccount();
+      await deleteUserData();
+      await Promise.all([deleteAccount(), signOutUser()]);
+      navigate('../../login');
     }, 10000);
 
     return () => {
@@ -37,7 +43,6 @@ function DeleteAccount() {
     try {
       await normalSignIn(currentUser.email, pwd);
       setSuccess(true);
-      signOutUser();
     } catch (err) {
       setError(err.code.slice(5).split("-").join(" "));
     }
@@ -46,7 +51,7 @@ function DeleteAccount() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-clr-cyan">
       {success && <p className="text-center bg-slate-200 w-full">
-        Account Deletion will start in <span className='text-orange-500'>{timer}</span>s.
+        Your account will be deleted in <span className='text-orange-500'>{timer}</span>s.
         <br />
         You can cancel it now. <span onClick={() => setCancel(true)} className='text-blue-600 underline underline-offset-1 ml-2'>cancel</span>.
       </p>}

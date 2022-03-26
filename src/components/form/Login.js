@@ -26,7 +26,7 @@ function Login() {
 
   useEffect(() => {
     if (!user?.displayName) return;
-    navigate(`../${user.displayName}`, { replace: true });
+    navigate(`../${user.displayName.replace(/\s+/g, '_')}`, { replace: true });
   }, [user, navigate]);
 
   const submitHandler = (e) => {

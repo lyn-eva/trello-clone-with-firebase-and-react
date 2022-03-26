@@ -8,11 +8,11 @@ import { useDB } from "../context/DbContext";
 import InputField from "./InputField";
 
 function SignUp() {
-  const { normalSignUp, updateDisplayName } = useAuth();
+  const { normalSignUp, updateDisplayName, normalSignIn } = useAuth();
   const { userAlreadyExists, createProfile } = useDB();
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const {
     email,
@@ -41,13 +41,14 @@ function SignUp() {
     }
     setLoading(true);
     try {
-      const alreadyExists = await userAlreadyExists(username);
+      const USERNAME = username.trim();
+      const alreadyExists = await userAlreadyExists(USERNAME);
       if (alreadyExists) throw new Error("username is already in use");
       await(normalSignUp(email, pwd))
-      await Promise.all([updateDisplayName(username), createProfile(username)])
+      await Promise.all([updateDisplayName(USERNAME), createProfile(USERNAME)]);
       setLoading(false);
       setError("");
-      navigate(`../${username}`);
+      navigate(`../${USERNAME}`);
     } catch (err) {
       setLoading(false);
       console.log({err})

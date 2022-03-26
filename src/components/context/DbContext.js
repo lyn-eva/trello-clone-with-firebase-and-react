@@ -13,7 +13,6 @@ import {
   deleteDoc,
   writeBatch,
   getDocs,
-
 } from "@firebase/firestore";
 
 import { db } from "../firebase-config";
@@ -72,7 +71,10 @@ export default function DbContext({ children }) {
     const unsub = onSnapshot(
       query(collection(db, path), orderBy("order")),
       (snapShot) => {
-        const listItems = snapShot.docs.reduce((total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),{});
+        const listItems = snapShot.docs.reduce(
+          (total, doc) => (total = { ...total, [doc.id]: { ...doc.data(), id: doc.id } }),
+          {}
+        );
         setLists(listItems);
         snapShot.docs.forEach((doc) => {
           const unsub = listenToNoteChange(doc.id);
@@ -98,11 +100,11 @@ export default function DbContext({ children }) {
     );
     return unsub;
   };
-  
+
   const userAlreadyExists = async (username) => {
     const data = await getDoc(doc(db, `users/${username}`));
     return data.exists();
-  }
+  };
 
   const createProfile = async (user) => {
     return setDoc(doc(db, "users/", user), {
@@ -159,12 +161,10 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  // const deleteUserData = () => {
-  //   boards.forEach(() => {
-  //     console.log(id)
-  //   })
-  // }
-
+  const deleteUserData = async() => {
+    await Promise.all(boards.map(id => deleteBoard(id)));
+    return deleteDoc(doc(db, `users/${currentUser.displayName}`));
+  };
 
   const deleteBoard = async (id) => {
     const batch = writeBatch(db);
@@ -181,7 +181,9 @@ export default function DbContext({ children }) {
     const path = `${boardPath}/lists/${id}`;
     deleteDoc(doc(db, path));
     const noteList = await getDocs(collection(db, `${path}/notes`)); // get lists of deleted board
-    const nestedNotes = noteList.docs.map((Doc) => batch.delete(doc(db, `${path}/notes/${Doc.id}`)));
+    const nestedNotes = noteList.docs.map((Doc) =>
+      batch.delete(doc(db, `${path}/notes/${Doc.id}`))
+    );
     const batchArray = await Promise.all(nestedNotes);
     const updatedList = Object.keys(lists).filter((key) => key !== id);
     updateListOrder(updatedList);
@@ -215,7 +217,9 @@ export default function DbContext({ children }) {
   };
 
   const updateNotesOrder = (draggedNote, source, target, sourceList, targetList) => {
-    const batch = writeBatch(db), sourceId = source.droppableId, targetId = target.droppableId;
+    const batch = writeBatch(db),
+      sourceId = source.droppableId,
+      targetId = target.droppableId;
 
     const batchNote = (List, ListId) => {
       List.forEach(({ id }, index) => {
@@ -224,19 +228,14 @@ export default function DbContext({ children }) {
       });
     };
 
-    batch.delete(
-      doc(db, `${boardPath}/lists/${sourceId}/notes/${draggedNote.id}`)
-    );
-    batch.set(
-      doc(db, `${boardPath}/lists/${targetId}/notes/${draggedNote.id}`),
-      {
-        ...draggedNote,
-        order: target.index,
-        lastModified: serverTimestamp(),
-      }
-    );
-    batchNote(targetList, targetId)
-    batchNote(sourceList, sourceId)
+    batch.delete(doc(db, `${boardPath}/lists/${sourceId}/notes/${draggedNote.id}`));
+    batch.set(doc(db, `${boardPath}/lists/${targetId}/notes/${draggedNote.id}`), {
+      ...draggedNote,
+      order: target.index,
+      lastModified: serverTimestamp(),
+    });
+    batchNote(targetList, targetId);
+    batchNote(sourceList, sourceId);
 
     batch.commit();
   };
@@ -263,6 +262,7 @@ export default function DbContext({ children }) {
     updateNotesOrder,
     updateListOrder,
     userAlreadyExists,
+    deleteUserData,
   };
 
   return <dbContext.Provider value={value}>{children}</dbContext.Provider>;

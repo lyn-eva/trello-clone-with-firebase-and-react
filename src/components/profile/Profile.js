@@ -29,7 +29,7 @@ function Profile() {
       <main className="flex flex-col grow p-2 mt-4 mb-4 sm:mt-12 text-white">
         {showInfo && <UserInfo/>}
         <h1 className="text-center text-sm-lg sm:text-4xl tracking-wide">
-          Welcome Back, {currentUser?.displayName}
+          Welcome Back, <pre className='pt-2'>{currentUser?.displayName}</pre>
         </h1>
         <hr className="mt-8 opacity-70" />
         <h2 className="my-6 text-sm-md sm:text-2xl font-medium tracking-wide">

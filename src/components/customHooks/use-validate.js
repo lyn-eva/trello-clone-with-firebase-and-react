@@ -20,7 +20,7 @@ function useValidate() {
     setPwdConfirm(e.target.value);
   }
   const handleUsername = e => {
-    setUsername(e.target.value.trim());
+    setUsername(e.target.value);
   }
   
   const emailIsVaild = () => {
@@ -63,11 +63,12 @@ function useValidate() {
   };
 
   const usernameIsValid = () => {
-    if (username.length === 0) {
+    const USERNAME = username.trim();
+    if (USERNAME.length === 0) {
       setUsernameError("username must not be empty");
       return false;
     }
-    if (/^_|\W+/gi.test(username)) {
+    if (/^_|[\W\s]+$/gi.test(USERNAME)) {
       setUsernameError("must only contain a to z, 0 to 9, _");
       return false;
     }
