@@ -44,11 +44,11 @@ function SignUp() {
       const USERNAME = username.trim();
       const alreadyExists = await userAlreadyExists(USERNAME);
       if (alreadyExists) throw new Error("username is already in use");
-      await(normalSignUp(email, pwd))
-      await Promise.all([updateDisplayName(USERNAME), createProfile(USERNAME)]);
+      await normalSignUp(email, pwd);
       setLoading(false);
       setError("");
-      navigate(`../${USERNAME}`);
+      navigate(`../${USERNAME.replace(/\s+/g, '_')}`);
+      await Promise.all([updateDisplayName(USERNAME), createProfile(USERNAME)]);
     } catch (err) {
       setLoading(false);
       console.log({err})

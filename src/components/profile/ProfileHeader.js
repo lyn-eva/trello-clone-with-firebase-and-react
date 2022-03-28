@@ -11,7 +11,6 @@ function BoardHeader({ setShowInfo }) {
   };
 
   const handleSignOut = () => {
-    console.log("in");
     signOutUser()
       .then(() => {
         navigate("../login", { replace: true });

@@ -30,7 +30,7 @@ function Note({ noteTxt, listId, noteId, index }) {
               />
               <Button
                 clickFunc={() => deleteNote(listId, noteId, index)}
-                className="bg-white absolute right-3 top-[3px] text-[18px] hidden group-hover:inline-block"
+                className="bg-white absolute right-3 top-0 text-[18px] hidden group-hover:inline-block"
               >
                 <i className="fas fa-times"></i>
               </Button>

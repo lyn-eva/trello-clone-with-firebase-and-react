@@ -6,6 +6,9 @@ import useValidate from '../customHooks/use-validate';
 import InputField from './InputField';
 import Button from '../utility/Button';
 
+
+import {auth} from "../firebase-config"
+
 function DeleteAccount() {
   const [success, setSuccess] = useState(false);
   const [timer, setTimer] = useState(10);
@@ -17,6 +20,8 @@ function DeleteAccount() {
   const {deleteUserData} = useDB();
   const navigate = useNavigate();
 
+  console.log(currentUser)
+
   useEffect(() => {
     if (!success) return;
     const unsub = setInterval(() => {
@@ -26,7 +31,8 @@ function DeleteAccount() {
     const unsubTime = setTimeout(async () => {
       if(cancel) return;
       await deleteUserData();
-      await Promise.all([deleteAccount(), signOutUser()]);
+      await deleteAccount();
+      await signOutUser();// why didn't I put this in all? Good question! In parallel requesting, if the signing out the user fulfilled first, deleting the user and firestore will end up with the error
       navigate('../../login');
     }, 10000);
 

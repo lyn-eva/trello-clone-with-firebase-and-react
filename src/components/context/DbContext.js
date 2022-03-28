@@ -162,18 +162,20 @@ export default function DbContext({ children }) {
   };
 
   const deleteUserData = async() => {
-    await Promise.all(boards.map(id => deleteBoard(id)));
+    console.log(boards)
+    await Promise.all(boards.map(({id}) =>  deleteBoard(id))); //
     return deleteDoc(doc(db, `users/${currentUser.displayName}`));
   };
 
   const deleteBoard = async (id) => {
+    console.log('deleting board');
     const batch = writeBatch(db);
     const path = `users/${currentUser.displayName}/boards/${id}`;
     const listItems = await getDocs(collection(db, `${path}/lists`));
     const deleteNested = listItems.docs.map((Doc) => deleteList(Doc.id, batch)); // delete nested lists
     await Promise.all(deleteNested);
     batch.delete(doc(db, path));
-    batch.commit();
+    return batch.commit();
   };
 
   const deleteList = async (id, Batch) => {
