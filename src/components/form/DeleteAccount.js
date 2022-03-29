@@ -6,9 +6,6 @@ import useValidate from '../customHooks/use-validate';
 import InputField from './InputField';
 import Button from '../utility/Button';
 
-
-import {auth} from "../firebase-config"
-
 function DeleteAccount() {
   const [success, setSuccess] = useState(false);
   const [timer, setTimer] = useState(10);
@@ -20,19 +17,17 @@ function DeleteAccount() {
   const {deleteUserData} = useDB();
   const navigate = useNavigate();
 
-  console.log(currentUser)
-
   useEffect(() => {
     if (!success) return;
     const unsub = setInterval(() => {
-      setTimer(prev => prev === 0 ? 0 : cancel ? prev :prev-1);
+      setTimer(prev => prev === 0 ? 0 : cancel ? prev : prev-1);
     }, 1000);
 
     const unsubTime = setTimeout(async () => {
-      if(cancel) return;
+      if(cancel) return setTimer(10);
       await deleteUserData();
       await deleteAccount();
-      await signOutUser();// why didn't I put this in all? Good question! In parallel requesting, if the signing out the user fulfilled first, deleting the user and firestore will end up with the error
+      await signOutUser();// why don't I use Promise.all() ? it can't be here
       navigate('../../login');
     }, 10000);
 
@@ -40,11 +35,12 @@ function DeleteAccount() {
       clearInterval(unsub);
       clearTimeout(unsubTime);
     }
-  }, [success])
+  }, [success, cancel])
   
 
   const submitHandler = async(e) => {
     e.preventDefault();
+    setCancel(false);
     if (!pwdIsValid()) return;
     try {
       await normalSignIn(currentUser.email, pwd);
@@ -56,10 +52,10 @@ function DeleteAccount() {
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen bg-clr-cyan">
-      {success && <p className="text-center bg-slate-200 w-full">
+      {success && !cancel && <p className="text-center bg-slate-200 w-full">
         Your account will be deleted in <span className='text-orange-500'>{timer}</span>s.
         <br />
-        You can cancel it now. <span onClick={() => setCancel(true)} className='text-blue-600 underline underline-offset-1 ml-2'>cancel</span>.
+        You can cancel it now. <span onClick={() => setCancel(true)} className='text-blue-600 underline underline-offset-1 ml-2 cursor-pointer'>cancel</span>.
       </p>}
       <div className="text-dense-blue px-4 sm:px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
         {error && <p className="auth-error">{error}</p>}

@@ -114,8 +114,6 @@ export default function DbContext({ children }) {
     });
   };
 
-  // createProfile('Zayar_Linn')
-
   const updateBoard = (newValues) => {
     if (newValues.bg === currentBoard.bg) return;
     updateDoc(doc(db, boardPath), { ...newValues, lastModified: serverTimestamp() });
@@ -164,6 +162,7 @@ export default function DbContext({ children }) {
   const deleteUserData = async() => {
     console.log(boards)
     await Promise.all(boards.map(({id}) =>  deleteBoard(id))); //
+    console.log('fulfilled');
     return deleteDoc(doc(db, `users/${currentUser.displayName}`));
   };
 
