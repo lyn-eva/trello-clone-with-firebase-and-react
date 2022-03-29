@@ -6,7 +6,6 @@ import {
   signOut,
   deleteUser,
   updateProfile,
-  sendEmailVerification,
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../firebase-config";

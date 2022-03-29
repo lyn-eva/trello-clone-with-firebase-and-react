@@ -25,7 +25,7 @@ function List({ id, title, index, notes }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className="mr-4 min-w-[20rem] w-64"
+          className="mr-4 min-w-[20rem] w-64 h-fit"
         >
           <div className="relative p-2 duration bg-list-clr rounded-md shadow-sm">
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />

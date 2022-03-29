@@ -95,15 +95,18 @@ function Board() {
         }
 
       default:
-        console.log("default");
+        // console.log("default");
     }
   };
+
+  // console.log(currentBoard.bg)
 
   return (
     <>
       {currentBoard && (
         <div
-          className={`relative p-[0.02px] bg-[${currentBoard.bg}] h-fit min-h-screen flex flex-col`}
+          className={`relative p-[0.02px] h-fit min-h-screen flex flex-col`}
+          style={{backgroundColor: currentBoard.bg}}
         >
           <DragDropContext onDragEnd={onDragEnd}>
             <BoardHeader toggleSidebar={toggleSidebar} />

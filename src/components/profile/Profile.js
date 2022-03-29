@@ -40,7 +40,8 @@ function Profile() {
               <li
                 key={id}
                 onClick={(e) => handleClick(e, id)}
-                className={`bg-[${bg}] h-36 w-52 shrink-0 rounded-[4px] p-3 pl-4 cursor-pointer relative group shadow-md`}
+                className={`h-36 w-52 shrink-0 rounded-[4px] p-3 pl-4 cursor-pointer relative group shadow-md`}
+                style={{backgroundColor: bg}}
               >
                 <h3 className="text-sm-md sm:text-2xl font-normal">
                   <i>{title}</i>

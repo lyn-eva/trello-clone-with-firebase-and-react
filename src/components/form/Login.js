@@ -26,7 +26,7 @@ function Login() {
 
   useEffect(() => {
     if (!user?.displayName) return;
-    navigate(`../${user.displayName.replace(/\s+/g, '_')}`, { replace: true });
+    navigate(`../${user.displayName.replace(/\s+/g, "_")}`, { replace: true });
   }, [user, navigate]);
 
   const submitHandler = (e) => {
@@ -53,7 +53,9 @@ function Login() {
       {!loading && (
         <div className="text-dense-blue px-4 sm:px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
           {error && <p className="auth-error">{error}</p>}
-          <h3 className="text-sm-md sm:text-2xl font-bold text-center ">Login to your account</h3>
+          <h3 className="text-sm-md sm:text-2xl font-bold text-center ">
+            Login to your account
+          </h3>
           <form onSubmit={submitHandler}>
             <InputField
               id="email"
@@ -70,14 +72,9 @@ function Login() {
               error={pwdError}
               onChange={handlePwd}
             />
-            <div className="flex flex-wrap gap-4 items-baseline justify-between mt-6 mb-3">
-              <button className="px-6 py-2 text-white bg-blue-600 rounded-lg duration-300 hover:bg-clr-cyan">
-                Login
-              </button>
-              <a href="" className="text-sm text-blue-600 hover:underline">
-                Forgot password?
-              </a>
-            </div>
+            <button className="block mt-6 mb-3 px-6 py-2 text-white bg-blue-600 rounded-lg duration-300 hover:bg-clr-cyan">
+              Login
+            </button>
             <Link
               to="../SignUp"
               className="text-sm text-blue-600 hover:border-blue-400 hover:underline"

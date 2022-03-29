@@ -4,8 +4,10 @@ import { createPortal } from "react-dom";
 import Backdrop from "../modal/Backdrop";
 import Button from "../utility/Button";
 
+const BG_COLORS = ["#d29034", "#4bbf6b", "#cd5a91", "#0079bf", "#89609e"];
+
 function BoardSidebar({ on, toggleSidebar }) {
-  const {currentBoard, updateBoard} = useDB();
+  const { currentBoard, updateBoard } = useDB();
 
   return (
     <>
@@ -22,9 +24,7 @@ function BoardSidebar({ on, toggleSidebar }) {
         <Button clickFunc={toggleSidebar} className="absolute right-4 top-4">
           <i className="fas fa-times text-xl"></i>
         </Button>
-        <h3 className="text-dense-blue pb-3 text-lg border-b-[1px] font-medium">
-          Menu
-        </h3>
+        <h3 className="text-dense-blue pb-3 text-lg border-b-[1px] font-medium">Menu</h3>
         <div className="py-3 text-grey-blue mt-2">
           <h4>
             <span
@@ -32,23 +32,15 @@ function BoardSidebar({ on, toggleSidebar }) {
             ></span>
             Change background
           </h4>
-          <ul className="flex gap-3 flex-wrap mt-4">
-            <li
-              onClick={() => updateBoard({bg :"#d29034"})}
-              className="color-option bg-[#d29034]"
-            ></li>
-            <li
-              onClick={() => updateBoard({bg :"#4bbf6b"})}
-              className="color-option bg-[#4bbf6b]"
-            ></li>
-            <li
-              onClick={() => updateBoard({bg :"#cd5a91"})}
-              className="color-option bg-[#cd5a91]"
-            ></li>
-            <li
-              onClick={() => updateBoard({bg :"#0079bf"})}
-              className="color-option bg-[#0079bf]"
-            ></li>
+          <ul className="flex gap-3 flex-wrap mt-4 border-2">
+            {BG_COLORS.map((color) => (
+              <li
+                key={color}
+                onClick={() => updateBoard({ bg: color })}
+                className="color-option"
+                style={{ backgroundColor: color }}
+              ></li>
+            ))}
           </ul>
         </div>
       </aside>

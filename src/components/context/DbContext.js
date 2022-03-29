@@ -107,6 +107,7 @@ export default function DbContext({ children }) {
   };
 
   const createProfile = async (user) => {
+    console.log({user});
     return setDoc(doc(db, "users/", user), {
       title: user,
       createdAt: serverTimestamp(),
