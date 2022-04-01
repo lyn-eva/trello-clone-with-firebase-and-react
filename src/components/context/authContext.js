@@ -20,10 +20,7 @@ export default function AuthContext({ children }) {
   const [currentUser, setcurrentUser] = useState({});
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
-      setcurrentUser(user);
-      console.log('auth state changed')
-    });
+    const unsubAuth = onAuthStateChanged(auth, (user) => setcurrentUser(user));
 
     return unsubAuth;
   }, []);
@@ -41,18 +38,18 @@ export default function AuthContext({ children }) {
   };
 
   const updateDisplayName = (username) => {
-    return updateProfile(auth.currentUser, {// fix this shit
+    return updateProfile(auth.currentUser, {
       displayName: username,
     });
   };
 
   const resetPwd = () => {
     sendPasswordResetEmail(auth, currentUser.email);
-  }
+  };
 
   const deleteAccount = () => {
     return deleteUser(currentUser);
-  }
+  };
 
   const value = {
     currentUser,
@@ -61,10 +58,8 @@ export default function AuthContext({ children }) {
     signOutUser,
     updateDisplayName,
     resetPwd,
-    deleteAccount
+    deleteAccount,
   };
 
-  return (
-    <firebaseAuth.Provider value={value}>{children}</firebaseAuth.Provider>
-  );
+  return <firebaseAuth.Provider value={value}>{children}</firebaseAuth.Provider>;
 }

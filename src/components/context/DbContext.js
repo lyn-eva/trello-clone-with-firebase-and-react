@@ -24,12 +24,14 @@ export const useDB = () => {
   return useContext(dbContext);
 };
 
+const metadata = () => ({ createdAt: serverTimestamp(), lastModified: serverTimestamp()});
+
 export default function DbContext({ children }) {
   const [boards, setBoards] = useState([]);
-  const [lists, setLists] = useState({}); // needn't an object
+  const [lists, setLists] = useState({});
   const [notes, setNotes] = useState({});
   const [boardPath, setBoardPath] = useState("");
-  const [currentBoard, setCurrentBoard] = useState(null); //
+  const [currentBoard, setCurrentBoard] = useState(null);
 
   const { currentUser } = useAuth();
 
@@ -107,11 +109,9 @@ export default function DbContext({ children }) {
   };
 
   const createProfile = async (user) => {
-    console.log({user});
     return setDoc(doc(db, "users/", user), {
+      ...metadata(),
       title: user,
-      createdAt: serverTimestamp(),
-      lastModified: serverTimestamp(),
     });
   };
 
@@ -123,30 +123,27 @@ export default function DbContext({ children }) {
   const createBoard = (boardName) => {
     const path = `users/${currentUser.displayName}/boards`;
     return addDoc(collection(db, path), {
+      ...metadata(),
       title: boardName,
       bg: "#0079bf",
-      createdAt: serverTimestamp(),
-      lastModified: serverTimestamp(),
     });
   };
 
   const createList = (listTitle, order) => {
     const path = `${boardPath}/lists`;
     addDoc(collection(db, path), {
+      ...metadata(),
       title: listTitle,
       order: order,
-      createdAt: serverTimestamp(),
-      lastModified: serverTimestamp(),
     });
   };
 
   const createNote = (listId, order, noteTxt) => {
     const path = `${boardPath}/lists/${listId}/notes`;
     addDoc(collection(db, path), {
+      ...metadata(),
       title: noteTxt,
       order: order,
-      createdAt: serverTimestamp(),
-      lastModified: serverTimestamp(),
     });
   };
 
@@ -160,15 +157,12 @@ export default function DbContext({ children }) {
     updateDoc(doc(db, path), { ...newValues, lastModified: serverTimestamp() });
   };
 
-  const deleteUserData = async() => {
-    console.log(boards)
-    await Promise.all(boards.map(({id}) =>  deleteBoard(id))); //
-    console.log('fulfilled');
+  const deleteUserData = async () => {
+    await Promise.all(boards.map(({ id }) => deleteBoard(id))); //
     return deleteDoc(doc(db, `users/${currentUser.displayName}`));
   };
 
   const deleteBoard = async (id) => {
-    console.log('deleting board');
     const batch = writeBatch(db);
     const path = `users/${currentUser.displayName}/boards/${id}`;
     const listItems = await getDocs(collection(db, `${path}/lists`));

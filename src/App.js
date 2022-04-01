@@ -17,17 +17,30 @@ function App() {
       <Routes>
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
-        <Route path=":profile/reset_pwd" element={<ResetPwd />} />
-        <Route path=":profile/delete_account" element={<DeleteAccount />} />
+        <Route
+          path=":profile/reset_pwd"
+          element={
+            <PrivateRoute>
+              <ResetPwd />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path=":profile/delete_account"
+          element={
+            <PrivateRoute>
+              <DeleteAccount />
+            </PrivateRoute>
+          }
+        />
         <Route
           path=":profile/:board"
           element={
-            // <PrivateRoute>
-            <Board />
-            // </PrivateRoute>
+            <PrivateRoute>
+              <Board />
+            </PrivateRoute>
           }
         />
-
         <Route
           path=":profile"
           element={
@@ -43,70 +56,3 @@ function App() {
 }
 
 export default App;
-
-// Component Tree
-// const APP = {
-//   SignUp: {},
-//   LogIn: {},
-//   Profile: {
-//     Dashboard: Boards,
-//   },
-//   GuestMode: {
-//     allowedComponents: [SignUp, LogIn, Board]
-//   },
-//   MainHdr: {
-//     Auth: {
-//       apiReq: ["firebase: download"],
-//     }
-//   },
-//   Boards: {
-//     Board: { // ofc, all of them are dndable/
-//       apiReq: ["firebase: upload, download", "unsplash: download"],
-//       BoardHdr: {},
-//       BoardSideBar: {
-//         apiReq: ["unsplash: download"],
-//       },
-//       List: {
-//         ListHeader: {
-//           sorting: ["by created time, by priority, by completed/uncompleted"]
-//         },
-//         Items: {
-//           Item : {},
-//           ItemDetail: {},
-//         },
-//         ListFooter: "list footer",
-//       },
-//       BoardFtr: {},
-//     },
-//   }
-// };
-
-// // Database Tree
-// const firestore = {
-//   "collection-users" : {
-//     "user" : {
-//       "preference" : {},
-//       "boards": {
-//         "board": {
-//           "lists": {
-//             "list": {
-//               "item": {}
-//             }
-//           }
-//         }
-//       }
-//     },
-//     "user" : {
-//       "preference" : {},
-//       "boards": {
-//         "board": {
-//           "lists": {
-//             "list": {
-//               "item": {}
-//             }
-//           }
-//         }
-//       }
-//     },
-//   }
-// }

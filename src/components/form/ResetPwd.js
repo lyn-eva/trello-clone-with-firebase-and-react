@@ -49,7 +49,7 @@ function ResetPwd() {
       <div className="text-dense-blue px-4 sm:px-8 py-6 my-8 text-left bg-white shadow-lg rounded-md w-11/12 max-w-[22rem]">
         {error && <p className="auth-error">{error}</p>}
         <h3 className="text-sm-md sm:text-2xl font-bold text-center ">
-          Reset your password
+          Change your password
         </h3>
         <form onSubmit={submitHandler}>
           <InputField

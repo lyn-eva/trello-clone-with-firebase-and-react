@@ -8,7 +8,7 @@ import { useDB } from "../context/DbContext";
 import InputField from "./InputField";
 
 function SignUp() {
-  const { normalSignUp, updateDisplayName, normalSignIn } = useAuth();
+  const { normalSignUp, updateDisplayName } = useAuth();
   const { userAlreadyExists, createProfile } = useDB();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -51,7 +51,6 @@ function SignUp() {
       await Promise.all([updateDisplayName(USERNAME), createProfile(USERNAME)]);
     } catch (err) {
       setLoading(false);
-      console.log({err})
       const errMsg =  err.code?.split("-").join(" ") || err.message; 
       setError(errMsg);
     }

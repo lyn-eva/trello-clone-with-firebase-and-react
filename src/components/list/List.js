@@ -60,4 +60,3 @@ function List({ id, title, index, notes }) {
   );
 }
 export default List;
-// export default memo(List);

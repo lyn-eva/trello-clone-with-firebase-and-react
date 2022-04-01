@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { getAuth } from "@firebase/auth";
 import { useNavigate } from "react-router";
-
 import ProfileHeader from "./ProfileHeader";
 import { useDB } from "../context/DbContext";
 import Button from "../utility/Button";

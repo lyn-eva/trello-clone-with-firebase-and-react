@@ -10,7 +10,7 @@ function DynamicTxt({
   updateFunc,
 }) {
   const [rename, setRename] = useState(false);
-  const [value, setValue] = useState(initialName); //
+  const [value, setValue] = useState(initialName);
   const txtAreaRef = useRef();
 
   useEffect(() => {
@@ -36,16 +36,16 @@ function DynamicTxt({
   return (
     <div
       onDoubleClick={renameStart}
-      className={`text-dense-blue w-full ${className || ""}`}
+      className={`text-dense-blue w-full ${className || undefined}`}
       style={style || {}}
     >
       <textarea
         onBlur={renameEnd}
         ref={txtAreaRef}
         type="text"
-        rows={rows || ""}
-        maxLength={maxLength || ""}
-        className={`board-hdr text-black p-1 w-full resize-none ${
+        rows={rows || undefined}
+        maxLength={maxLength || undefined}
+        className={`dynamic-txt text-black p-1 w-full resize-none ${
           rename ? "block" : "hidden"
         } ${noWrap ? "whitespace-nowrap" : ""}`}
       />

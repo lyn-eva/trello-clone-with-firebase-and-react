@@ -80,7 +80,7 @@ function Board() {
           updateNoteOrder(source.droppableId, sourceList);
           break;
         }
-        // dnd between different Lists
+        // dnd among different Lists
         else {
           const targetList = localNotes[target.droppableId];
           sourceList.splice(source.index, 1);
@@ -95,11 +95,9 @@ function Board() {
         }
 
       default:
-        // console.log("default");
+        break;
     }
   };
-
-  // console.log(currentBoard.bg)
 
   return (
     <>
@@ -125,7 +123,7 @@ function Board() {
                       clickFunc={() => createList("new list", localLists.length)}
                       className="text-lg text-dense-blue pl-6 py-3 w-[20rem] text-left bg-list-clr duration-300 hover:bg-hover-clr hover:text-white rounded-md"
                     >
-                      <i className="fas fa-plus mr-2"></i> Add another list
+                      <i className="fas fa-plus mr-2"></i> Add a list
                     </Button>
                   </li>
                 </ul>

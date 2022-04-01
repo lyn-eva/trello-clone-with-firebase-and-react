@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import Button from "../utility/Button";
 
 function BoardHeader({ setShowInfo }) {
   const { signOutUser } = useAuth();
@@ -30,23 +29,11 @@ function BoardHeader({ setShowInfo }) {
             className="cursor-pointer sm:py-1 sm:px-2 sm:border-none sm:bg-white tracking-wide sm:rounded-md py-2 border-b-[1px] border-[rgba(255,255,255,.4)]"
           >
             Sign Up
-            {/* <Button
-              clickFunc={handleSignUp}
-              className="py-[5px] bg-white tracking-wide rounded-md"
-            >
-              Sign up
-            </Button> */}
           </li>
           <li
             onClick={handleSignOut}
             className="cursor-pointer py-2 sm:py-1 sm:bg-white sm:px-2 sm:rounded-md"
           >
-            {/* <Button
-              clickFunc={handleSignOut}
-              className="py-[5px] tracking-wide bg-white rounded-md"
-            >
-              Sign Out
-            </Button> */}
             Sign Out
           </li>
         </ul>

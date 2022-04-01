@@ -1,13 +1,10 @@
 import { useState, useRef } from "react";
-
 import { useDB } from "../context/DbContext";
-
 import Button from "../utility/Button";
 
 function ListFooter({ listId, noteOrder }) {
   const [add, setAdd] = useState(false);
   const txtAreaRef = useRef();
-
   const { createNote } = useDB();
 
   const addNoteStart = () => {

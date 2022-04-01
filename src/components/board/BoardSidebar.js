@@ -17,7 +17,7 @@ function BoardSidebar({ on, toggleSidebar }) {
           document.getElementById("backdrop")
         )}
       <aside
-        className={`text-center fixed ${
+        className={`text-center fixed overflow-y-auto ${
           on ? "translate-x-0" : "translate-x-full"
         } duration-300 top-0 right-0 p-5 w-full bg-white sm:w-[22rem] h-screen z-20 py-10`}
       >
@@ -32,7 +32,7 @@ function BoardSidebar({ on, toggleSidebar }) {
             ></span>
             Change background
           </h4>
-          <ul className="flex gap-3 flex-wrap mt-4 border-2">
+          <ul className="flex gap-3 flex-wrap mt-4">
             {BG_COLORS.map((color) => (
               <li
                 key={color}
