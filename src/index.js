@@ -4,15 +4,15 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 import App from "./App";
 import AuthContext from "./components/context/AuthContext";
-import DbContext from "./components/context/DbContext"
+import DbContext from "./components/context/DbContext";
 
 ReactDOM.render(
   <BrowserRouter>
-      <AuthContext>
-        <DbContext>
+    <AuthContext>
+      <DbContext>
         <App />
-        </DbContext>
-      </AuthContext>
+      </DbContext>
+    </AuthContext>
   </BrowserRouter>,
   document.getElementById("root")
 );
