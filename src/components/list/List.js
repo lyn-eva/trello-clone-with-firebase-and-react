@@ -31,11 +31,11 @@ function List({ id, title, index, notes }) {
             <ListHeader hdr={title} id={id} setDropDownOn={setDropDownOn} />
             {dropDownOn && (
               <>
-                {createPortal(
+                {/* {createPortal(
                   <Backdrop onClick={() => setDropDownOn(false)} />,
                   document.getElementById("backdrop")
-                )}
-                <ListDropDown listId={id} />
+                )} */}
+                <ListDropDown setDropDownOn={setDropDownOn} listId={id} />
               </>
             )}
             <Droppable droppableId={id} type="note">

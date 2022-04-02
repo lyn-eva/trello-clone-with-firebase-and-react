@@ -40,7 +40,7 @@ function ListFooter({ listId, noteOrder }) {
           placeholder="Enter the title of this card"
           className="w-full rounded-sm p-2 h-16 border-2 box-border resize-none"
         />
-        <div className="border-2 p-[1px] flex items-center -mt-1">
+        <div className="border-2 p-[1px] flex items-center">
           <Button
             clickFunc={addNoteEnd}
             className="bg-primary mr-2 text-white py-[5px]"
