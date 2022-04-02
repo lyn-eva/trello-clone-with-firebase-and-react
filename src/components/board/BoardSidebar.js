@@ -9,6 +9,13 @@ const BG_COLORS = ["#d29034", "#4bbf6b", "#cd5a91", "#0079bf", "#89609e"];
 function BoardSidebar({ on, toggleSidebar }) {
   const { currentBoard, updateBoard } = useDB();
 
+  const updateBackground = (bg) => {
+    return () => {
+      toggleSidebar(false);
+      updateBoard({ bg: bg });
+    };
+  };
+
   return (
     <>
       {on &&
@@ -36,7 +43,7 @@ function BoardSidebar({ on, toggleSidebar }) {
             {BG_COLORS.map((color) => (
               <li
                 key={color}
-                onClick={() => updateBoard({ bg: color })}
+                onClick={updateBackground(color)}
                 className="color-option"
                 style={{ backgroundColor: color }}
               ></li>
